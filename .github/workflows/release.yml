@@ -1,0 +1,137 @@
+name: Release
+on:
+  push:
+    tags: [v*]
+
+jobs:
+  release:
+    name: Build & upload release assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout OnyxOS meta
+        uses: actions/checkout@v6
+
+      - name: Checkout OnyxBoot
+        uses: actions/checkout@v6
+        with:
+          repository: loki5512344/OnyxBoot
+          path: OnyxBoot
+
+      - name: Checkout OnyxKernel
+        uses: actions/checkout@v6
+        with:
+          repository: loki5512344/OnyxKernel
+          path: OnyxKernel
+
+      - name: Checkout OnyxShell
+        uses: actions/checkout@v6
+        with:
+          repository: loki5512344/OnyxShell
+          path: OnyxShell
+
+      - name: Install RISC-V GCC
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-riscv64-unknown-elf make || \
+          sudo apt-get install -y gcc-riscv64-linux-gnu make
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: riscv64gc-unknown-none-elf
+
+      - name: Build bootloader
+        run: |
+          cd OnyxBoot
+          if command -v riscv64-unknown-elf-gcc &>/dev/null; then
+            make -j$(nproc)
+          else
+            make -j$(nproc) CROSS=riscv64-linux-gnu
+          fi
+
+      - name: Build kernel (ultra)
+        run: |
+          cd OnyxKernel
+          cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf
+
+      - name: Build tools (elf2onx)
+        run: |
+          cd OnyxKernel
+          cargo build --release -p onyx_tools
+
+      - name: Build shell
+        env:
+          ONYXKERNEL_DIR: ${{ github.workspace }}/OnyxKernel
+        run: |
+          cd OnyxShell
+          bash build.sh
+
+      - name: Create release bundle
+        run: |
+          mkdir -p onyxos-release
+          cp OnyxBoot/bootloader.bin onyxos-release/
+          cp OnyxBoot/bootloader.elf onyxos-release/
+          cp OnyxKernel/target/riscv64gc-unknown-none-elf/release/onyx-kernel onyxos-release/
+          cp OnyxShell/build/osh.onx onyxos-release/
+          cp OnyxShell/build/onyx-osh onyxos-release/
+          cp OnyxKernel/build/*.onx onyxos-release/ 2>/dev/null || true
+          cp OnyxShell/build/osh.onx onyxos-release/
+
+      - name: Create install.sh
+        run: |
+          cat > onyxos-release/install.sh << 'INSTALL'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          if [ $# -ne 1 ]; then
+              echo "Usage: sudo bash install.sh /dev/sdX"
+              exit 1
+          fi
+          DEV="$1"
+          HERE="$(cd "$(dirname "$0")" && pwd)"
+          echo "=== OnyxOS Installer ==="
+          echo "Target: $DEV"
+          read -rp "Continue? (y/N) " ans
+          [[ "$ans" != "y" && "$ans" != "Y" ]] && echo "Aborted." && exit 1
+          parted -s "$DEV" mklabel gpt
+          parted -s "$DEV" mkpart primary fat32 1MiB 64MiB
+          parted -s "$DEV" mkpart primary ext4 64MiB 100%
+          parted -s "$DEV" set 1 boot on
+          BOOT_DEV="${DEV}1"
+          ROOT_DEV="${DEV}2"
+          mkfs.fat -F32 "$BOOT_DEV"
+          mkfs.ext4 "$ROOT_DEV"
+          mkdir -p /mnt/onyx-boot /mnt/onyx-root
+          mount "$BOOT_DEV" /mnt/onyx-boot
+          mount "$ROOT_DEV" /mnt/onyx-root
+          cp "$HERE/bootloader.bin" /mnt/onyx-boot/
+          cp "$HERE/onyx-kernel" /mnt/onyx-boot/
+          mkdir -p /mnt/onyx-root/bin
+          for f in "$HERE"/*.onx; do
+              cp "$f" /mnt/onyx-root/bin/
+          done
+          sync
+          umount /mnt/onyx-boot /mnt/onyx-root
+          rmdir /mnt/onyx-boot /mnt/onyx-root
+          echo "=== Done! Insert SD card and boot. ==="
+          INSTALL
+          chmod +x onyxos-release/install.sh
+
+      - name: Create zip
+        run: |
+          cd onyxos-release
+          zip -r ../onyxos-${{ github.ref_name }}.zip .
+          cd ..
+          ls -lh onyxos-${{ github.ref_name }}.zip
+
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.ref_name }}" \
+            onyxos-${{ github.ref_name }}.zip \
+            OnyxBoot/bootloader.bin \
+            OnyxBoot/bootloader.elf \
+            OnyxKernel/target/riscv64gc-unknown-none-elf/release/onyx-kernel \
+            OnyxShell/build/osh.onx \
+            --repo "${{ github.repository }}" \
+            --clobber

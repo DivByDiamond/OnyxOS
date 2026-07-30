@@ -34,7 +34,7 @@ for repo in OnyxKernel OnyxBoot OnyxShell OnyxCompiller; do
     if [ -d ".vent/repos/$repo" ]; then
         echo "  ✓ $repo"
     else
-        echo "  ✗ $repo — missing"
+        echo "  ✗ $repo - missing"
     fi
 done
 echo ""

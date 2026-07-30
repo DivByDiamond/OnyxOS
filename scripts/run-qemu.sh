@@ -10,7 +10,7 @@ BUILD_DIR="$(pwd)/.build"
 
 # Auto-build if no artifacts
 if [ ! -f "$BUILD_DIR/onyx-kernel.elf" ]; then
-    echo "[*] No builds found — running build-all first..."
+    echo "[*] No builds found - running build-all first..."
     bash scripts/build-all.sh
 fi
 

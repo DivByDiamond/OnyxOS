@@ -8,7 +8,7 @@ echo ""
 
 # Bootstrap first if needed
 if [ ! -d ".vent/repos/OnyxKernel" ]; then
-    echo "[*] Bootstrap needed — resolving dependencies..."
+    echo "[*] Bootstrap needed - resolving dependencies..."
     bash scripts/bootstrap.sh
 fi
 
