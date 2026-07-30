@@ -14,7 +14,7 @@ jobs:
     name: OnyxCompiller (host + selfhost)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: loki5512344/OnyxCompiller
       - name: Install deps
@@ -26,7 +26,7 @@ jobs:
       - name: Self-hosting full build
         run: make selfhost
       - name: Upload onyxcc_self.onx
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: onyxcc_self
           path: onyxcc_self.onx
@@ -35,7 +35,7 @@ jobs:
     name: OnyxBoot
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: loki5512344/OnyxBoot
       - name: Install toolchain
@@ -54,16 +54,16 @@ jobs:
             exit 1
           fi
       - name: Upload kernel.elf
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: onyxboot-elf
-          path: kernel.elf
+          path: bootloader.elf
 
   build-onyxkernel:
     name: OnyxKernel
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: loki5512344/OnyxKernel
       - name: Install Rust
@@ -77,19 +77,19 @@ jobs:
       - name: Run core tests
         run: cargo test -p onyx_core
       - name: Upload kernel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: onyxkernel-elf
-          path: target/riscv64gc-unknown-none-elf/release/Onyxos
+          path: target/riscv64gc-unknown-none-elf/release/onyx-kernel
 
   build-onyxshell:
     name: OnyxShell
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: loki5512344/OnyxShell
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: loki5512344/OnyxKernel
           path: OnyxKernel
@@ -106,7 +106,7 @@ jobs:
     name: OnyxOS meta
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install deps
         run: sudo apt-get update && sudo apt-get install -y cmake build-essential libcurl4-openssl-dev libarchive-dev
       - name: Setup Vent
