@@ -94,6 +94,78 @@ make host          # нативный бинар для Linux
 make onyx          # кросс-компиляция в .onx
 ```
 
+## Как сделать свою прошивку (OC2R)
+
+Мод OC2R умеет скачивать прошивку компьютера из GitHub-репозитория по манифесту
+`oc2r-firmware.json` в корне репозитория. Мод читает его, берёт ссылку `image`
+и заливает flash-образ в виртуальную машину.
+
+### Формат манифеста `oc2r-firmware.json`
+
+```json
+{
+  "name": "OnyxOS",
+  "version": "0.3.0",
+  "layout": "minux",
+  "image": "https://github.com/loki5512344/OnyxOS/releases/latest/download/onyx-flash.img"
+}
+```
+
+| Поле | Значение | Описание |
+|------|----------|----------|
+| `name` | `OnyxOS` | Название прошивки |
+| `version` | `0.3.0` | Версия из `Cargo.toml` воркспейса OnyxKernel |
+| `layout` | `minux` | Схема раскладки flash (см. ниже) |
+| `image` | прямая ссылка на `onyx-flash.img` | Цельный flash-образ, прикреплённый к GitHub Release |
+
+Раскладка `minux` (flash ровно 15 МБ):
+
+| Offset | Размер | Содержимое |
+|--------|--------|------------|
+| `0x000000` (0) | — | `fw_jump.bin` — OpenSBI (файл из мода OC2R: `src/main/scripts/firmware_files/fw_jump.bin`) |
+| `0x200000` (2 МБ) | — | Образ ядра OnyxKernel (ELF, собранный cargo) |
+| до 15 МБ | — | Нули |
+
+### Сборка образа вручную
+
+```bash
+# 1. Разрешить зависимости — vent клонирует репозитории в .vent/repos/
+make deps
+
+# 2. Собрать bootloader и ядро
+make -C .vent/repos/OnyxBoot
+cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf \
+  --manifest-path .vent/repos/OnyxKernel/Cargo.toml
+
+# 3. Положить настоящий OpenSBI как firmware/fw_jump.bin
+#    (берётся из мода OC2R: src/main/scripts/firmware_files/fw_jump.bin)
+
+# 4. Склеить образ ровно 15 МБ по схеме minux
+dd if=/dev/zero of=onyx-flash.img bs=1M count=15
+dd if=firmware/fw_jump.bin of=onyx-flash.img conv=notrunc
+dd if=.vent/repos/OnyxKernel/target/riscv64gc-unknown-none-elf/release/onyx-kernel \
+   of=onyx-flash.img bs=1M seek=2 conv=notrunc
+```
+
+### Автоматическая сборка через GitHub Actions
+
+`.github/workflows/release.yml` при пуше git-тега (например `v0.3.0`):
+1. Собирает все компоненты (`make deps` → vent клонирует OnyxKernel/OnyxBoot/OnyxShell/OnyxCompiller);
+2. Склеивает `onyx-flash.img` (15 МБ, layout `minux`);
+3. Создаёт GitHub Release и прикрепляет образ.
+
+Ссылка `image` в манифесте указывает на `/releases/latest/download/onyx-flash.img` —
+GitHub сам отдаёт ассет последнего релиза по тегу.
+
+Для рабочего релиза нужно:
+1. Положить настоящий `fw_jump.bin` (OpenSBI) в `firmware/fw_jump.bin` репозитория
+   либо задать переменную репозитория `OC2R_FW_JUMP_URL` (если файла нет, CI
+   соберёт образ с заглушкой — он не загрузится);
+2. Создать тег `v0.3.0` и запушить — CI соберёт и зальёт образ.
+
+На каждый пуш в `main` workflow дополнительно публикует превью-образ как
+artifact (без создания Release).
+
 ## План развития
 
 | Область | Что делаем |
