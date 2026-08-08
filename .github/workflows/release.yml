@@ -150,17 +150,34 @@ jobs:
 
       # 7. Склейка цельного flash-образа ровно 15 МБ по схеме "minux":
       #      offset 0x000000 (0)    → fw_jump.bin (OpenSBI)
-      #      offset 0x200000 (2 МБ) → ядро OnyxKernel (ELF)
+      #      offset 0x200000 (2 МБ) → ядро OnyxKernel (raw binary)
       #      остальное до 15 МБ     → нули
+      #
+      #    ВАЖНО: OpenSBI (fw_jump) прыгает напрямую на 0x80200000, поэтому там
+      #    должен лежать машинный код, а НЕ ELF. Сначала конвертируем ELF в
+      #    плоский бинарник через objcopy (как делает OnyxBoot для bootloader.bin).
+      #    ELF линкуется с KERNEL_BASE = 0x80200000 (kernel/linker.ld), поэтому
+      #    первый байт raw-бина = первая инструкция _start по адресу 0x80200000.
       - name: Assemble onyx-flash.img (15 MB, layout minux)
         run: |
           set -euo pipefail
           IMG="onyx-flash.img"
           FLASH_MB=15
           FW_JUMP="firmware/fw_jump.bin"
-          KERNEL=".vent/repos/OnyxKernel/target/riscv64gc-unknown-none-elf/release/onyx-kernel"
+          KERNEL_ELF=".vent/repos/OnyxKernel/target/riscv64gc-unknown-none-elf/release/onyx-kernel"
+          KERNEL_BIN="kernel.bin"
 
-          [ -f "$KERNEL" ] || { echo "ERROR: kernel ELF not found: $KERNEL"; exit 1; }
+          [ -f "$KERNEL_ELF" ] || { echo "ERROR: kernel ELF not found: $KERNEL_ELF"; exit 1; }
+
+          # Найти riscv objcopy (префикс зависит от установленного тулчейна).
+          OBJCOPY=""
+          for c in riscv64-unknown-elf-objcopy riscv64-elf-objcopy riscv64-linux-gnu-objcopy; do
+            if command -v "$c" &>/dev/null; then OBJCOPY="$c"; break; fi
+          done
+          [ -n "$OBJCOPY" ] || { echo "ERROR: no riscv objcopy found"; exit 1; }
+
+          echo "[+] ELF -> raw: $OBJCOPY -O binary $KERNEL_ELF $KERNEL_BIN"
+          "$OBJCOPY" -O binary "$KERNEL_ELF" "$KERNEL_BIN"
 
           # 15 МБ нулей — базовое полотно образа
           dd if=/dev/zero of="$IMG" bs=1M count=$FLASH_MB
@@ -168,8 +185,8 @@ jobs:
           # OpenSBI на offset 0
           dd if="$FW_JUMP" of="$IMG" conv=notrunc
 
-          # Ядро на offset 2 МБ (0x200000)
-          dd if="$KERNEL" of="$IMG" bs=1M seek=2 conv=notrunc
+          # Ядро (raw) на offset 2 МБ (0x200000)
+          dd if="$KERNEL_BIN" of="$IMG" bs=1M seek=2 conv=notrunc
 
           # Контроль размера: ровно 15 МБ = 15728640 байт
           SIZE="$(stat -c%s "$IMG")"
