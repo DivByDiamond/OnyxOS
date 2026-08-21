@@ -85,6 +85,29 @@ jobs:
           name: onyxkernel-elf
           path: target/riscv64gc-unknown-none-elf/release/onyx-kernel
 
+  qemu-smoke:
+    name: QEMU boot smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-riscv64 dosfstools mtools parted cmake build-essential libcurl4-openssl-dev libarchive-dev
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: riscv64gc-unknown-none-elf
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+      - name: Build all components
+        run: bash scripts/bootstrap.sh && bash scripts/build-all.sh
+      - name: Build disk image
+        run: bash scripts/mk-onyxfs-disk.sh
+      - name: Boot test (headless QEMU, full chain)
+        timeout-minutes: 6
+        run: bash scripts/qemu-smoke.sh
+
   build-onyxshell:
     name: OnyxShell
     runs-on: ubuntu-latest

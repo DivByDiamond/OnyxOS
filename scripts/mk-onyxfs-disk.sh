@@ -145,15 +145,16 @@ dir /ipc
 dir /proc
 dir /dev
 dir /service
-file /bin/init $TMP_ONX_DIR/init.onx
-file /bin/login $TMP_ONX_DIR/login.onx
-file /bin/osh $TMP_ONX_DIR/osh.onx
-file /bin/passwd $TMP_ONX_DIR/passwd.onx
-file /bin/useradd $TMP_ONX_DIR/useradd.onx
-file /bin/userdel $TMP_ONX_DIR/userdel.onx
-file /etc/passwd $TMP_ONX_DIR/passwd.txt
-file /etc/shadow $TMP_ONX_DIR/shadow.txt
-file /font/default.psf $TMP_ONX_DIR/default.psf
+# NOTE: mkimage expects "file <host_path> <fs_path>" — host path FIRST.
+file $TMP_ONX_DIR/init.onx /bin/init
+file $TMP_ONX_DIR/login.onx /bin/login
+file $TMP_ONX_DIR/osh.onx /bin/osh
+file $TMP_ONX_DIR/passwd.onx /bin/passwd
+file $TMP_ONX_DIR/useradd.onx /bin/useradd
+file $TMP_ONX_DIR/userdel.onx /bin/userdel
+file $TMP_ONX_DIR/passwd.txt /etc/passwd
+file $TMP_ONX_DIR/shadow.txt /etc/shadow
+file $TMP_ONX_DIR/default.psf /font/default.psf
 EOF
 
 # mkimage uses literal path strings in the manifest — substitute $TMP_ONX_DIR
@@ -168,19 +169,24 @@ echo "    OnyxFS image: $ROOTFS_IMG ($((ROOTFS_SIZE / 1024)) KiB)"
 # ── 6. Build the final two-partition disk image ────────────────────────
 # Layout (MBR, 512-byte sectors):
 #   0 - 2047            : MBR + reserved
-#   2048 - 32767        : FAT32 partition 1 (16 MiB), kernel.elf at root
-#   32768 - end         : OnyxFS partition 2 (rootfs)
+#   2048 - 10239        : FAT32 partition 1 (4 MiB), kernel.elf at root
+#   10240 - end         : OnyxFS partition 2 (rootfs)
+#
+# IMPORTANT: partition 2 MUST start at sector 10240 — OnyxKernel hardcodes
+# ONYXFS_LBA=10240 (arch/regs.rs) and scans exactly LBA 0 and LBA 10240.
 DISK_SIZE_MB=64
 PART1_START=2048                 # 1 MiB offset (conventional)
-PART1_END=$((PART1_START + 16 * 1024 * 1024 / 512 - 1))   # 16 MiB
-PART2_START=$((PART1_END + 1))
+PART1_END=10239                  # -> FAT32 partition is exactly 4 MiB
+PART2_START=10240                # = kernel's ONYXFS_LBA
 echo "[*] Creating disk image ($DISK_SIZE_MB MiB, 2 partitions)..."
 dd if=/dev/zero of="$DISK_IMG" bs=1M count="$DISK_SIZE_MB" status=none
 
 # MBR partition table with two primary partitions
 parted -s "$DISK_IMG" mklabel msdos
 parted -s "$DISK_IMG" mkpart primary fat32 "${PART1_START}s" "${PART1_END}s"
-parted -s "$DISK_IMG" mkpart primary onyxfs "${PART2_START}s" 100%
+# NOTE: parted has no "onyxfs" type — ext4 hint gives MBR type 0x83 (Linux),
+# which is what OnyxBoot's MBR scan expects for the rootfs partition.
+parted -s "$DISK_IMG" mkpart primary ext4 "${PART2_START}s" 100%
 
 # Format + populate FAT32 partition 1 with kernel.elf
 echo "[*] Formatting FAT32 partition 1..."
