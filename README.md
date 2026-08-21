@@ -16,10 +16,11 @@
 
 | Компонент | Язык | Описание | Статус |
 |-----------|------|----------|--------|
-| **OnyxBoot** | C++20 | Загрузчик: FDT, VirtIO, SDHCI, FAT32/ext4, GPT, boot menu | v0.4 |
-| **OnyxKernel** | Rust | Монолитное ядро: MM (Sv39), SMP, VFS, TCP/IP, драйверы, 77 syscalls | active |
-| **OnyxShell** | Rust | Шелл: 20 команд, табы, история, пайпы/редиректы, globbing | v0.3 |
-| **OnyxCompiller** | C99 | C → RV64 → `.onx`, single-pass, самокомпиляция в процессе | MVP |
+| **OnyxBoot** | C++20 | Загрузчик: FDT, VirtIO, SDHCI, FAT32/ext4, GPT, boot menu | v0.7 |
+| **OnyxKernel** | Rust | Монолитное ядро: MM (Sv39), SMP, VFS, TCP/IP, OnyxFS v2 (chmod/symlink/truncate-to-N), FAT32 read+write, 85 syscalls | v0.5 |
+| **OnyxShell** | Rust | Шелл: 20 команд, табы, история, пайпы/редиректы, globbing, background jobs | v0.3 |
+| **OnyxCompiller** | C99 | C → RV64 → `.onx`, single-pass, multi-file compilation, self-hosting stage-1, onyx-ld linker (.o + .a) | v0.5 |
+| **libonyxc** | C99 | libc: FILE* buffered I/O, sprintf/snprintf/sscanf, errno/strerror/perror, time/signal/stdlib/string/ctype | v0.5 |
 | **OnyxOS** | — | Документация, скрипты, интеграция | meta |
 
 ## Быстрый старт
@@ -69,7 +70,7 @@ OnyxOS/
 
 ```bash
 cd .vent/repos/OnyxKernel
-cargo build --release
+cargo kbuild    # alias: cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf
 ```
 
 ### OnyxBoot
