@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
@@ -70,6 +71,8 @@ jobs:
         uses: dtolnay/rust-toolchain@nightly
         with:
           targets: riscv64gc-unknown-none-elf
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
       - name: Build kernel
         run: cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf
       - name: Build tools
@@ -97,6 +100,12 @@ jobs:
         uses: dtolnay/rust-toolchain@nightly
         with:
           targets: riscv64gc-unknown-none-elf
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            .
+            OnyxKernel
       - name: Build
         env:
           ONYXKERNEL_DIR: ${{ github.workspace }}/OnyxKernel
