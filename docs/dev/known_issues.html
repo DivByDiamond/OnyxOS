@@ -46,55 +46,61 @@ main li{margin-bottom:4px}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0d1117}::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}</style>
 </head>
 <body>
-<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="../architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="../architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="../architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="../architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="building.html">&nbsp;&nbsp;Building</a></li><li><a href="contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="known_issues.html" class="active">&nbsp;&nbsp;Known Issues</a></li><li><a href="language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_slipperos.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
+<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="../architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="../architecture/design_decisions.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="../architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="../architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="../architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="building.html">&nbsp;&nbsp;Building</a></li><li><a href="contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="known_issues.html" class="active">&nbsp;&nbsp;Known Issues</a></li><li><a href="language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_slipperos.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
   <a href="known_issues.html" class="active">RU</a>
   <a href="known_issues.en.html">EN</a>
 </div></nav>
 <main><div class="breadcrumb"><a href="../">Docs</a> <span> / Dev / Known Issues</span></div><h1>Known Issues</h1>
-<p>Задокументированные проблемы, которые есть в коде на данный момент.</p>
-<h2>Scheduler: context switch не подключён</h2>
-<p><code>sched_yield()</code> двигает <code>CURRENT</code> и возвращается. <code>save_context()</code> /
-<code>restore_context()</code> написаны в <code>context.rs</code>, но нигде не вызваны.
-Планировщик пока не переключает задачи - просто ходит по кругу.</p>
-<p><strong>План</strong>: v0.3 - trap handler + вызов <code>sched_yield</code> из CLINT прерывания.</p>
-<h2>Page allocator: нет contiguous-аллокаций</h2>
-<p>Текущий free list возвращает одну страницу за раз. Гарантии что два
-последовательных <code>alloc()</code> вернут соседние страницы - нет.</p>
-<p>Это заблокирует VirtIO block (v0.4): vring обязан лежать в физически
-непрерывной памяти. Либо внедрить descriptor-based allocator (флаги
-Taken/Last), либо уметь выделять N последовательных страниц.</p>
-<p><strong>План</strong>: решить до v0.4.</p>
-<h2>VirtIO: Legacy vs v2 MMIO - resolved</h2>
-<p>Проверено по исходникам Sedna (<code>AbstractVirtIODevice.java</code>):
-<code>VIRTIO_MMIO_VERSION = 0x2</code>, требует <code>VIRTIO_F_VERSION_1</code> при негоциации.
-<strong>Legacy транспорт не поддерживается</strong>.</p>
-<p>Документация (<code>hardware/virtio/overview.md</code>, <code>hardware/virtio/block.md</code>,
-<code>dev/bootloader.md</code>) переписана под v2 MMIO:
-<code>QueueDescLow/High</code>, <code>QueueDriverLow/High</code>, <code>QueueDeviceLow/High</code>,
-<code>QueueReady</code>. Драйвер в ядре (<code>kernel/drivers/virtio/block.rs</code>) - v0.4.</p>
-<p><strong>Риск снят</strong>. Подтверждено: только v2.</p>
-<h2>Обработка трапов: S-mode регистры</h2>
-<p>В документацию внесены правки (<code>sepc</code>/<code>scause</code>/<code>stval</code>/<code>stvec</code>/<code>sret</code>),
-но кода trap handler ещё нет. При реализации важно не скопировать M-mode
-формулировки из старых доков - настроить <code>stvec</code>, а не <code>mtvec</code>.</p>
-<p><strong>План</strong>: v0.3, через <code>global_asm!</code> или <code>naked_asm!</code> внутри Rust-файла.</p>
-<h2>UART/VirtIO адреса захардкожены, не из FDT</h2>
-<p><code>kernel/drivers/uart.rs</code> (0x10000000), <code>kernel/drivers/virtio/block.rs</code>
-(0x10001000, IRQ 1-8), и kernel и bootloader пока хардкодят адреса
-и IRQ. На OC2r с динамическим размещением устройств это не заведётся.</p>
-<p><strong>План</strong>: SlipperBoot - FDT-парсер для UART и VirtIO;
-v0.3 или v0.4 - передача FDT в ядро и отказ от хардкода.</p>
-<h2>Userspace: ELF load + syscalls не реализованы</h2>
-<p>ELF-загрузчик (<code>elf_loading.md</code>) спроектирован, но не реализован.
-Зависит от v0.4 (VirtIO block) и v0.5 (SlipFS).</p>
-<h2>Shell: read_line() всегда возвращает None</h2>
-<p><code>shell/slip.rs</code> - баг: <code>INPUT_LEN</code> сбрасывается в 0 до того, как строка
-обработана, из-за чего <code>read_line()</code> всегда возвращает <code>None</code>, и команды
-не выполняются.</p>
-<p><strong>План</strong>: исправить в SlipperBoot.</p>
-<h2>Sv39: map_page() не аллоцирует page tables</h2>
-<p><code>mm/map.rs</code> - <code>map_page()</code> проверяет <code>pte.is_valid()</code> но при отсутствии
-таблицы просто возвращается, а не выделяет новую страницу для page table.</p>
-<p><strong>План</strong>: v0.3, вместе с реальным переключением контекста.</p></main>
+<p>Актуальные проблемы и недоделки в текущем коде.</p>
+<h2>OnyxKernel</h2>
+<table><thead><tr><th>Проблема</th><th>Файл</th><th>Статус</th></tr></thead><tbody>
+<tr><td>FAT32 read - lookup/read заглушены</td><td><code>`kernel/src/fs/fat32/`</code></td><td>TODO (см. ниже)</td></tr>
+<tr><td>USB xHCI - только probe, нет URB transfer</td><td><code>`kernel/src/drivers/usb/`</code></td><td>TODO</td></tr>
+<tr><td><code>`truncate/ftruncate`</code> только до нуля</td><td><code>`kernel/src/fs/vfs/truncate.rs`</code></td><td>✅ FIXED (v0.5) - <code>`truncate_to_length(ino, length)`</code> поддерживает zero/shrink/extend</td></tr>
+<tr><td>symlink/readlink не реализованы</td><td><code>`kernel/src/fs/onyxfs/`</code></td><td>✅ FIXED (v0.5) - symlink.rs + readlink syscall работают</td></tr>
+<tr><td><code>`chmod/fchmod`</code> - заглушки</td><td><code>`kernel/src/syscall/fs_sys3/`</code></td><td>✅ FIXED (v0.5) - set_mode() в OnyxFS сохраняет mode в inode</td></tr>
+<tr><td><code>`chown/fchown`</code></td><td><code>`kernel/src/syscall/fs_sys3/`</code></td><td>✅ FIXED (v0.5) - set_uid_gid() сохраняет uid/gid в inode</td></tr>
+<tr><td><code>`getdents64`</code> без батчинга</td><td><code>`kernel/src/syscall/fs_sys3/`</code></td><td>TODO</td></tr>
+<tr><td>fork без передачи argv/envp</td><td><code>`kernel/src/syscall/fs_sys3/extra.rs`</code></td><td>TODO</td></tr>
+<tr><td>UDP/DHCP/DNS отсутствуют</td><td><code>`kernel/src/net/`</code></td><td>TODO</td></tr>
+<tr><td>Нет unit-тестов</td><td>-</td><td>TODO</td></tr>
+<tr><td>32-bit порт (~50%)</td><td><code>`arch/bits.rs`</code>, <code>`boot_32.rs`</code></td><td>WIP</td></tr>
+</tbody></table>
+<h2>OnyxCompiller</h2>
+<table><thead><tr><th>Проблема</th><th>Статус</th></tr></thead><tbody>
+<tr><td>Самокомпиляция</td><td>✅ DONE (stage-1, <code>`make selfhost`</code> собирает onyxcc_self.onx)</td></tr>
+<tr><td>Multi-file compilation (N <code>`.c`</code> файлов в один <code>`.onx`</code>)</td><td>✅ DONE (см. main.c)</td></tr>
+<tr><td>External library linking (.a архивы + .o объектники с релокациями)</td><td>TODO (см. onyx-ld roadmap)</td></tr>
+<tr><td>Глобальные инициализаторы массивов/строк</td><td>✅ DONE</td></tr>
+<tr><td>C++ фронтенд не написан</td><td>TODO</td></tr>
+<tr><td>Нет автоматического прогона тестов</td><td>✅ DONE (<code>`make test-runner`</code>)</td></tr>
+</tbody></table>
+<h2>libonyxc</h2>
+<table><thead><tr><th>Проблема</th><th>Статус</th></tr></thead><tbody>
+<tr><td>Нет <code>`FILE*`</code> buffered I/O</td><td>✅ FIXED (v0.5)</td></tr>
+<tr><td>Нет <code>`sprintf`</code>/<code>`snprintf`</code>/<code>`sscanf`</code></td><td>✅ FIXED (v0.5)</td></tr>
+<tr><td>Нет <code>`errno`</code>/<code>`strerror`</code>/<code>`perror`</code></td><td>✅ FIXED (v0.5)</td></tr>
+<tr><td>Нет <code>`time.h`</code> (time/localtime/strftime/clock_gettime/nanosleep)</td><td>✅ FIXED (v0.5)</td></tr>
+<tr><td>Нет <code>`signal.h`</code> (sigset ops, struct sigaction)</td><td>✅ FIXED (v0.5)</td></tr>
+<tr><td>Мало stdlib (qsort/bsearch/strtoul/strtoll/strtod/atexit)</td><td>✅ FIXED (v0.5)</td></tr>
+<tr><td>Мало string (strstr/strrchr/strtok_r/strcasecmp/strpbrk/memchr)</td><td>✅ FIXED (v0.5)</td></tr>
+</tbody></table>
+<h2>OnyxOS</h2>
+<table><thead><tr><th>Проблема</th><th>Статус</th></tr></thead><tbody>
+<tr><td>Makefile - скелет, не все цели работают</td><td>WIP</td></tr>
+<tr><td>Нет CI/CD (GitHub Actions)</td><td>TODO</td></tr>
+</tbody></table>
+<h2>Решённые проблемы (исторические)</h2>
+<p>Все проблемы из предыдущей версии (<code>known_issues.md</code> SlipperOS) исправлены:</p>
+<ul>
+<li>✅ Контекст свитч - работает (SMP, per-CPU run queues)</li>
+<li>✅ Page allocator - bitmap + slab, есть contiguous</li>
+<li>✅ VirtIO Legacy - не используется, только v2</li>
+<li>✅ Trap handler - S-mode, stvec</li>
+<li>✅ UART/VirtIO адреса - FDT-driven</li>
+<li>✅ ELF загрузчик - onx::load работает</li>
+<li>✅ Shell - все 20 команд работают</li>
+<li>✅ Sv39 map_page - аллоцирует page tables</li>
+</ul></main>
 </body>
 </html>

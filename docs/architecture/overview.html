@@ -46,56 +46,84 @@ main li{margin-bottom:4px}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0d1117}::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}</style>
 </head>
 <body>
-<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="overview.html" class="active">&nbsp;&nbsp;Overview</a></li><li><a href="privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="../dev/adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="../dev/bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="../dev/building.html">&nbsp;&nbsp;Building</a></li><li><a href="../dev/contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="../dev/debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="../dev/getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="../dev/known_issues.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="../dev/language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="../dev/roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="../dev/wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_slipperos.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
+<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="design_decisions.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="overview.html" class="active">&nbsp;&nbsp;Overview</a></li><li><a href="privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="../dev/adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="../dev/bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="../dev/building.html">&nbsp;&nbsp;Building</a></li><li><a href="../dev/contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="../dev/debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="../dev/getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="../dev/known_issues.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="../dev/language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="../dev/roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="../dev/wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_slipperos.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
   <a href="overview.html" class="active">RU</a>
   <a href="overview.en.html">EN</a>
 </div></nav>
-<main><div class="breadcrumb"><a href="../">Docs</a> <span> / Architecture / Overview</span></div><h1>Архитектура Slipper</h1>
-<p>Проект состоит из трёх независимых компонентов, каждый в своей директории:</p>
+<main><div class="breadcrumb"><a href="../">Docs</a> <span> / Architecture / Overview</span></div><h1>Архитектура OnyxOS</h1>
+<p>Проект состоит из пяти компонентов:</p>
 <pre><code>OpenSBI (M-mode)
     ↓
-SlipperBoot (S-mode, C++)
+OnyxBoot (S-mode, C++)
     ↓
-SlipperKernel (S-mode, Rust - no_std)
+OnyxKernel (S-mode, Rust - no_std)
     ↓
-SlipperOS (userspace - будущее)
+init → login → OnyxShell (ring 1, Rust)
+    ↓
+OnyxCompiller (ring 2, C - userspace)
 </code></pre>
 <hr />
-<h2>SlipperBoot</h2>
-<p>Загрузчик на C++ (ни одного <code>.S</code> файла). Работает в S-mode, получает управление после OpenSBI.</p>
+<h2>OnyxBoot</h2>
+<p>Загрузчик на C++20 (ни одного <code>.S</code> файла). Работает в S-mode, получает управление после OpenSBI.</p>
 <p><strong>Ответственность:</strong></p>
 <ul>
 <li>UART (NS16550A) - вывод сообщений</li>
-<li>FDT-парсер - определение памяти, устройств</li>
-<li>VirtIO block - чтение <code>kernel.elf</code> с диска</li>
+<li>FDT-парсер - определение памяти, устройств (UART, VirtIO, SDHCI)</li>
+<li>VirtIO block / SDHCI - чтение <code>kernel.elf</code> с диска</li>
+<li>FAT32 + ext4 read, GPT + MBR</li>
 <li>ELF64-парсер - загрузка сегментов в память</li>
+<li>Boot menu с timeout и выбором устройства</li>
 <li>Передача управления ядру (a0=hart_id, a1=fdt)</li>
 </ul>
-<p><strong>Статус:</strong> v0.4 - UART, VirtIO, SDHCI, FAT32/EXT4, ELF, FDT, boot menu</p>
+<p><strong>Статус:</strong> v0.4 - стабильный, протестирован в QEMU</p>
 <hr />
-<h2>SlipperKernel</h2>
-<p>Монолитное ядро на чистом Rust (<code>no_std</code>, <code>no_main</code>, panic=abort).
-Единственная зависимость - <code>riscv = &quot;0.16.1&quot;</code>.</p>
-<p><strong>Ответственность:</strong></p>
+<h2>OnyxKernel</h2>
+<p>Монолитное ядро на Rust (<code>no_std</code>, <code>no_main</code>). RISC-V 64-bit (rv64gc) с 32-bit портом в разработке.</p>
+<p><strong>Ключевые подсистемы:</strong></p>
 <ul>
-<li><code>kernel/main.rs</code> - точка входа <code>kernel_main</code>, инициализация</li>
-<li><code>kernel/drivers/</code> - UART, CLINT, PLIC, VirtIO</li>
-<li><code>kernel/mm/</code> - bump allocator, page allocator, Sv39</li>
-<li><code>kernel/proc/</code> - задачи, round-robin, контекст</li>
-<li><code>kernel/fs/</code> - SlipFS (блочная ФС)</li>
-<li><code>kernel/shell/</code> - slip shell (UART CLI)</li>
+<li><code>kernel/src/mm/</code> - PMM (bitmap+slab), VMM (Sv39), heap allocator</li>
+<li><code>kernel/src/proc/</code> - процессы, SMP scheduler, сигналы, onx загрузчик</li>
+<li><code>kernel/src/fs/</code> - OnyxFS v2, VFS, FAT32, procfs, ipcfs, devfs</li>
+<li><code>kernel/src/drivers/</code> - UART, VirtIO, SDHCI, PCI, PLIC, GMAC, USB, display</li>
+<li><code>kernel/src/syscall/</code> - 77 syscalls (POSIX-flavored)</li>
+<li><code>kernel/src/net/</code> - Ethernet, IP, TCP</li>
+<li><code>kernel/src/ipc/</code> - IPC каналы с ring buffer</li>
 </ul>
-<p><strong>Статус:</strong> v0.1 (активно)</p>
+<p><strong>Статус:</strong> активная разработка, ~30K+ строк</p>
 <hr />
-<h2>SlipperOS</h2>
-<p>Системный слой. Пока содержит документацию и билд-скрипты.
-В будущем - userspace-программы, init, библиотеки.</p>
+<h2>OnyxShell</h2>
+<p>Пользовательский shell (<code>/bin/osh</code>). Работает в ring 1 (root space).</p>
+<p><strong>Возможности:</strong></p>
+<ul>
+<li>20 built-in команд: ls, cat, cp, mv, rm, mkdir, touch, stat, cd, pwd, echo, whoami, uname, date, clear, help, exit, exec, run, ver</li>
+<li>Tab completion, arrow-key history</li>
+<li>History expansion (!! / !N / !-N)</li>
+<li>Pipe (|) и redirect (&gt;, &lt;)</li>
+<li>Wildcard globbing (*, ?, [...])</li>
+</ul>
+<p><strong>Статус:</strong> v0.3, активно</p>
+<hr />
+<h2>OnyxCompiller</h2>
+<p>C → RISC-V 64-bit → <code>.onx</code> компилятор. Single-pass, вдохновлён tcc.</p>
+<p><strong>Возможности:</strong></p>
+<ul>
+<li>C99 парсер (функции, struct/union/enum, указатели, массивы)</li>
+<li>Препроцессор (#include, #define, #if/#ifdef...)</li>
+<li>RV64IMA codegen</li>
+<li>libonyxc (printf, malloc, string)</li>
+<li>Двойная сборка: нативный Linux + <code>.onx</code> для OnyxOS</li>
+</ul>
+<p><strong>Статус:</strong> MVP, самокомпиляция в процессе</p>
+<hr />
+<h2>OnyxOS</h2>
+<p>Системный слой: документация, скрипты сборки, интеграция.</p>
 <p><strong>Ответственность:</strong></p>
 <ul>
 <li><code>docs/</code> - вся документация проекта</li>
-<li><code>build-docs.sh</code> - генератор HTML-документации</li>
-<li>В будущем: userspace (picolibc, C-программы)</li>
+<li><code>scripts/</code> - bootstrap, build-all, run-qemu</li>
+<li><code>Onyx.vent</code> - dependency management через Vent</li>
+<li>В будущем: полноценный userspace</li>
 </ul>
-<p><strong>Статус:</strong> формируется</p></main>
+<p><strong>Статус:</strong> meta-репозиторий</p></main>
 </body>
 </html>

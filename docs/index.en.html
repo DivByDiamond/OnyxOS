@@ -46,53 +46,90 @@ main li{margin-bottom:4px}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0d1117}::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}</style>
 </head>
 <body>
-<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="." class="active">Home</a></li><div class="dir">Architecture</div><li><a href="architecture/boot_sequence.en.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="architecture/memory_map.en.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="architecture/overview.en.html">&nbsp;&nbsp;Overview</a></li><li><a href="architecture/privilege_modes.en.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="dev/adding_driver.en.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="dev/bootloader.en.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="dev/building.en.html">&nbsp;&nbsp;Building</a></li><li><a href="dev/contributing.en.html">&nbsp;&nbsp;Contributing</a></li><li><a href="dev/debugging.en.html">&nbsp;&nbsp;Debugging</a></li><li><a href="dev/getting_started.en.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="dev/known_issues.en.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="dev/language_policy.en.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="dev/roadmap.en.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="dev/wayland.en.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="hardware/clint.en.html">&nbsp;&nbsp;Clint</a></li><li><a href="hardware/plic.en.html">&nbsp;&nbsp;Plic</a></li><li><a href="hardware/uart.en.html">&nbsp;&nbsp;Uart</a></li><li><a href="hardware/virtio/block.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="hardware/virtio/net.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="hardware/virtio/overview.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="internals/coding_style.en.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="internals/error_handling.en.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="internals/panic_policy.en.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="kernel/interrupts.en.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="kernel/mm/bump_allocator.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="kernel/mm/page_allocator.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="kernel/mm/sv39.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="kernel/proc/context_switch.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="kernel/proc/elf_loading.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="kernel/proc/scheduler.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="kernel/proc/tasks.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="kernel/proc/userspace.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="lore/seal.en.html">&nbsp;&nbsp;Seal</a></li><li><a href="lore/why_slipperos.en.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="shell/commands.en.html">&nbsp;&nbsp;Commands</a></li><li><a href="shell/internals.en.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
+<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="." class="active">Home</a></li><div class="dir">Architecture</div><li><a href="architecture/boot_sequence.en.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="architecture/design_decisions.en.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="architecture/memory_map.en.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="architecture/overview.en.html">&nbsp;&nbsp;Overview</a></li><li><a href="architecture/privilege_modes.en.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="dev/adding_driver.en.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="dev/bootloader.en.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="dev/building.en.html">&nbsp;&nbsp;Building</a></li><li><a href="dev/contributing.en.html">&nbsp;&nbsp;Contributing</a></li><li><a href="dev/debugging.en.html">&nbsp;&nbsp;Debugging</a></li><li><a href="dev/getting_started.en.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="dev/known_issues.en.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="dev/language_policy.en.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="dev/roadmap.en.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="dev/wayland.en.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="hardware/clint.en.html">&nbsp;&nbsp;Clint</a></li><li><a href="hardware/plic.en.html">&nbsp;&nbsp;Plic</a></li><li><a href="hardware/uart.en.html">&nbsp;&nbsp;Uart</a></li><li><a href="hardware/virtio/block.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="hardware/virtio/net.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="hardware/virtio/overview.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="internals/coding_style.en.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="internals/error_handling.en.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="internals/panic_policy.en.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="kernel/interrupts.en.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="kernel/mm/bump_allocator.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="kernel/mm/page_allocator.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="kernel/mm/sv39.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="kernel/proc/context_switch.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="kernel/proc/elf_loading.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="kernel/proc/scheduler.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="kernel/proc/tasks.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="kernel/proc/userspace.en.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="lore/seal.en.html">&nbsp;&nbsp;Seal</a></li><li><a href="lore/why_slipperos.en.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="shell/commands.en.html">&nbsp;&nbsp;Commands</a></li><li><a href="shell/internals.en.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
   <a href="index.html">RU</a>
   <a href="index.en.html" class="active">EN</a>
 </div></nav>
-<main><h1>SlipperOS</h1>
-<p>RISC-V operating system (OC2r / Milk-V Duo S). Three components:</p>
-<pre><code>Slipper/
-├── SlipperBoot/     - bootloader (C++)
-├── SlipperKernel/   - kernel (Rust, no_std)
-└── SlipperOS/       - system layer (docs, scripts, userspace)
-</code></pre>
-<hr />
+<main><h1>OnyxOS</h1>
+<p align="center">
+  <img src="https://img.shields.io/badge/arch-RISC--V%2064--bit%20%7C%20RV32-green" alt="RISC-V">
+  <img src="https://img.shields.io/badge/kernel-Rust-orange" alt="Rust">
+  <img src="https://img.shields.io/badge/boot-C++20-blue" alt="C++20">
+  <img src="https://img.shields.io/badge/shell-Rust-orange" alt="Shell">
+  <img src="https://img.shields.io/badge/compiler-C99-yellow" alt="Compiler">
+  <img src="https://img.shields.io/badge/license-GPL--3.0-red" alt="GPL-3.0">
+</p>
+<p>A RISC-V operating system for OC2r / Milk-V Duo S. Monolithic kernel in Rust,
+bootloader in C++, userspace shell in Rust, and a self-hosted C compiler.</p>
 <h2>Components</h2>
-<table><thead><tr><th>Component</th><th>Lang</th><th>Role</th><th>Status</th></tr></thead><tbody>
-<tr><td><strong>*<em>*SlipperBoot*</em>*</strong></td><td>C++</td><td>UART, FDT, VirtIO, SDHCI, FAT32/EXT4, ELF, boot menu</td><td>v0.4</td></tr>
-<tr><td><strong>*<em>*SlipperKernel*</em>*</strong></td><td>Rust</td><td>Monolithic kernel: MM, processes, drivers, shell</td><td>In progress (v0.1)</td></tr>
-<tr><td><strong>*<em>*SlipperOS*</em>*</strong></td><td>-</td><td>Documentation, build scripts, future userspace</td><td>Forming</td></tr>
+<table><thead><tr><th>Component</th><th>Language</th><th>Description</th><th>Status</th></tr></thead><tbody>
+<tr><td><strong>*<em>*OnyxBoot*</em>*</strong></td><td>C++20</td><td>Bootloader: FDT, VirtIO, SDHCI, FAT32/ext4, GPT, boot menu</td><td>v0.4</td></tr>
+<tr><td><strong>*<em>*OnyxKernel*</em>*</strong></td><td>Rust</td><td>Monolithic kernel: MM (Sv39), SMP, VFS, TCP/IP, drivers, 77 syscalls</td><td>active</td></tr>
+<tr><td><strong>*<em>*OnyxShell*</em>*</strong></td><td>Rust</td><td>Shell: 20 commands, tabs, history, pipes/redirects, globbing</td><td>v0.3</td></tr>
+<tr><td><strong>*<em>*OnyxCompiller*</em>*</strong></td><td>C99</td><td>C → RV64 → <code>`.onx`</code>, single-pass, self-hosting WIP</td><td>MVP</td></tr>
+<tr><td><strong>*<em>*OnyxOS*</em>*</strong></td><td>-</td><td>Documentation, scripts, integration</td><td>meta</td></tr>
 </tbody></table>
-<hr />
-<h2>Build</h2>
-<h3>SlipperKernel</h3>
-<pre><code class="language-bash">cd SlipperKernel
-cargo build --release
+<h2>Quick Start</h2>
+<pre><code class="language-bash"># 1. Install system deps
+sudo pacman -S cmake base-devel curl libarchive    # Arch
+sudo apt install cmake build-essential libcurl4-openssl-dev libarchive-dev  # Debian
 
-# Run in QEMU
-qemu-system-riscv64 \
-  -machine virt -m 128M -nographic \
-  -bios default \
-  -kernel target/riscv64gc-unknown-none-elf/release/slipperos
+# 2. Fetch all Onyx repositories via Vent
+./.vent/vent -j 4 Onyx.vent
+
+# 3. Build everything
+bash scripts/build-all.sh
+
+# 4. Run in QEMU
+bash scripts/run-qemu.sh
 </code></pre>
-<h3>SlipperBoot</h3>
-<pre><code class="language-bash">cd SlipperBoot
-make
+<h2>Repository Structure</h2>
+<pre><code>OnyxOS/
+├── Onyx.vent              # Vent dependency file
+├── .vent/
+│   ├── vent               # Vent binary
+│   └── repos/             # Cloned repositories (after running Vent)
+├── scripts/
+│   ├── bootstrap.sh       # Install Vent + clone all repos
+│   ├── build-all.sh       # Build all components
+│   └── run-qemu.sh        # Launch QEMU (OnyxBoot + OnyxKernel)
+├── docs/                  # Documentation
+│   ├── architecture/      # Boot, memory, privilege modes
+│   ├── dev/               # Building, contributing, roadmap
+│   ├── hardware/          # UART, PLIC, CLINT, VirtIO
+│   ├── internals/         # Coding style, error handling
+│   ├── kernel/            # Processes, MM, interrupts
+│   ├── shell/             # Commands, internals
+│   └── lore/              # Project lore
+├── Makefile               # Skeleton (WIP)
+└── README.md
 </code></pre>
-<hr />
+<h2>Building Individual Components</h2>
+<h3>OnyxKernel</h3>
+<pre><code class="language-bash">cd .vent/repos/OnyxKernel
+cargo build --release
+</code></pre>
+<h3>OnyxBoot</h3>
+<pre><code class="language-bash">cd .vent/repos/OnyxBoot
+make -j$(nproc)
+</code></pre>
+<h3>OnyxShell</h3>
+<pre><code class="language-bash">cd .vent/repos/OnyxShell
+bash build.sh
+</code></pre>
+<h3>OnyxCompiller</h3>
+<pre><code class="language-bash">cd .vent/repos/OnyxCompiller
+make host          # native Linux binary
+make onyx          # cross-compile to .onx
+</code></pre>
 <h2>Roadmap</h2>
-<table><thead><tr><th>Version</th><th>Component</th><th>Milestone</th></tr></thead><tbody>
-<tr><td>v0.1</td><td>SlipperKernel</td><td>Kernel skeleton: UART, MM, drivers, shell - <strong>*<em>*done*</em>*</strong></td></tr>
-<tr><td>-</td><td>SlipperBoot</td><td>C++ bootloader: FDT, VirtIO, ELF</td></tr>
-<tr><td>v0.3</td><td>SlipperKernel</td><td>Traps, tasks, round-robin, syscall</td></tr>
-<tr><td>v0.4</td><td>SlipperKernel</td><td>VirtIO block v2 MMIO</td></tr>
-<tr><td>v0.5</td><td>Both</td><td>SlipFS + first userspace</td></tr>
-<tr><td>v0.6</td><td>SlipperOS</td><td>CLI tools, init process</td></tr>
-<tr><td>v1.0</td><td>All</td><td>Userspace shell, picolibc, modules</td></tr>
+<table><thead><tr><th>Area</th><th>What's next</th></tr></thead><tbody>
+<tr><td><strong>*<em>*OnyxKernel*</em>*</strong></td><td>FAT32 read, USB URB, symlink, chmod, 32-bit port, unit tests</td></tr>
+<tr><td><strong>*<em>*OnyxCompiller*</em>*</strong></td><td>Self-hosting, multi-file linking, C++</td></tr>
+<tr><td><strong>*<em>*CI/CD*</em>*</strong></td><td>GitHub Actions, automated QEMU tests</td></tr>
+<tr><td><strong>*<em>*Hardware*</em>*</strong></td><td>Verification on Milk-V Duo S</td></tr>
 </tbody></table>
-<p>Details - <a href="dev/roadmap.md">docs/dev/roadmap.md</a></p>
-<hr />
+<p>See <a href="dev/roadmap.md">docs/dev/roadmap.md</a> and <a href="https://github.com/loki5512344/OnyxKernel/blob/main/todo.md">OnyxKernel todo.md</a>.</p>
 <h2>License</h2>
 <p>GPL-3.0-or-later</p></main>
 </body>

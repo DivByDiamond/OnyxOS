@@ -46,67 +46,105 @@ main li{margin-bottom:4px}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0d1117}::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}</style>
 </head>
 <body>
-<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="../architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="../architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="../architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="../architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="building.html">&nbsp;&nbsp;Building</a></li><li><a href="contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="known_issues.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="roadmap.html" class="active">&nbsp;&nbsp;Roadmap</a></li><li><a href="wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_slipperos.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
+<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="../architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="../architecture/design_decisions.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="../architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="../architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="../architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="building.html">&nbsp;&nbsp;Building</a></li><li><a href="contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="known_issues.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="roadmap.html" class="active">&nbsp;&nbsp;Roadmap</a></li><li><a href="wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_slipperos.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
   <a href="roadmap.html" class="active">RU</a>
   <a href="roadmap.en.html">EN</a>
 </div></nav>
 <main><div class="breadcrumb"><a href="../">Docs</a> <span> / Dev / Roadmap</span></div><h1>Roadmap</h1>
-<h2>v0.1 - SlipperKernel: костяк ✅</h2>
+<h2>OnyxOS Ecosystem Roadmap</h2>
+<h3>v0.4 - текущий релиз ✅</h3>
+<p><strong>OnyxBoot:</strong></p>
 <ul>
-<li>[x] UART консоль (NS16550A)</li>
-<li>[x] CLINT таймер</li>
-<li>[x] PLIC прерывания</li>
-<li>[x] Bump + Page allocator</li>
-<li>[x] Sv39 identity map</li>
-<li>[x] VirtIO block (v2 MMIO, базовая инициализация)</li>
-<li>[x] FDT-парсер (memory, UART, VirtIO)</li>
-<li>[x] Slip shell (7 команд)</li>
-<li>[x] Panic handler</li>
-<li>[x] Разделение на SlipperBoot / SlipperKernel / SlipperOS</li>
+<li>[x] UART, FDT, VirtIO v2 MMIO, SDHCI</li>
+<li>[x] FAT32 + ext4 read, GPT + MBR</li>
+<li>[x] Boot menu с timeout</li>
+<li>[x] ELF64 загрузчик</li>
+<li>[x] QEMU интеграционные тесты</li>
 </ul>
-<h2>SlipperBoot: загрузчик (v0.4)</h2>
+<p><strong>OnyxKernel (core):</strong></p>
 <ul>
-<li>[x] Точка входа _start (naked C++, inline asm)</li>
-<li>[x] UART драйвер (NS16550A, адрес из FDT)</li>
-<li>[x] VirtIO block v2 MMIO (probe, read_sector)</li>
-<li>[x] SDHCI driver (probe, read_sector)</li>
-<li>[x] FAT32 + EXT4 reader</li>
-<li>[x] ELF64 парсер (valid, check_safe, load_all)</li>
-<li>[x] FDT парсер (memory, UART, VirtIO, SDHCI)</li>
-<li>[x] Boot menu (выбор устройства)</li>
-<li>[x] Загрузка <code>kernel.elf</code> с диска и запуск</li>
+<li>[x] UART, CLINT, PLIC, таймер</li>
+<li>[x] PMM (bitmap+slab) + VMM (Sv39)</li>
+<li>[x] Heap allocator</li>
+<li>[x] Процессы: динамический список, spawn, exec, wait</li>
+<li>[x] Scheduler: SMP, per-CPU run queues, load balancing</li>
+<li>[x] 77 syscalls (POSIX-flavored)</li>
+<li>[x] OnyxFS v2 (журналирование, COW snapshots, indirect blocks)</li>
+<li>[x] OnyxExec v2 загрузчик (RLE compression, ring1 flag)</li>
+<li>[x] VirtIO block/net, GMAC</li>
+<li>[x] TCP/IP (Ethernet, IP, TCP)</li>
+<li>[x] IPC каналы (/ipc/*)</li>
+<li>[x] Framebuffer + PSF1/PSF2 шрифты</li>
+<li>[x] /proc filesystem</li>
+<li>[x] Аутентификация (/etc/passwd + /etc/shadow)</li>
+<li>[x] INIT + LOGIN + userspace binaries (9 штук)</li>
+<li>[x] FDT-driven адреса устройств</li>
 </ul>
-<h2>v0.3 - SlipperKernel: прерывания и задачи</h2>
+<p><strong>OnyxShell:</strong></p>
 <ul>
-<li>[ ] Trap handler (S-mode, <code>stvec</code>)</li>
-<li>[ ] Реальное переключение контекста в <code>sched_yield()</code></li>
-<li>[ ] Round-robin scheduler по CLINT</li>
-<li>[ ] syscall: ecall handler</li>
+<li>[x] 20 built-in команд</li>
+<li>[x] Tab completion + arrow-key history</li>
+<li>[x] History expansion (!! / !N / !-N)</li>
+<li>[x] Pipe (|) и redirect (&gt;, &lt;)</li>
+<li>[x] Wildcard globbing (*, ?, [...])</li>
+<li>[x] QEMU integration test</li>
 </ul>
-<h2>v0.4 - SlipperKernel: VirtIO block v2 MMIO</h2>
+<p><strong>OnyxCompiller:</strong></p>
 <ul>
-<li>[ ] Descriptor-based page allocator (contiguous)</li>
-<li>[ ] Чтение/запись секторов (полноценный драйвер)</li>
-<li>[ ] Прерывания по завершению I/O</li>
+<li>[x] C99 lexer, preprocessor, parser</li>
+<li>[x] RV64IMA codegen</li>
+<li>[x] .onx v1 output</li>
+<li>[x] libonyxc (printf, malloc, string, syscall wrappers)</li>
+<li>[x] 58 тестовых программ</li>
 </ul>
-<h2>v0.5 - SlipFS + userspace</h2>
+<p><strong>OnyxOS:</strong></p>
 <ul>
-<li>[ ] SlipFS (блочная ФС на Rust) - в SlipperKernel</li>
-<li>[ ] ELF загрузчик в ядре</li>
-<li>[ ] Первый userspace процесс в SlipperOS</li>
+<li>[x] Vent dependency management</li>
+<li>[x] Bootstrap/build/run скрипты</li>
+<li>[x] Полная документация</li>
 </ul>
-<h2>v0.6 - SlipperOS: стабильная система</h2>
+<h3>v0.5 - стабилизация ядра</h3>
+<p><strong>OnyxKernel:</strong></p>
 <ul>
-<li>[ ] CLI тулы (ls, cat, echo, ps) - в SlipperOS</li>
-<li>[ ] Init процесс</li>
-<li>[ ] Работает в OC2r</li>
-<li>[ ] Полная документация</li>
+<li>[ ] FAT32 read (lookup/read)</li>
+<li>[ ] USB xHCI URB transfer</li>
+<li>[ ] symlink/readlink</li>
+<li>[ ] chmod/fchmod</li>
+<li>[ ] truncate/ftruncate(&gt;0)</li>
+<li>[ ] getdents64 batched</li>
+<li>[ ] fork c argv/envp</li>
+<li>[ ] UDP/DHCP/DNS</li>
 </ul>
-<h2>v1.0 - Релиз</h2>
+<p><strong>OnyxCompiller:</strong></p>
 <ul>
-<li>[ ] Slip shell как userspace программа (SlipperOS)</li>
-<li>[ ] Порт picolibc для C-софта (SlipperOS)</li>
-<li>[ ] Загрузка модулей через SlipperBoot</li>
+<li>[ ] <strong>Самокомпиляция</strong> (P0)</li>
+<li>[ ] Multi-file linking</li>
+<li>[ ] Глобальные инициализаторы массивов/строк</li>
+<li>[ ] Автоматический test runner</li>
+</ul>
+<p><strong>Quality:</strong></p>
+<ul>
+<li>[ ] GitHub Actions CI</li>
+<li>[ ] Unit-тесты ядра</li>
+<li>[ ] Full-stack QEMU test suite</li>
+</ul>
+<h3>v0.6 - расширение</h3>
+<p><strong>OnyxKernel:</strong></p>
+<ul>
+<li>[ ] 32-bit порт (RV32)</li>
+<li>[ ] Многопользовательский режим</li>
+<li>[ ] Динамические модули</li>
+</ul>
+<p><strong>OnyxCompiller:</strong></p>
+<ul>
+<li>[ ] C++ фронтенд (начало)</li>
+<li>[ ] Оптимизации (const propagation, dead code elimination)</li>
+</ul>
+<h3>v1.0 - стабильный релиз</h3>
+<ul>
+<li>[ ] Проверка на реальном Milk-V Duo S</li>
+<li>[ ] Документация на двух языках</li>
+<li>[ ] Self-hosting: OnyxOS компилирует OnyxOS</li>
 </ul></main>
 </body>
 </html>
