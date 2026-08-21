@@ -67,6 +67,18 @@ cp onyx-ld "$BUILD_DIR/"
 cd "$OLDPWD"
 echo "[+] OnyxCompiller done"
 
+# 5. Create FAT32 boot disk image (kernel.elf at root) for OnyxBoot.
+#    Requires: parted, mkfs.fat, mcopy (Arch: pacman -S parted dosfstools mtools)
+#    Safe to skip if these aren't installed — run-qemu.sh 'dev' mode works
+#    without a disk image, only 'boot' mode needs it.
+echo "[*] Creating boot disk image (for OnyxBoot chain-load)..."
+if bash scripts/mk-boot-disk.sh 2>&1; then
+    echo "[+] Boot disk ready"
+else
+    echo "[!] Boot disk creation skipped — 'bash scripts/run-qemu.sh boot' will fail"
+    echo "    Use 'bash scripts/run-qemu.sh dev' to skip OnyxBoot (faster dev mode)"
+fi
+
 echo ""
 echo "=== All builds complete ==="
 echo "    Output: $BUILD_DIR/"
