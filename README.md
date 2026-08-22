@@ -1,5 +1,7 @@
 # OnyxOS
 
+[![Build & Test](https://github.com/DivByDiamond/OnyxOS/actions/workflows/build.yml/badge.svg)](https://github.com/DivByDiamond/OnyxOS/actions/workflows/build.yml) [![Release](https://github.com/DivByDiamond/OnyxOS/actions/workflows/release.yml/badge.svg)](https://github.com/DivByDiamond/OnyxOS/actions/workflows/release.yml)
+
 <p align="center">
   <img src="https://img.shields.io/badge/arch-RISC--V%2064--bit%20%7C%20RV32-green" alt="RISC-V">
   <img src="https://img.shields.io/badge/kernel-Rust-orange" alt="Rust">
