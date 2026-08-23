@@ -188,10 +188,20 @@ parted -s "$DISK_IMG" mkpart primary fat32 "${PART1_START}s" "${PART1_END}s"
 # which is what OnyxBoot's MBR scan expects for the rootfs partition.
 parted -s "$DISK_IMG" mkpart primary ext4 "${PART2_START}s" 100%
 
-# Format + populate FAT32 partition 1 with kernel.elf
+# Format + populate FAT32 partition 1 with kernel.elf.
+# IMPORTANT: we build the FAT filesystem in a standalone temp file sized
+# exactly to the partition (8192 sectors), then dd it into the disk image.
+# Using 'mkfs.fat --offset' without an explicit size makes mkfs.fat assume
+# the FS extends to end-of-image, so later mtools writes can dirty metadata
+# beyond the partition boundary and corrupt partition 2's OnyxFS superblock.
+PART1_SECTORS=$((PART1_END - PART1_START + 1))
+FAT_TMP="$BUILD_DIR/.fat32-p1.img"
 echo "[*] Formatting FAT32 partition 1..."
-mkfs.fat -F 32 "$DISK_IMG" --offset="$PART1_START" >/dev/null
-mcopy -i "$DISK_IMG@@$((PART1_START * 512))" "$KERNEL_ELF" ::kernel.elf
+truncate -s $((PART1_SECTORS * 512)) "$FAT_TMP"
+mkfs.fat -F 32 "$FAT_TMP" >/dev/null
+mcopy -i "$FAT_TMP" "$KERNEL_ELF" ::kernel.elf
+dd if="$FAT_TMP" of="$DISK_IMG" bs=512 seek="$PART1_START" conv=notrunc status=none
+rm -f "$FAT_TMP"
 
 # Write the OnyxFS image into partition 2.
 # We can't use mcopy (OnyxFS isn't a FAT). Instead we dd the pre-built
