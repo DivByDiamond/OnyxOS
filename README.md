@@ -21,8 +21,8 @@
 | **OnyxBoot** | C++20 | Загрузчик: FDT, VirtIO, SDHCI, FAT32/ext4, GPT, boot menu | v0.7 |
 | **OnyxKernel** | Rust | Монолитное ядро: MM (Sv39), SMP, VFS, TCP/IP, OnyxFS v2 (chmod/symlink/truncate-to-N), FAT32 read+write, 85 syscalls | v0.5 |
 | **OnyxShell** | Rust | Шелл: 20 команд, табы, история, пайпы/редиректы, globbing, background jobs | v0.3 |
-| **OnyxCompiller** | C99 | C → RV64 → `.onx`, single-pass, multi-file compilation, self-hosting stage-1, onyx-ld linker (.o + .a) | v0.5 |
-| **libonyxc** | C99 | libc: FILE* buffered I/O, sprintf/snprintf/sscanf, errno/strerror/perror, time/signal/stdlib/string/ctype | v0.5 |
+| **OnyxCompiller** | C99 | C → RV64 → `.onx`, автолинковка libonyxc, function-like макросы (#/##/____VA_ARGS____), FP-кодген, onx-run эмулятор | v0.6 |
+| **libonyxc** | C99 | libc: stdio/stdlib/string/ctype/time + termios (raw mode), math (soft-float), assert, buffered I/O, printf %f | v0.6 |
 | **OnyxOS** | — | Документация, скрипты, интеграция | meta |
 
 ## Быстрый старт
@@ -172,6 +172,20 @@ GitHub сам отдаёт ассет последнего релиза по т�
 
 На каждый пуш в `main` workflow дополнительно публикует превью-образ как
 artifact (без создания Release).
+
+## Userspace-софт (v0.6)
+
+`software/` — программы, собираемые одним вызовом `onyxcc -o X.onx X.c`:
+
+| Программа | Стиль | Что демонстрирует |
+|-----------|-------|-------------------|
+| **oed** | nano/vim | Полноэкранный редактор: raw mode (termios), ANSI-курсор, стрелки/Home/End/PgUp/PgDn, редактирование, Ctrl+S/Q/G, статус-бар, буфер 2048 строк |
+| **osysmon** | btop/htop | Монитор: box-drawing, цветные load-бары, uname/uptime/PID/CWD, дисковые/сетевые панели, обновление по интервалу |
+
+Обе работают поверх нового ANSI/VT100-терминала ядра (fb_term/ansi.rs):
+цвета SGR 30-37/90-97, позиционирование CSI H, erase J/K, scroll-regions,
+per-process termios через TCGETS/TCSETS, TIOCGWINSZ возвращает реальную
+сетку фреймбуфера.
 
 ## План развития
 
