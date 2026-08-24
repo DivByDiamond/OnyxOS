@@ -1,0 +1,8 @@
+# OnyxOS — Dependency Resolution File
+# Usage: .vent/vent -j 4 Onyx.vent
+# This will clone all Onyx repositories under .vent/repos/
+
+git https://github.com/loki5512344/OnyxKernel     .vent/repos/OnyxKernel
+git https://github.com/loki5512344/OnyxBoot       .vent/repos/OnyxBoot
+git https://github.com/loki5512344/OnyxShell       .vent/repos/OnyxShell
+git https://github.com/loki5512344/OnyxCompiller   .vent/repos/OnyxCompiller

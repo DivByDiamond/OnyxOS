@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SlipperOS - Bootloader</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;display:flex;min-height:100vh}
+nav{width:260px;min-width:260px;background:#161b22;padding:16px;overflow-y:auto;border-right:1px solid #30363d;height:100vh;position:sticky;top:0}
+nav h2{font-size:14px;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+nav ul{list-style:none;margin:0;padding:0}
+nav li{margin:0}
+nav a{color:#58a6ff;text-decoration:none;font-size:13px;display:block;padding:3px 8px;border-radius:6px;line-height:1.6}
+nav a:hover{background:#1f2937;color:#f0f6fc}
+nav a.active{background:#1f6feb33;color:#f0f6fc;font-weight:600}
+nav .dir{color:#8b949e;font-size:11px;padding:8px 8px 2px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-top:4px}
+nav .dir:first-child{margin-top:0}
+nav .home{margin-bottom:8px;border-bottom:1px solid #30363d;padding-bottom:6px}
+nav .home a{font-weight:600;font-size:14px}
+nav .home a::before{content:"\2302  ";color:#8b949e}
+.lang-switch{text-align:center;margin:12px 0;padding:8px;border-top:1px solid #30363d;border-bottom:1px solid #30363d}
+.lang-switch a{display:inline-block;padding:4px 12px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;color:#8b949e;border:1px solid #30363d}
+.lang-switch a:hover{background:#1f6feb33;color:#f0f6fc;border-color:#58a6ff}
+.lang-switch a.active{background:#1f6feb33;color:#f0f6fc;border-color:#58a6ff}
+main{flex:1;padding:40px;max-width:960px;line-height:1.7;overflow-y:auto}
+main h1{font-size:32px;border-bottom:1px solid #30363d;padding-bottom:8px;margin-bottom:16px}
+main h2{font-size:24px;margin-top:24px;margin-bottom:8px}
+main h3{font-size:20px;margin-top:20px;margin-bottom:6px}
+main h4{font-size:16px;margin-top:16px;margin-bottom:6px}
+main p,main li{font-size:16px;color:#e6edf3;margin-bottom:8px}
+main a{color:#58a6ff}
+main code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:14px;font-family:"JetBrains Mono","Fira Code",monospace;color:#f0f6fc}
+main pre{background:#161b22;padding:16px;border-radius:8px;overflow-x:auto;margin:16px 0;border:1px solid #30363d}
+main pre code{background:none;padding:0;font-size:13px;line-height:1.5}
+main hr{border:none;border-top:1px solid #30363d;margin:24px 0}
+main blockquote{border-left:4px solid #30363d;padding-left:16px;color:#8b949e;margin:16px 0}
+main table{border-collapse:collapse;margin:16px 0;width:100%}
+main th,main td{border:1px solid #30363d;padding:8px 12px;text-align:left;font-size:14px}
+main th{background:#161b22;color:#8b949e;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+main tr:nth-child(even){background:#161b22}
+main ul,main ol{padding-left:24px;margin-bottom:8px}
+main li{margin-bottom:4px}
+.breadcrumb{font-size:14px;color:#8b949e;margin-bottom:24px;padding:8px 12px;background:#161b22;border-radius:8px;border:1px solid #30363d}
+.breadcrumb a{color:#58a6ff;text-decoration:none}
+.breadcrumb span{color:#8b949e}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0d1117}::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}</style>
+</head>
+<body>
+<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="../architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="../architecture/design_decisions.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="../architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="../architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="../architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="bootloader.html" class="active">&nbsp;&nbsp;Bootloader</a></li><li><a href="building.html">&nbsp;&nbsp;Building</a></li><li><a href="contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="known_issues.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_slipperos.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
+  <a href="bootloader.html" class="active">RU</a>
+  <a href="bootloader.en.html">EN</a>
+</div></nav>
+<main><div class="breadcrumb"><a href="../">Docs</a> <span> / Dev / Bootloader</span></div><h1>SlipperBoot - загрузчик на C++</h1>
+<h2>Дизайн</h2>
+<p>Чистый C++, без единого <code>.S</code> файла. Всё что нужно ассемблеру - inline asm
+в <code>[[gnu::naked]]</code> точке входа. Одна цель: прочитать ядро с диска и прыгнуть
+в него.</p>
+<h2>Почему C++, не Rust и не C</h2>
+<table><thead><tr><th>Язык</th><th>За</th><th>Против</th></tr></thead><tbody>
+<tr><td>Rust</td><td>типобезопасность</td><td><code>`#[naked]`</code> нестабилен, extra тулчейн</td></tr>
+<tr><td>C</td><td>простота</td><td>нет шаблонов для MMIO-врапперов</td></tr>
+<tr><td><strong>*<em>*C++*</em>*</strong></td><td>шаблоны для регистров, <code>`constexpr`</code> для MMIO, naked entry</td><td>-</td></tr>
+</tbody></table>
+<p>Выбран C++ потому что bootloader маленький, <code>volatile</code> + шаблоны удобны
+для MMIO, а naked entry работает стабильно в GCC.</p>
+<h2>Entry point (ноль ассемблера)</h2>
+<p>Единственная функция с inline asm - <code>_start</code>. Всё остальное - чистый C++.</p>
+<pre><code class="language-cpp">// boot_entry.cpp
+#include &lt;cstdint&gt;
+
+extern &quot;C&quot; {
+    extern uint8_t _sbss[], _ebss[], _stack_end[];
+    void boot_main();
+}
+
+[[gnu::naked]] [[gnu::section(&quot;.text.boot&quot;)]]
+void _start() {
+    asm volatile(
+        &quot;csrr    t0, mhartid\n&quot;
+        &quot;li      t1, 0\n&quot;
+        &quot;bne     t0, t1, _hang\n&quot;
+        &quot;la      t0, _sbss\n&quot;
+        &quot;la      t1, _ebss\n&quot;
+        &quot;li      t2, 0\n&quot;
+        &quot;1:\n&quot;
+        &quot;bgeu    t0, t1, 2f\n&quot;
+        &quot;sw      t2, 0(t0)\n&quot;
+        &quot;addi    t0, t0, 4\n&quot;
+        &quot;j       1b\n&quot;
+        &quot;2:\n&quot;
+        &quot;la      sp, _stack_end\n&quot;
+        &quot;call    boot_main\n&quot;
+        &quot;_hang:\n&quot;
+        &quot;wfi\n&quot;
+        &quot;j       _hang\n&quot;
+    );
+}
+</code></pre>
+<p>Это единственный <code>asm volatile</code> в проекте. Всё что ниже - C++.</p>
+<h2>Структура</h2>
+<pre><code>bootloader/
+├── linker.ld              # линкуется на 0x80000000
+├── Makefile                # cross-riscv64 g++
+├── boot_entry.cpp          # _start (inline asm, 1 файл)
+├── boot_main.cpp           # boot_main(), init sequence
+├── uart.hpp                # NS16550A MMIO-враппер (шаблон)
+├── uart.cpp
+├── virtio.hpp              # VirtIO block v2 MMIO (QueueDesc/QueueReady)
+├── virtio.cpp
+├── elf.hpp                 # ELF64 header parser
+├── elf.cpp
+├── fdt.hpp                 # DeviceTree parser
+└── fdt.cpp
+</code></pre>
+<h2>boot_main()</h2>
+<pre><code class="language-cpp">void boot_main() {
+    FDT fdt(fdt_addr);
+
+    auto uart_addr = fdt.find_uart();       // compatible = &quot;ns16550a&quot;
+    auto uart_irq  = fdt.uart_interrupt();
+    UART uart(uart_addr);
+    uart.init();
+    uart.puts(&quot;SlipperBoot v0.1\n&quot;);
+
+    auto mem = fdt.memory();
+    auto virtio_addrs = fdt.find_virtio();  // compatible = &quot;virtio,mmio&quot;
+
+    VirtIOBlock disk(virtio_addrs[0]);
+    if (!disk.probe()) fail(&quot;no disk&quot;);
+
+    static uint8_t kernel_buf[2_MB] __attribute__((aligned(512)));
+
+    for (int i = 0; i &lt; KERNEL_SECTORS; i++) {
+        disk.read(KERNEL_LBA + i, &amp;kernel_buf[i * 512]);
+    }
+
+    ELF elf(kernel_buf);
+    if (!elf.valid()) fail(&quot;bad ELF&quot;);
+
+    elf.load_all();
+    uart.puts(&quot;jumping to kernel\n&quot;);
+    elf.entry()(hart_id, fdt_addr);
+}
+</code></pre>
+<h2>UART (NS16550A)</h2>
+<pre><code class="language-cpp">struct UART {
+    uintptr_t base;
+
+    UART(uintptr_t addr) : base(addr) {}
+
+    volatile uint8_t* reg(uintptr_t off) {
+        return reinterpret_cast&lt;volatile uint8_t*&gt;(base + off);
+    }
+
+    void init() {
+        reg(3)[0] = 0x03;  // LCR: 8N1
+        reg(2)[0] = 0x07;  // FCR: FIFO
+        reg(1)[0] = 0x01;  // IER: RX IRQ
+    }
+
+    void put(char c) {
+        while (!(reg(5)[0] &amp; (1 &lt;&lt; 5)));
+        reg(0)[0] = c;
+    }
+
+    char get() {
+        while (!(reg(5)[0] &amp; 1));
+        return reg(0)[0];
+    }
+};
+</code></pre>
+<p>Адрес передаётся из FDT, не хардкодится.</p>
+<h2>VirtIO Block (v2 MMIO)</h2>
+<p>Sedna/OC2r реализует только <strong>v2 (modern) MMIO-транспорт</strong>:
+<code>VIRTIO_MMIO_VERSION = 2</code>, обязателен флаг <code>VIRTIO_F_VERSION_1</code> (bit 32).</p>
+<ul>
+<li>Регистры: <code>QueueDescLow/High</code>, <code>QueueDriverLow/High</code>,
+<code>QueueDeviceLow/High</code> + <code>QueueReady</code> (вместо Legacy <code>QueuePfn</code>)</li>
+<li>Feature negotiation: ACK → DRIVER → negotiate (вкл. <code>VIRTIO_F_VERSION_1</code>)
+→ <code>FEATURES_OK</code> → Queue setup → <code>QueueReady = 1</code> → <code>DRIVER_OK</code></li>
+<li>3 дескриптора на запрос: header + data + status</li>
+<li>Polling used ring (прерываний в bootloader не нужно)</li>
+<li>Адрес устройства и PLIC ID - из FDT, не хардкодить</li>
+</ul>
+<h2>ELF парсер</h2>
+<ul>
+<li>Читает ELF64 header: magic, machine=RISCV(0xF3), type=EXEC</li>
+<li>Итерирует Program Headers</li>
+<li>Для каждого PT_LOAD: копирует <code>filesz</code> байт из ELF, обнуляет <code>memsz-filesz</code></li>
+<li>Возвращает entry point</li>
+</ul>
+<h2>FDT парсер</h2>
+<ul>
+<li>Ищет <code>memory</code> node в дереве - читает <code>reg</code> (start, size)</li>
+<li>Ищет <code>compatible = &quot;ns16550a&quot;</code> - адрес UART + PLIC interrupt ID</li>
+<li>Ищет <code>compatible = &quot;virtio,mmio&quot;</code> - адреса VirtIO устройств + IRQ</li>
+<li>Fallback памяти: 0x80000000, 128MB если FDT нет</li>
+<li>Fallback UART: 0x10000000, IRQ 10 (только для QEMU)</li>
+<li>Адреса устройств - динамические, отказываемся от хардкода</li>
+</ul>
+<h2>Сборка</h2>
+<pre><code class="language-makefile">CXX = riscv64-unknown-elf-g++
+CXXFLAGS = -march=rv64gc -mabi=lp64d -ffreestanding -nostdlib -O2
+LDFLAGS = -T linker.ld -nostdlib
+
+bootloader.bin: bootloader.elf
+    riscv64-unknown-elf-objcopy -O binary $&lt; $@
+</code></pre>
+<h2>Линкер-скрипт</h2>
+<pre><code>BASE = 0x80000000;
+.text : { *(.text.boot) *(.text) }
+.rodata : { *(.rodata) }
+.data : { *(.data) }
+.bss : { _sbss = .; *(.bss); _ebss = .; }
+. = ALIGN(16);
+_stack_start = .;
+. += 4K;
+_stack_end = .;
+</code></pre>
+<h2>Ограничения</h2>
+<ul>
+<li>Максимум: 32KB на весь bootloader</li>
+<li>Стек: 4KB</li>
+<li>bss обнуляется в _start inline asm</li>
+<li>Никаких глобальных конструкторов (не используем static objects)</li>
+</ul></main>
+</body>
+</html>

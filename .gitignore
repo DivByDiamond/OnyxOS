@@ -1,0 +1,8 @@
+/build/
+/.build/
+.vent/repos/
+.vent/vent
+/target/
+*.o
+*.a
+*.elf
