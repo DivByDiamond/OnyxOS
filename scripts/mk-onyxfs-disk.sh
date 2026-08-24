@@ -68,15 +68,42 @@ if [ -z "$HOST_TARGET" ]; then
     echo "[-] Cannot determine rustc host target. Is rustup in PATH?"
     exit 1
 fi
-MKIMAGE="$ONYXKERNEL_DIR/target/$HOST_TARGET/release/mkimage"
-ELF2ONX="$ONYXKERNEL_DIR/target/$HOST_TARGET/release/elf2onx"
-PSFGEN="$ONYXKERNEL_DIR/target/$HOST_TARGET/release/psfgen"
+MKIMAGE=""
+ELF2ONX=""
+PSFGEN=""
+# cargo places host binaries under target/<host-triple>/release/ only when
+# --target <host> was passed explicitly; a plain `cargo build --release`
+# puts them in target/release/. Accept both locations, preferring the
+# explicit-target one.
+for TOOLDIR in \
+    "$ONYXKERNEL_DIR/target/$HOST_TARGET/release" \
+    "$ONYXKERNEL_DIR/target/release"
+do
+    if [ -x "$TOOLDIR/mkimage" ] && [ -x "$TOOLDIR/elf2onx" ] && [ -x "$TOOLDIR/psfgen" ]; then
+        MKIMAGE="$TOOLDIR/mkimage"
+        ELF2ONX="$TOOLDIR/elf2onx"
+        PSFGEN="$TOOLDIR/psfgen"
+        break
+    fi
+done
 
-if [ ! -x "$MKIMAGE" ] || [ ! -x "$ELF2ONX" ] || [ ! -x "$PSFGEN" ]; then
+if [ -z "$MKIMAGE" ] || [ ! -x "$MKIMAGE" ] || [ ! -x "$ELF2ONX" ] || [ ! -x "$PSFGEN" ]; then
     echo "[*] Building OnyxKernel tools (mkimage, elf2onx, psfgen)..."
     (cd "$ONYXKERNEL_DIR" && cargo tbuild 2>&1 | tail -5)
+    # Re-scan after the build attempt (cargo may have used either layout).
+    for TOOLDIR in \
+        "$ONYXKERNEL_DIR/target/$HOST_TARGET/release" \
+        "$ONYXKERNEL_DIR/target/release"
+    do
+        if [ -x "$TOOLDIR/mkimage" ] && [ -x "$TOOLDIR/elf2onx" ] && [ -x "$TOOLDIR/psfgen" ]; then
+            MKIMAGE="$TOOLDIR/mkimage"
+            ELF2ONX="$TOOLDIR/elf2onx"
+            PSFGEN="$TOOLDIR/psfgen"
+            break
+        fi
+    done
 fi
-if [ ! -x "$MKIMAGE" ] || [ ! -x "$ELF2ONX" ] || [ ! -x "$PSFGEN" ]; then
+if [ -z "$MKIMAGE" ] || [ ! -x "$MKIMAGE" ] || [ ! -x "$ELF2ONX" ] || [ ! -x "$PSFGEN" ]; then
     echo "[-] Tools missing after build attempt. Check cargo output above."
     exit 1
 fi
@@ -156,6 +183,11 @@ file $TMP_ONX_DIR/passwd.txt /etc/passwd
 file $TMP_ONX_DIR/shadow.txt /etc/shadow
 file $TMP_ONX_DIR/default.psf /font/default.psf
 EOF
+
+# Optional third-party software (present only if placed in .tmp-onx)
+if [ -f "$TMP_ONX_DIR/vim.onx" ]; then
+    echo "file $TMP_ONX_DIR/vim.onx /bin/vim" >> "$MANIFEST"
+fi
 
 # mkimage uses literal path strings in the manifest — substitute $TMP_ONX_DIR
 sed -i "s|\$TMP_ONX_DIR|$TMP_ONX_DIR|g" "$MANIFEST"
