@@ -23,6 +23,7 @@
 | **OnyxShell** | Rust | Шелл: 20 команд, табы, история, пайпы/редиректы, globbing, background jobs | v0.3 |
 | **OnyxCompiller** | C99 | C → RV64 → `.onx`, автолинковка libonyxc, function-like макросы (#/##/____VA_ARGS____), FP-кодген, onx-run эмулятор | v0.6 |
 | **libonyxc** | C99 | libc: stdio/stdlib/string/ctype/time + termios (raw mode), math (soft-float), assert, buffered I/O, printf %f | v0.6 |
+| **OnyxApps** | C99 | Userland-приложения: vim, oed, osysmon (монорепо, CI собирает .onx) | v0.1 |
 | **OnyxOS** | — | Документация, скрипты, интеграция | meta |
 
 ## Быстрый старт
@@ -173,9 +174,16 @@ GitHub сам отдаёт ассет последнего релиза по т�
 На каждый пуш в `main` workflow дополнительно публикует превью-образ как
 artifact (без создания Release).
 
-## Userspace-софт (v0.6)
+## Userspace-софт (v0.6 → OnyxApps)
 
-`software/` — программы, собираемые одним вызовом `onyxcc -o X.onx X.c`:
+Опциональные userspace-программы переехали в монорепозиторий
+[OnyxApps](https://github.com/DivByDiamond/OnyxApps) (vim, oed, osysmon).
+Полная документация каждого приложения — в его собственном `README.md`
+внутри `apps/<name>/`. Сборка: `make` в корне OnyxApps, артефакты
+`build/*.onx` также публикуются CI.
+
+Ранее `software/` содержал программы, собираемые одним вызовом
+`onyxcc -o X.onx X.c`:
 
 | Программа | Стиль | Что демонстрирует |
 |-----------|-------|-------------------|

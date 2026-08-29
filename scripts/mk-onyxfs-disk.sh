@@ -184,7 +184,8 @@ file $TMP_ONX_DIR/shadow.txt /etc/shadow
 file $TMP_ONX_DIR/default.psf /font/default.psf
 EOF
 
-# Optional third-party software (present only if placed in .tmp-onx)
+# Optional userland apps from OnyxApps (https://github.com/DivByDiamond/OnyxApps):
+# drop built *.onx (vim.onx, oed.onx, ...) into .tmp-onx before this script
 if [ -f "$TMP_ONX_DIR/vim.onx" ]; then
     echo "file $TMP_ONX_DIR/vim.onx /bin/vim" >> "$MANIFEST"
 fi
