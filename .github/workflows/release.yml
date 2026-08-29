@@ -1,9 +1,9 @@
 name: Release
 
-# Срабатывает:
-#   - на пуш git-тега вида v0.3.0  → полный релиз: сборка + GitHub Release + ассет onyx-flash.img
-#   - на пуш в ветку main          → превью-сборка (образ заливается как artifact, релиз НЕ создаётся)
-#   - вручную (workflow_dispatch)  → для отладки из UI
+# Triggers:
+#   - push of a git tag (v0.3.0-style) -> full release: build + GitHub Release + onyx-flash.img asset
+#   - push to main branch              -> preview build (image uploaded as artifact, NO release created)
+#   - manual (workflow_dispatch)       -> for debugging from the UI
 on:
   push:
     tags:
@@ -14,30 +14,30 @@ on:
 
 jobs:
   # =====================================================================
-  # BUILD — собирает все компоненты через vent/Makefile и склеивает
-  # цельный flash-образ onyx-flash.img (ровно 15 МБ, layout "minux").
+  # BUILD — builds all components via the vent/Makefile and assembles the
+  # complete flash image onyx-flash.img (exactly 15 MB, "minux" layout).
   # =====================================================================
   build:
     name: Build onyx-flash.img
     runs-on: ubuntu-latest
     env:
-      # Откуда брать fw_jump.bin, если его нет в репозитории.
-      # Можно задать переменной репозитория OC2R_FW_JUMP_URL
-      # (Settings → Secrets and variables → Actions → Variables).
+      # Where to fetch fw_jump.bin from when it is not committed to the
+      # repository. Can be provided via the OC2R_FW_JUMP_URL repository
+      # variable (Settings -> Secrets and variables -> Actions -> Variables).
       OC2R_FW_JUMP_URL: ${{ vars.OC2R_FW_JUMP_URL }}
     steps:
-      # 1. Чекаут репозитория OnyxOS. Зависимости (OnyxBoot/OnyxKernel/
-      #    OnyxShell/OnyxCompiller) тянутся системой .vent на шаге 4.
-      #    submodules — на случай, если в репо появятся git-субмодули.
+      # 1. Checkout the OnyxOS repository. Dependencies (OnyxBoot/OnyxKernel/
+      #    OnyxShell/OnyxCompiller) are pulled by the .vent system on step 4.
+      #    submodules — in case git submodules appear in the repo.
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           submodules: recursive
 
-      # 2. Системные зависимости:
-      #    - cmake/git/build-essential + libcurl/libarchive dev — для сборки .vent/vent
-      #      из исходников (Makefile цель deps) и для host-компилятора OnyxCC
-      #    - gcc-riscv64-unknown-elf — cross-компилятор для OnyxBoot (bootloader)
+      # 2. System dependencies:
+      #    - cmake/git/build-essential + libcurl/libarchive dev — to build .vent/vent
+      #      from source (Makefile `deps` target) and the host OnyxCC compiler
+      #    - gcc-riscv64-unknown-elf — cross-compiler for OnyxBoot (bootloader)
       - name: Install system dependencies
         run: |
           sudo apt-get update
@@ -47,37 +47,37 @@ jobs:
             build-essential \
             libcurl4-openssl-dev \
             libarchive-dev
-          # RISC-V cross-тулчейн для bootloader'а.
-          # gcc-riscv64-unknown-elf есть в universe начиная с Ubuntu 22.04.
-          # Если пакета нет — откатываемся на gcc-riscv64-linux-gnu
-          # (другой префикс, сборка пойдёт через CROSS=riscv64-linux-gnu).
+          # RISC-V cross-toolchain for the bootloader.
+          # gcc-riscv64-unknown-elf is in universe since Ubuntu 22.04.
+          # If unavailable, fall back to gcc-riscv64-linux-gnu
+          # (different prefix; the build then uses CROSS=riscv64-linux-gnu).
           sudo apt-get install -y gcc-riscv64-unknown-elf binutils-riscv64-unknown-elf \
             || sudo apt-get install -y gcc-riscv64-linux-gnu binutils-riscv64-linux-gnu
 
       # 3. Rust toolchain.
-      #    Nightly — как в остальных CI-воркфлоу Onyx (ядро и shell требуют nightly).
-      #    edition 2024 (rust-version 1.85+). Target riscv64gc-unknown-none-elf —
-      #    bare-metal ядро без std, поэтому обязательно указываем target при сборке.
+      #    Nightly — same as the other Onyx CI workflows (kernel and shell need nightly).
+      #    edition 2024 (rust-version 1.85+). Target riscv64gc-unknown-none-elf:
+      #    bare-metal std-less kernel, so --target is mandatory when building.
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@nightly
         with:
           targets: riscv64gc-unknown-none-elf
 
       # 4. make deps:
-      #    - собирает .vent/vent из исходников (grafmorkov/vent) через cmake
-      #    - запускает .vent/vent -j 4 Onyx.vent → клонирует OnyxKernel,
-      #      OnyxBoot, OnyxShell, OnyxCompiller в .vent/repos/
+      #    - builds .vent/vent from source (grafmorkov/vent) via cmake
+      #    - runs .vent/vent -j 4 Onyx.vent -> clones OnyxKernel,
+      #      OnyxBoot, OnyxShell, OnyxCompiller into .vent/repos/
       - name: Resolve dependencies (make deps)
         run: make deps
 
-      # 5. Сборка компонентов.
-      #    Внимание: `make build` в Makefile = build-boot + build-kernel +
-      #    build-shell + build-compiller, но «as-is» она не работает в CI, поэтому
-      #    шаги разбиты явно (см. комментарии ниже).
-      #    a) build-kernel: голый `cargo build` без --target собирает bare-metal ядро
-      #       под хост (x86_64) и падает на riscv-asm. Ядро собираем явно под
-      #       riscv64gc-unknown-none-elf — тот же приём, что в scripts/run-qemu.sh
-      #       и в CI OnyxKernel.
+      # 5. Component builds.
+      #    Note: `make build` in the Makefile = build-boot + build-kernel +
+      #    build-shell + build-compiller, but it does not work as-is in CI, so
+      #    the steps are split explicitly (see comments below).
+      #    a) build-kernel: a bare `cargo build` without --target builds the
+      #       bare-metal kernel for the host (x86_64) and fails on riscv-asm.
+      #       The kernel is built explicitly for riscv64gc-unknown-none-elf —
+      #       the same trick as scripts/run-qemu.sh and OnyxKernel CI.
       - name: Build bootloader (OnyxBoot)
         run: |
           cd .vent/repos/OnyxBoot
@@ -97,9 +97,9 @@ jobs:
             --features smode \
             --manifest-path .vent/repos/OnyxKernel/Cargo.toml
 
-      #    b) host-инструменты (elf2onx / mkimage / psfgen) нужны OnyxShell'у:
-      #       его build.sh ищет elf2onx по пути target/<host-target>/release/.
-      #       Поэтому собираем onyx_tools явно под host (x86_64-unknown-linux-gnu).
+      #    b) host tools (elf2onx / mkimage / psfgen) are needed by OnyxShell:
+      #       its build.sh looks for elf2onx under target/<host-target>/release/.
+      #       So onyx_tools is built explicitly for the host (x86_64-unknown-linux-gnu).
       - name: Build host tools (elf2onx / mkimage / psfgen)
         run: |
           HOST_TARGET="$(rustc -vV | sed -ne 's/^host: //p')"
@@ -108,26 +108,26 @@ jobs:
             --target "$HOST_TARGET" \
             --manifest-path .vent/repos/OnyxKernel/Cargo.toml
 
-      #    c) build-shell: собирает OnyxShell через bash build.sh и конвертирует
-      #       в osh.onx (elf2onx уже готов на предыдущем шаге).
+      #    c) build-shell: builds OnyxShell via bash build.sh and converts it
+      #       to osh.onx (elf2onx is already built on the previous step).
       - name: Build shell (OnyxShell)
         run: make build-shell
 
-      #    d) build-compiller: в OnyxCompiller НЕТ цели `host`
-      #       (в Makefile её нет, правильная цель — `all`/дефолтная).
-      #       Поэтому вместо `make host` используем просто `make`.
+      #    d) build-compiller: OnyxCompiller has NO `host` target
+      #       (it is absent from its Makefile; the right target is `all`/default).
+      #       So instead of `make host` we run plain `make`.
       - name: Build compiler (OnyxCompiller)
         run: |
           make -C .vent/repos/OnyxCompiller
 
-      # 6. fw_jump.bin (OpenSBI) — первая ступень загрузки, живёт в моде OC2R
-      #    по пути src/main/scripts/firmware_files/fw_jump.bin. В этом репо его
-      #    нет, поэтому порядок такой:
-      #      1) если положить файл firmware/fw_jump.bin в репозиторий — берём его;
-      #      2) иначе качаем по адресу из переменной репозитория OC2R_FW_JUMP_URL;
-      #      3) иначе создаём заглушку — образ соберётся, но НЕ загрузится.
-      #         Для рабочего релиза обязательно положить настоящий OpenSBI
-      #         способом 1 или задать URL способом 2.
+      # 6. fw_jump.bin (OpenSBI) — first boot stage, lives in the OC2R mod at
+      #    src/main/scripts/firmware_files/fw_jump.bin. It is not in this repo,
+      #    so the resolution order is:
+      #      1) commit firmware/fw_jump.bin to the repository — it is used;
+      #      2) otherwise download from the OC2R_FW_JUMP_URL repo variable;
+      #      3) otherwise create a placeholder — the image builds but will
+      #         NOT boot. For a working release, provide the real OpenSBI
+      #         via method 1 or set the URL via method 2.
       - name: Obtain fw_jump.bin (OpenSBI)
         run: |
           set -euo pipefail
@@ -148,16 +148,16 @@ jobs:
           fi
           ls -l "$FW_JUMP"
 
-      # 7. Склейка цельного flash-образа ровно 15 МБ по схеме "minux":
-      #      offset 0x000000 (0)    → fw_jump.bin (OpenSBI)
-      #      offset 0x200000 (2 МБ) → ядро OnyxKernel (raw binary)
-      #      остальное до 15 МБ     → нули
+      # 7. Assemble the complete flash image, exactly 15 MB, "minux" layout:
+      #      offset 0x000000 (0)    -> fw_jump.bin (OpenSBI)
+      #      offset 0x200000 (2 MB) -> OnyxKernel (raw binary)
+      #      rest up to 15 MB       -> zeros
       #
-      #    ВАЖНО: OpenSBI (fw_jump) прыгает напрямую на 0x80200000, поэтому там
-      #    должен лежать машинный код, а НЕ ELF. Сначала конвертируем ELF в
-      #    плоский бинарник через objcopy (как делает OnyxBoot для bootloader.bin).
-      #    ELF линкуется с KERNEL_BASE = 0x80200000 (kernel/linker.ld), поэтому
-      #    первый байт raw-бина = первая инструкция _start по адресу 0x80200000.
+      #    IMPORTANT: OpenSBI (fw_jump) jumps directly to 0x80200000, so raw
+      #    machine code must live there, NOT an ELF. First convert the ELF to
+      #    a flat binary via objcopy (as OnyxBoot does for bootloader.bin).
+      #    The ELF links with KERNEL_BASE = 0x80200000 (kernel/linker.ld), so
+      #    the first byte of the raw binary = the first _start instruction at 0x80200000.
       - name: Assemble onyx-flash.img (15 MB, layout minux)
         run: |
           set -euo pipefail
@@ -169,7 +169,7 @@ jobs:
 
           [ -f "$KERNEL_ELF" ] || { echo "ERROR: kernel ELF not found: $KERNEL_ELF"; exit 1; }
 
-          # Найти riscv objcopy (префикс зависит от установленного тулчейна).
+          # Locate a riscv objcopy (prefix depends on the installed toolchain).
           OBJCOPY=""
           for c in riscv64-unknown-elf-objcopy riscv64-elf-objcopy riscv64-linux-gnu-objcopy; do
             if command -v "$c" &>/dev/null; then OBJCOPY="$c"; break; fi
@@ -179,16 +179,16 @@ jobs:
           echo "[+] ELF -> raw: $OBJCOPY -O binary $KERNEL_ELF $KERNEL_BIN"
           "$OBJCOPY" -O binary "$KERNEL_ELF" "$KERNEL_BIN"
 
-          # 15 МБ нулей — базовое полотно образа
+          # 15 MB of zeros — base canvas of the image
           dd if=/dev/zero of="$IMG" bs=1M count=$FLASH_MB
 
-          # OpenSBI на offset 0
+          # OpenSBI at offset 0
           dd if="$FW_JUMP" of="$IMG" conv=notrunc
 
-          # Ядро (raw) на offset 2 МБ (0x200000)
+          # Kernel (raw) at offset 2 MB (0x200000)
           dd if="$KERNEL_BIN" of="$IMG" bs=1M seek=2 conv=notrunc
 
-          # Контроль размера: ровно 15 МБ = 15728640 байт
+          # Size check: exactly 15 MB = 15728640 bytes
           SIZE="$(stat -c%s "$IMG")"
           EXPECTED=$((FLASH_MB * 1024 * 1024))
           if [ "$SIZE" -ne "$EXPECTED" ]; then
@@ -197,7 +197,7 @@ jobs:
           fi
           ls -l "$IMG"
 
-      # 8. Артефакт: на main это превью-образ, на теге его подхватит job release.
+      # 8. Artifact: on main this is a preview image; on a tag the release job picks it up.
       - name: Upload flash image artifact
         uses: actions/upload-artifact@v6
         with:
@@ -206,8 +206,8 @@ jobs:
           if-no-files-found: error
 
   # =====================================================================
-  # RELEASE — создаёт GitHub Release и прикрепляет onyx-flash.img.
-  # Запускается ТОЛЬКО для тегов v* (на main — только превью-артефакт).
+  # RELEASE — creates the GitHub Release and attaches onyx-flash.img.
+  # Runs ONLY for v* tags (on main — preview artifact only).
   # =====================================================================
   release:
     name: Create GitHub Release
@@ -215,7 +215,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
-      contents: write # нужен GITHUB_TOKEN для создания релиза и загрузки ассета
+      contents: write # GITHUB_TOKEN is needed to create the release and upload the asset
     steps:
       - name: Download flash image
         uses: actions/download-artifact@v6
@@ -226,7 +226,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          # Тег берётся из github.ref автоматически (ref_name тега).
+          # The tag is taken from github.ref automatically (ref_name of the tag).
           files: onyx-flash.img
           generate_release_notes: true
           fail_on_unmatched_files: true
