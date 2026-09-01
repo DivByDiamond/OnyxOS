@@ -197,12 +197,20 @@ per-process termios через TCGETS/TCSETS, TIOCGWINSZ возвращает р
 
 ## План развития
 
+Дедлайн v0.6 (15 сентября 2026) закрыт: non-blocking I/O (poll/FIONREAD/O_NONBLOCK/
+VMIN-VTIME), сигналы (SIGWINCH/SIGCHLD/SIGTSTP/SIGCONT), TUI-библиотека
+(mouse syscall, double buffering, event loop, widget rendering) и PTY +
+мультиплексоры — всё сделано 2026-09-01.
+
 | Область | Что делаем |
 |---------|-----------|
-| **OnyxKernel** | FAT32 read, USB URB, symlink, chmod, 32-bit порт, unit-тесты |
-| **OnyxCompiller** | Самокомпиляция, multi-file linking, C++ |
-| **CI/CD** | GitHub Actions, автотесты в QEMU |
-| **Железо** | Проверка на Milk-V Duo S |
+| **OC2R-стенд** | Проверка загрузки через OnyxOSFirmware, snapshot на несъёмном диске (нужно реальное железо/OC2R) |
+| **Java runtime** | Class loader, байткод-интерпретатор, подмножество JDK, GC — для совместимости с Java-модами OC2R |
+| **GUI (v0.7+)** | Window manager, compositor, mouse cursor/click, продвинутый widget toolkit |
+| **Безопасность userland** | umask/права OnyxFS, $5$-хэш совместимость с crypt(3), passwd с пустым текущим паролем |
+| **Платформа/время** | RTC под sedna, точность nanosleep, SBI-звонки (get_spec_version, reboot/shutdown) |
+| **Ввод/QoL** | Ctrl+D = EOF, backspace/стрелки в raw-режиме, история+tab-completion в osh, UART IRQ-driven rx |
+| **Тесты** | journal crash-recovery с реальным блочным I/O (пока ручной QEMU-цикл) |
 
 Подробнее — [docs/dev/roadmap.md](docs/dev/roadmap.md) и [todo.md](https://github.com/loki5512344/OnyxKernel/blob/main/todo.md).
 
