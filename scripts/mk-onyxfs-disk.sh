@@ -189,6 +189,11 @@ EOF
 if [ -f "$TMP_ONX_DIR/vim.onx" ]; then
     echo "file $TMP_ONX_DIR/vim.onx /bin/vim" >> "$MANIFEST"
 fi
+for app in oed osysmon osnake otop ohttp; do
+    if [ -f "$TMP_ONX_DIR/$app.onx" ]; then
+        echo "file $TMP_ONX_DIR/$app.onx /bin/$app" >> "$MANIFEST"
+    fi
+done
 
 # mkimage uses literal path strings in the manifest — substitute $TMP_ONX_DIR
 sed -i "s|\$TMP_ONX_DIR|$TMP_ONX_DIR|g" "$MANIFEST"
