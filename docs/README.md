@@ -32,8 +32,8 @@ docs/
 
 | Компонент | Репозиторий |
 |-----------|------------|
-| OnyxBoot | https://github.com/loki5512344/OnyxBoot |
-| OnyxKernel | https://github.com/loki5512344/OnyxKernel |
+| OnyxBoot | https://github.com/DivByDiamond/OnyxBoot |
+| OnyxKernel | https://github.com/DivByDiamond/OnyxKernel |
 | OnyxOS | (корень — этот репозиторий) |
 
 ## План

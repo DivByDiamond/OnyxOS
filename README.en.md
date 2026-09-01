@@ -103,7 +103,7 @@ make onyx          # cross-compile to .onx
 | **CI/CD** | GitHub Actions, automated QEMU tests |
 | **Hardware** | Verification on Milk-V Duo S |
 
-See [docs/dev/roadmap.md](docs/dev/roadmap.md) and [OnyxKernel todo.md](https://github.com/loki5512344/OnyxKernel/blob/main/todo.md).
+See [docs/dev/roadmap.md](docs/dev/roadmap.md) and [OnyxKernel todo.md](https://github.com/DivByDiamond/OnyxKernel/blob/main/todo.md).
 
 ## License
 

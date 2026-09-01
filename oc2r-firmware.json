@@ -2,5 +2,5 @@
   "name": "OnyxOS",
   "version": "0.3.0",
   "layout": "minux",
-  "image": "https://github.com/loki5512344/OnyxOS/releases/latest/download/onyx-flash.img"
+  "image": "https://github.com/DivByDiamond/OnyxOS/releases/latest/download/onyx-flash.img"
 }
