@@ -115,7 +115,7 @@ make onyx          # кросс-компиляция в .onx
   "name": "OnyxOS",
   "version": "0.3.0",
   "layout": "minux",
-  "image": "https://github.com/loki5512344/OnyxOS/releases/latest/download/onyx-flash.img"
+  "image": "https://github.com/DivByDiamond/OnyxOS/releases/latest/download/onyx-flash.img"
 }
 ```
 
@@ -212,7 +212,7 @@ VMIN-VTIME), сигналы (SIGWINCH/SIGCHLD/SIGTSTP/SIGCONT), TUI-библио
 | **Ввод/QoL** | Ctrl+D = EOF, backspace/стрелки в raw-режиме, история+tab-completion в osh, UART IRQ-driven rx |
 | **Тесты** | journal crash-recovery с реальным блочным I/O (пока ручной QEMU-цикл) |
 
-Подробнее — [docs/dev/roadmap.md](docs/dev/roadmap.md) и [todo.md](https://github.com/loki5512344/OnyxKernel/blob/main/todo.md).
+Подробнее — [docs/dev/roadmap.md](docs/dev/roadmap.md) и [todo.md](https://github.com/DivByDiamond/OnyxKernel/blob/main/todo.md).
 
 ## Лицензия
 
