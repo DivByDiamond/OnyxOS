@@ -9,6 +9,8 @@
 #       /bin/passwd      (change password)
 #       /bin/useradd     (add user)
 #       /bin/userdel     (remove user)
+#       + every *.onx found in OnyxOS/bin/ (drop-in apps: vim.onx, ...) —
+#         each is shipped to /bin/<name> automatically
 #       /etc/passwd      (user database)
 #       /etc/shadow      (password hashes — empty on first boot)
 #       /font/default.psf (PSF1 font for framebuffer console)
@@ -59,10 +61,23 @@ for tool in parted mkfs.fat mcopy; do
     fi
 done
 
-# Locate mkimage and elf2onx — they are built by `cargo tbuild` from
-# OnyxKernel/tools. build-all.sh runs cargo kbuild which builds the kernel
-# but does NOT build the tools. We trigger the build here on first use.
-ONYXKERNEL_DIR="$VENT_REPOS/OnyxKernel"
+# Locate the OnyxKernel checkout. build-all.sh/bootstrap.sh put it under
+# .vent/repos/; the sibling layout (OnyxOS and OnyxKernel cloned side by
+# side, as documented in the OnyxOS README) is equally supported — check
+# both and fail with a clear message when neither exists.
+ONYXKERNEL_DIR=""
+for cand in "$VENT_REPOS/OnyxKernel" "$(pwd)/../OnyxKernel"; do
+    if [ -d "$cand" ]; then
+        ONYXKERNEL_DIR="$cand"
+        break
+    fi
+done
+if [ -z "$ONYXKERNEL_DIR" ]; then
+    echo "[-] OnyxKernel checkout not found."
+    echo "    Looked in: $VENT_REPOS/OnyxKernel and ../OnyxKernel"
+    exit 1
+fi
+echo "[*] Using OnyxKernel at: $ONYXKERNEL_DIR"
 HOST_TARGET=$(rustc -vV 2>/dev/null | sed -ne 's/^host: //p')
 if [ -z "$HOST_TARGET" ]; then
     echo "[-] Cannot determine rustc host target. Is rustup in PATH?"
@@ -184,16 +199,39 @@ file $TMP_ONX_DIR/shadow.txt /etc/shadow
 file $TMP_ONX_DIR/default.psf /font/default.psf
 EOF
 
-# Optional userland apps from OnyxApps (https://github.com/DivByDiamond/OnyxApps):
-# drop built *.onx (vim.onx, oed.onx, ...) into .tmp-onx before this script
-if [ -f "$TMP_ONX_DIR/vim.onx" ]; then
-    echo "file $TMP_ONX_DIR/vim.onx /bin/vim" >> "$MANIFEST"
-fi
-for app in oed osysmon osnake otop ohttp; do
-    if [ -f "$TMP_ONX_DIR/$app.onx" ]; then
-        echo "file $TMP_ONX_DIR/$app.onx /bin/$app" >> "$MANIFEST"
-    fi
+# Optional userland apps from OnyxApps (https://github.com/DivByDiamond/OnyxApps).
+#
+# Bug fix (2026-09-04, TumRedSun): previously only a HARDCODED list of app
+# names (vim/oed/osysmon/osnake/otop/ohttp) was considered, and only when
+# the .onx file had been dropped into .build/.tmp-onx by hand — binaries
+# placed in OnyxOS/bin/ (the documented drop-in dir, has bin/.gitkeep) were
+# silently ignored, so e.g. vim.onx never reached the image no matter how
+# often the system was rebuilt. We now scan:
+#
+#   1. $TMP_ONX_DIR/*.onx   (staging dir — build tooling can drop files here)
+#   2. OnyxOS/bin/*.onx     (user drop-in dir)
+#
+# and append every file not already in the manifest as /bin/<name>. The
+# core six binaries above always win, and the first source wins on
+# conflicts, so nothing is ever added twice.
+MANIFEST_BINS=" init login osh passwd useradd userdel"
+add_manifest_bin() {
+    local src="$1" base
+    base="$(basename "$src")"
+    base="${base%.onx}"
+    case " $MANIFEST_BINS " in
+        *" $base "*) return 0 ;;
+    esac
+    printf 'file %s /bin/%s\n' "$src" "$base" >> "$MANIFEST"
+    MANIFEST_BINS="$MANIFEST_BINS $base"
+}
+for onx in "$TMP_ONX_DIR"/*.onx "$(pwd)/bin"/*.onx; do
+    # keep going when a glob has no matches (unexpanded literal stays)
+    [ -f "$onx" ] || continue
+    add_manifest_bin "$onx"
 done
+N_BINS=$(wc -w <<< "$MANIFEST_BINS")
+echo "[*] /bin contents: $((N_BINS - 1)) binaries"
 
 # mkimage uses literal path strings in the manifest — substitute $TMP_ONX_DIR
 sed -i "s|\$TMP_ONX_DIR|$TMP_ONX_DIR|g" "$MANIFEST"
