@@ -11,104 +11,151 @@
   <img src="https://img.shields.io/badge/license-GPL--3.0-red" alt="GPL-3.0">
 </p>
 
-Операционная система для RISC-V (OC2r / Milk-V Duo S). Монолитное ядро на Rust,
-загрузчик на C++, userspace shell на Rust, собственный C-компилятор.
+An operating system for RISC-V (QEMU virt, OC2R, Milk-V Duo S). A monolithic
+kernel in Rust, a bootloader in C++, a userspace shell in Rust, and a
+self-hosting C compiler - all built from source and assembled into one
+bootable image.
 
-## Компоненты
+This repository is the meta-project: it vendors the other Onyx repositories
+as sibling checkouts, builds all of them, and assembles the boot disk image
+and QEMU launch scripts.
 
-| Компонент | Язык | Описание | Статус |
-|-----------|------|----------|--------|
-| **OnyxBoot** | C++20 | Загрузчик: FDT, VirtIO, SDHCI, FAT32/ext4, GPT, boot menu | v0.7 |
-| **OnyxKernel** | Rust | Монолитное ядро: MM (Sv39), SMP, VFS, TCP/IP, OnyxFS v2 (chmod/symlink/truncate-to-N), FAT32 read+write, 85 syscalls | v0.5 |
-| **OnyxShell** | Rust | Шелл: 20 команд, табы, история, пайпы/редиректы, globbing, background jobs | v0.3 |
-| **OnyxCompiller** | C99 | C → RV64 → `.onx`, автолинковка libonyxc, function-like макросы (#/##/____VA_ARGS____), FP-кодген, onx-run эмулятор | v0.6 |
-| **libonyxc** | C99 | libc: stdio/stdlib/string/ctype/time + termios (raw mode), math (soft-float), assert, buffered I/O, printf %f | v0.6 |
-| **OnyxApps** | C99 | Userland-приложения: vim, oed, osysmon (монорепо, CI собирает .onx) | v0.1 |
-| **OnyxOS** | — | Документация, скрипты, интеграция | meta |
+----
 
-## Быстрый старт
+## Components
 
-```bash
-# 1. Установить зависимости
-sudo pacman -S cmake base-devel curl libarchive    # Arch
-sudo apt install cmake build-essential libcurl4-openssl-dev libarchive-dev  # Deb
+| Component | Language | Description |
+|-----------|----------|-------------|
+| [OnyxBoot](https://github.com/DivByDiamond/OnyxBoot) | C++20 | Bootloader: FDT, VirtIO, SDHCI, FAT32/ext4, GPT, boot menu |
+| [OnyxKernel](https://github.com/DivByDiamond/OnyxKernel) | Rust | Monolithic kernel: SMP, Sv39 MM, VFS, TCP/IP, OnyxFS v2, FAT32, wide syscall ABI |
+| [OnyxShell](https://github.com/DivByDiamond/OnyxShell) | Rust | `/bin/osh`: built-in commands, tab completion, history, pipes/redirects, globbing, job control |
+| [OnyxCompiller](https://github.com/DivByDiamond/OnyxCompiller) | C99 | Self-hosting C compiler: C99 -> RV64 -> `.onx`, `libonyxc` |
+| [OnyxApps](https://github.com/DivByDiamond/OnyxApps) | C99 | Optional userland applications, built with OnyxCompiller |
+| OnyxOS (this repo) | - | Build orchestration, docs, disk image assembly |
 
-# 2. Скачать все Onyx-репозитории
-./.vent/vent -j 4 Onyx.vent
+----
 
-# 3. Собрать всё
-bash scripts/build-all.sh
+## Quick Start
 
-# 4. Запустить в QEMU
-bash scripts/run-qemu.sh
+```console
+$ # 1. Install build dependencies
+$ sudo pacman -S cmake base-devel curl libarchive             # Arch
+$ sudo apt install cmake build-essential libcurl4-openssl-dev libarchive-dev  # Debian/Ubuntu
+
+$ # 2. Clone every Onyx repository as a sibling checkout
+$ bash scripts/bootstrap.sh
+
+$ # 3. Build every component and assemble the boot disk image
+$ bash scripts/build-all.sh
+
+$ # 4. Boot it in QEMU
+$ bash scripts/run-qemu.sh
 ```
 
-## Структура репозитория
+`scripts/bootstrap.sh` fetches [Vent](https://github.com/grafmorkov/vent)
+(building it from source on first run if needed) and resolves the
+dependency manifest in `Onyx.vent`, cloning OnyxBoot, OnyxKernel,
+OnyxShell, and OnyxCompiller into `.vent/repos/`. `scripts/build-all.sh`
+then builds each component in turn and writes everything to `.build/`.
+
+----
+
+## Repository Layout
 
 ```
 OnyxOS/
-├── Onyx.vent              # Dependency-файл для Vent
+├── Onyx.vent               # Dependency manifest for Vent
 ├── .vent/
-│   ├── vent               # Vent binary
-│   └── repos/             # Стянутые репозитории (после запуска Vent)
+│   ├── vent                # Vent binary
+│   └── repos/               # Sibling checkouts (after bootstrap.sh)
 ├── scripts/
-│   ├── bootstrap.sh       # Установка Vent + клонирование репозиториев
-│   ├── build-all.sh       # Сборка всех компонентов
-│   └── run-qemu.sh        # Запуск QEMU (OnyxBoot + OnyxKernel)
-├── docs/                  # Документация
-│   ├── architecture/      # Архитектура: boot, memory, privilege modes
-│   ├── dev/               # Разработка: building, contributing, roadmap
-│   ├── hardware/          # Железо: UART, PLIC, CLINT, VirtIO
-│   ├── internals/         # Внутренности: coding style, error handling
-│   ├── kernel/            # Ядро: процессы, MM, прерывания
-│   ├── shell/             # Шелл: команды, internals
-│   └── lore/              # Фольклор
-├── Makefile               # Skeleton (WIP)
+│   ├── bootstrap.sh         # Install Vent, clone dependent repositories
+│   ├── build-all.sh         # Build every component + assemble the disk image
+│   ├── run-qemu.sh          # Boot in QEMU (dev mode or full boot chain)
+│   ├── mk-onyxfs-disk.sh    # Build the FAT32 + OnyxFS partitioned disk image
+│   ├── qemu-smoke.sh        # Headless boot smoke test
+│   └── qemu-interactive-smoke.sh  # Interactive boot smoke test
+├── docs/
+│   ├── architecture/        # Boot chain, memory layout, privilege rings
+│   ├── dev/                 # Building, contributing, roadmap
+│   ├── hardware/            # UART, PLIC, CLINT, VirtIO
+│   ├── internals/            # Coding style, error handling conventions
+│   ├── kernel/               # Process model, memory management, interrupts
+│   ├── shell/                 # Shell commands and internals
+│   └── lore/                  # Project history and notes
+├── Makefile
 └── README.md
 ```
 
-## Сборка компонентов по отдельности
+----
+
+## Running QEMU
+
+`scripts/run-qemu.sh` supports two modes:
+
+```console
+$ bash scripts/run-qemu.sh boot    # default: full chain via OnyxBoot + a disk image
+$ bash scripts/run-qemu.sh dev     # fast dev loop: QEMU loads the kernel ELF directly, no disk image
+```
+
+Useful environment variables:
+
+| Variable | Effect |
+|----------|--------|
+| `QEMU_MEM` | RAM size (default `256M`) |
+| `QEMU_EXTRA` | Extra QEMU flags, e.g. `-s -S` for GDB |
+
+SMP is controlled by passing `-smp N` via `QEMU_EXTRA`, or by invoking QEMU
+directly (see the [OnyxKernel README](https://github.com/DivByDiamond/OnyxKernel)
+for the full manual command line and its multi-hart caveat - the kernel
+supports up to 8 harts, but multi-hart boots are still experimental).
+
+----
+
+## Building Components Individually
 
 ### OnyxKernel
 
-```bash
-cd .vent/repos/OnyxKernel
-cargo kbuild    # alias: cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf
+```console
+$ cd .vent/repos/OnyxKernel
+$ cargo kbuild    # alias for: cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf
 ```
 
 ### OnyxBoot
 
-```bash
-cd .vent/repos/OnyxBoot
-make -j$(nproc)
+```console
+$ cd .vent/repos/OnyxBoot
+$ make -j$(nproc)
 ```
 
 ### OnyxShell
 
-```bash
-cd .vent/repos/OnyxShell
-bash build.sh
+```console
+$ cd .vent/repos/OnyxShell
+$ bash build.sh
 ```
 
 ### OnyxCompiller
 
-```bash
-cd .vent/repos/OnyxCompiller
-make host          # нативный бинар для Linux
-make onyx          # кросс-компиляция в .onx
+```console
+$ cd .vent/repos/OnyxCompiller
+$ make            # native Linux binary
+$ make onyxcc-onx # cross-compiled .onx for OnyxOS
 ```
 
-## Как сделать свою прошивку (OC2R)
+----
 
-> **OC2R** — мод для Minecraft (NeoForge), добавляющий виртуальные компьютеры с
-> 64-битной RISC-V эмуляцией: <https://github.com/TumRedSun/OC2R>.
-> OnyxOS можно загрузить прямо внутри игры.
+## Building a Firmware Image for OC2R
 
-Мод OC2R умеет скачивать прошивку компьютера из GitHub-репозитория по манифесту
-`oc2r-firmware.json` в корне репозитория. Мод читает его, берёт ссылку `image`
-и заливает flash-образ в виртуальную машину.
+> [OC2R](https://github.com/TumRedSun/OC2R) is a Minecraft (NeoForge) mod
+> that adds virtual computers with 64-bit RISC-V emulation. OnyxOS can boot
+> directly inside the game.
 
-### Формат манифеста `oc2r-firmware.json`
+OC2R downloads a computer's firmware from a GitHub repository using an
+`oc2r-firmware.json` manifest at the repository root. The mod reads it,
+follows the `image` link, and flashes that image into the virtual machine.
+
+### Manifest format (`oc2r-firmware.json`)
 
 ```json
 {
@@ -119,101 +166,90 @@ make onyx          # кросс-компиляция в .onx
 }
 ```
 
-| Поле | Значение | Описание |
-|------|----------|----------|
-| `name` | `OnyxOS` | Название прошивки |
-| `version` | `0.3.0` | Версия из `Cargo.toml` воркспейса OnyxKernel |
-| `layout` | `minux` | Схема раскладки flash (см. ниже) |
-| `image` | прямая ссылка на `onyx-flash.img` | Цельный flash-образ, прикреплённый к GitHub Release |
+| Field | Value | Description |
+|-------|-------|-------------|
+| `name` | `OnyxOS` | Firmware name |
+| `version` | e.g. `0.3.0` | Matches the OnyxKernel workspace `Cargo.toml` version |
+| `layout` | `minux` | Flash layout scheme (below) |
+| `image` | direct link to `onyx-flash.img` | The flat flash image attached to a GitHub Release |
 
-Раскладка `minux` (flash ровно 15 МБ):
+`minux` layout (flash is exactly 15 MB):
 
-| Offset | Размер | Содержимое |
-|--------|--------|------------|
-| `0x000000` (0) | — | `fw_jump.bin` — OpenSBI (файл из мода OC2R: `src/main/scripts/firmware_files/fw_jump.bin`) |
-| `0x200000` (2 МБ) | — | Образ ядра OnyxKernel (ELF, собранный cargo) |
-| до 15 МБ | — | Нули |
+| Offset | Size | Contents |
+|--------|------|----------|
+| `0x000000` | - | `fw_jump.bin` (OpenSBI, from the OC2R mod's `src/main/scripts/firmware_files/`) |
+| `0x200000` (2 MB) | - | OnyxKernel image (ELF, built by cargo) |
+| up to 15 MB | - | zero-filled |
 
-### Сборка образа вручную
+### Building the image manually
 
-```bash
-# 1. Разрешить зависимости — vent клонирует репозитории в .vent/repos/
-make deps
+```console
+$ # 1. Resolve dependencies (vent clones the repos into .vent/repos/)
+$ make deps
 
-# 2. Собрать bootloader и ядро
-make -C .vent/repos/OnyxBoot
-cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf \
-  --manifest-path .vent/repos/OnyxKernel/Cargo.toml
+$ # 2. Build the bootloader and kernel
+$ make -C .vent/repos/OnyxBoot
+$ cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf \
+    --manifest-path .vent/repos/OnyxKernel/Cargo.toml
 
-# 3. Положить настоящий OpenSBI как firmware/fw_jump.bin
-#    (берётся из мода OC2R: src/main/scripts/firmware_files/fw_jump.bin)
+$ # 3. Place a real OpenSBI build at firmware/fw_jump.bin
+$ #    (from the OC2R mod: src/main/scripts/firmware_files/fw_jump.bin)
 
-# 4. Склеить образ ровно 15 МБ по схеме minux
-dd if=/dev/zero of=onyx-flash.img bs=1M count=15
-dd if=firmware/fw_jump.bin of=onyx-flash.img conv=notrunc
-dd if=.vent/repos/OnyxKernel/target/riscv64gc-unknown-none-elf/release/onyx-kernel \
-   of=onyx-flash.img bs=1M seek=2 conv=notrunc
+$ # 4. Assemble a 15 MB image using the minux layout
+$ dd if=/dev/zero of=onyx-flash.img bs=1M count=15
+$ dd if=firmware/fw_jump.bin of=onyx-flash.img conv=notrunc
+$ dd if=.vent/repos/OnyxKernel/target/riscv64gc-unknown-none-elf/release/onyx-kernel \
+    of=onyx-flash.img bs=1M seek=2 conv=notrunc
 ```
 
-### Автоматическая сборка через GitHub Actions
+### Automated builds via GitHub Actions
 
-`.github/workflows/release.yml` при пуше git-тега (например `v0.3.0`):
-1. Собирает все компоненты (`make deps` → vent клонирует OnyxKernel/OnyxBoot/OnyxShell/OnyxCompiller);
-2. Склеивает `onyx-flash.img` (15 МБ, layout `minux`);
-3. Создаёт GitHub Release и прикрепляет образ.
+`.github/workflows/release.yml` runs on every pushed git tag (e.g. `v0.3.0`):
 
-Ссылка `image` в манифесте указывает на `/releases/latest/download/onyx-flash.img` —
-GitHub сам отдаёт ассет последнего релиза по тегу.
+1. Builds every component (`make deps` resolves OnyxKernel/OnyxBoot/OnyxShell/OnyxCompiller via Vent).
+2. Assembles `onyx-flash.img` (15 MB, `minux` layout).
+3. Creates a GitHub Release and attaches the image.
 
-Для рабочего релиза нужно:
-1. Положить настоящий `fw_jump.bin` (OpenSBI) в `firmware/fw_jump.bin` репозитория
-   либо задать переменную репозитория `OC2R_FW_JUMP_URL` (если файла нет, CI
-   соберёт образ с заглушкой — он не загрузится);
-2. Создать тег `v0.3.0` и запушить — CI соберёт и зальёт образ.
+The manifest's `image` field points at
+`/releases/latest/download/onyx-flash.img`, which GitHub resolves to the
+newest release's asset automatically.
 
-На каждый пуш в `main` workflow дополнительно публикует превью-образ как
-artifact (без создания Release).
+To produce a working release you need to either:
 
-## Userspace-софт (v0.6 → OnyxApps)
+1. Commit a real `fw_jump.bin` (OpenSBI) at `firmware/fw_jump.bin`, or set the
+   repository variable `OC2R_FW_JUMP_URL` (without either, CI builds an image
+   with a placeholder that will not boot); and
+2. Push a tag such as `v0.3.0` - CI builds and uploads the image.
 
-Опциональные userspace-программы переехали в монорепозиторий
-[OnyxApps](https://github.com/DivByDiamond/OnyxApps) (vim, oed, osysmon).
-Полная документация каждого приложения — в его собственном `README.md`
-внутри `apps/<name>/`. Сборка: `make` в корне OnyxApps, артефакты
-`build/*.onx` также публикуются CI.
+Every push to `main` also publishes a preview image as a workflow artifact,
+without creating a Release.
 
-Ранее `software/` содержал программы, собираемые одним вызовом
-`onyxcc -o X.onx X.c`:
+----
 
-| Программа | Стиль | Что демонстрирует |
-|-----------|-------|-------------------|
-| **oed** | nano/vim | Полноэкранный редактор: raw mode (termios), ANSI-курсор, стрелки/Home/End/PgUp/PgDn, редактирование, Ctrl+S/Q/G, статус-бар, буфер 2048 строк |
-| **osysmon** | btop/htop | Монитор: box-drawing, цветные load-бары, uname/uptime/PID/CWD, дисковые/сетевые панели, обновление по интервалу |
+## Userspace Applications
 
-Обе работают поверх нового ANSI/VT100-терминала ядра (fb_term/ansi.rs):
-цвета SGR 30-37/90-97, позиционирование CSI H, erase J/K, scroll-regions,
-per-process termios через TCGETS/TCSETS, TIOCGWINSZ возвращает реальную
-сетку фреймбуфера.
+Optional userspace programs live in the
+[OnyxApps](https://github.com/DivByDiamond/OnyxApps) monorepo (a text
+editor, a system monitor, an HTTP client, and more). Each application has
+its own `README.md` under `apps/<name>/`. Build with `make` in the OnyxApps
+repository root; CI also publishes `build/*.onx` artifacts.
 
-## План развития
+All applications run on top of the kernel's ANSI/VT100 framebuffer
+terminal (`fb_term`/`ansi.rs`): SGR colors, cursor positioning, erase
+sequences, scroll regions, per-process `termios` via `TCGETS`/`TCSETS`, and
+`TIOCGWINSZ` reporting the real framebuffer grid.
 
-Дедлайн v0.6 (15 сентября 2026) закрыт: non-blocking I/O (poll/FIONREAD/O_NONBLOCK/
-VMIN-VTIME), сигналы (SIGWINCH/SIGCHLD/SIGTSTP/SIGCONT), TUI-библиотека
-(mouse syscall, double buffering, event loop, widget rendering) и PTY +
-мультиплексоры — всё сделано 2026-09-01.
+----
 
-| Область | Что делаем |
-|---------|-----------|
-| **OC2R-стенд** | Проверка загрузки через OnyxOSFirmware, snapshot на несъёмном диске (нужно реальное железо/OC2R) |
-| **Java runtime** | Class loader, байткод-интерпретатор, подмножество JDK, GC — для совместимости с Java-модами OC2R |
-| **GUI (v0.7+)** | Window manager, compositor, mouse cursor/click, продвинутый widget toolkit |
-| **Безопасность userland** | umask/права OnyxFS, $5$-хэш совместимость с crypt(3), passwd с пустым текущим паролем |
-| **Платформа/время** | RTC под sedna, точность nanosleep, SBI-звонки (get_spec_version, reboot/shutdown) |
-| **Ввод/QoL** | Ctrl+D = EOF, backspace/стрелки в raw-режиме, история+tab-completion в osh, UART IRQ-driven rx |
-| **Тесты** | journal crash-recovery с реальным блочным I/O (пока ручной QEMU-цикл) |
+## Roadmap
 
-Подробнее — [docs/dev/roadmap.md](docs/dev/roadmap.md) и [todo.md](https://github.com/DivByDiamond/OnyxKernel/blob/main/todo.md).
+Planned work and open issues are tracked in
+[`docs/dev/roadmap.md`](docs/dev/roadmap.md) (project-wide milestones) and
+[OnyxKernel's `todo.md`](https://github.com/DivByDiamond/OnyxKernel/blob/main/todo.md)
+(kernel-level tracking, including in-progress investigations).
 
-## Лицензия
+----
 
-GPL-3.0-or-later
+## License
+
+GPL-3.0-or-later. See [LICENSE](LICENSE).

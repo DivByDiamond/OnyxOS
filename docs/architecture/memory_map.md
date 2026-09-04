@@ -29,10 +29,10 @@
 
 | Адрес | Что | Размер |
 |---|---|---|
-| 0x80000000 | SlipperBoot (текст + данные) | ≤ 32KB |
-| 0x80008000 | SlipperBoot стек | 4KB |
-| 0x80100000 | SlipperBoot bss/data (опциональный резерв) | — |
-| 0x80200000 | **SlipperOS kernel** (из ELF) | переменный |
+| 0x80000000 | OnyxBoot (текст + данные) | ≤ 32KB |
+| 0x80008000 | OnyxBoot стек | 4KB |
+| 0x80100000 | OnyxBoot bss/data (опциональный резерв) | — |
+| 0x80200000 | **OnyxOS kernel** (из ELF) | переменный |
 | 0x80200000 + kernel_size | Heap (bump, page allocator) | до top |
 | memory_top | конец RAM (из FDT) | — |
 
@@ -40,7 +40,7 @@
 > `maxAllocatedMemory = 512MB`. Реальный объём зависит от количества
 > установленных карт (2/4/8/16MB каждая).
 
-## SlipperBoot layout (внутри 0x80000000)
+## OnyxBoot layout (внутри 0x80000000)
 
 ```
 .text.boot   → _start() naked (inline asm)

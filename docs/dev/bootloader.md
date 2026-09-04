@@ -1,4 +1,4 @@
-# SlipperBoot — загрузчик на C++
+# OnyxBoot — загрузчик на C++
 
 ## Дизайн
 
@@ -84,7 +84,7 @@ void boot_main() {
     auto uart_irq  = fdt.uart_interrupt();
     UART uart(uart_addr);
     uart.init();
-    uart.puts("SlipperBoot v0.1\n");
+    uart.puts("OnyxBoot v0.1\n");
 
     auto mem = fdt.memory();
     auto virtio_addrs = fdt.find_virtio();  // compatible = "virtio,mmio"

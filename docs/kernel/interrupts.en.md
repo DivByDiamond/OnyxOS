@@ -47,7 +47,7 @@ struct TrapFrame {
 The kernel runs in S-mode. OpenSBI delegates traps via `stvec`.
 Only S-mode registers are used:
 
-| Purpose | M-mode (OpenSBI) | S-mode (SlipperOS) |
+| Purpose | M-mode (OpenSBI) | S-mode (OnyxOS) |
 |---|---|---|
 | Trap vector | `mtvec` | `stvec` |
 | Exception PC | `mepc` | `sepc` |

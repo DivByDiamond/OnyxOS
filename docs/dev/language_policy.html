@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SlipperOS - Language Policy</title>
+<title>OnyxOS - Language Policy</title>
 <style>*{margin:0;padding:0;box-sizing:border-box}
 body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;display:flex;min-height:100vh}
 nav{width:260px;min-width:260px;background:#161b22;padding:16px;overflow-y:auto;border-right:1px solid #30363d;height:100vh;position:sticky;top:0}
@@ -46,19 +46,19 @@ main li{margin-bottom:4px}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0d1117}::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}</style>
 </head>
 <body>
-<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="../architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="../architecture/design_decisions.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="../architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="../architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="../architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="building.html">&nbsp;&nbsp;Building</a></li><li><a href="contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="known_issues.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="language_policy.html" class="active">&nbsp;&nbsp;Language Policy</a></li><li><a href="roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_slipperos.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
+<nav><h2>OnyxOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="../architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="../architecture/design_decisions.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="../architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="../architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="../architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="building.html">&nbsp;&nbsp;Building</a></li><li><a href="contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="known_issues.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="language_policy.html" class="active">&nbsp;&nbsp;Language Policy</a></li><li><a href="roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_onyxos.html">&nbsp;&nbsp;Why Onyxos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
   <a href="language_policy.html" class="active">RU</a>
   <a href="language_policy.en.html">EN</a>
 </div></nav>
 <main><div class="breadcrumb"><a href="../">Docs</a> <span> / Dev / Language Policy</span></div><h1>Языковая политика</h1>
 <h2>Принцип</h2>
 <p>Каждый слой системы - свой язык. На стыке - только ELF + ABI.</p>
-<pre><code>SlipperBoot   → C++  (один naked entry, остальное чистый C++)
-SlipperOS     → Rust (ядро, драйверы, shell, сервисы)
+<pre><code>OnyxBoot   → C++  (один naked entry, остальное чистый C++)
+OnyxOS     → Rust (ядро, драйверы, shell, сервисы)
 Userspace C   → C    (только picolibc, если нужен порт)
 Userspace C++ → C++  (только если реальный порт Hyprland)
 </code></pre>
-<h2>SlipperBoot: C++ без ассемблера</h2>
+<h2>OnyxBoot: C++ без ассемблера</h2>
 <p>Единственный <code>asm volatile</code> - naked entry point <code>_start()</code>. Всё остальное
 чистый C++: шаблоны для MMIO-регистров, <code>constexpr</code> для адресов,
 RAII для устройств.</p>
@@ -69,10 +69,10 @@ RAII для устройств.</p>
 <li>C++ naked + <code>asm volatile</code> стабильно работает в GCC годами</li>
 <li>bootloader маленький - выгода от шаблонов есть, от borrow checker нет</li>
 </ul>
-<h2>SlipperOS: Rust</h2>
+<h2>OnyxOS: Rust</h2>
 <p>Ядро на Rust <code>#![no_std]</code> под <code>riscv64gc-unknown-none-elf</code>.
 Допустимый ассемблер - только inline <code>asm!</code> внутри Rust-файлов,
-никаких отдельных <code>.S</code> кроме <code>boot/boot.S</code> (который заменится SlipperBoot).</p>
+никаких отдельных <code>.S</code> кроме <code>boot/boot.S</code> (который заменится OnyxBoot).</p>
 <h2>C - только если picolibc в userspace</h2>
 <p>Появляется после v0.5. Один файл syscalls.c, всё остальное - picolibc.</p>
 <h2>C++ - только Hyprland, отдельная ветка</h2>

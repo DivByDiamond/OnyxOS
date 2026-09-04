@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$SCRIPT_DIR/docs"
-TITLE="SlipperOS Documentation"
+TITLE="OnyxOS Documentation"
 
 CSS=$(cat <<'CSS'
 *{margin:0;padding:0;box-sizing:border-box}
@@ -268,7 +268,7 @@ wrap_page() {
 <style>${CSS}</style>
 </head>
 <body>
-<nav><h2>SlipperOS Docs</h2><ul>${sidebar}</ul>${lang_switch}</nav>
+<nav><h2>OnyxOS Docs</h2><ul>${sidebar}</ul>${lang_switch}</nav>
 <main>${breadcrumb}${content}</main>
 </body>
 </html>
@@ -294,7 +294,7 @@ for rel in "${RU_ENTRIES[@]}"; do
   sidebar="$(build_sidebar "$base" "ru")"
   lang_switch="$(build_lang_switch "$base" "ru")"
   breadcrumb="$(build_breadcrumb "$base")"
-  html="$(wrap_page "SlipperOS - ${name}" "$sidebar" "$breadcrumb" "$content" "$lang_switch")"
+  html="$(wrap_page "OnyxOS - ${name}" "$sidebar" "$breadcrumb" "$content" "$lang_switch")"
   out="${md%.md}.html"
   echo "$html" > "$out"
   echo "  ${rel} -> ${rel%.md}.html"
@@ -315,7 +315,7 @@ for rel in "${EN_ENTRIES[@]}"; do
   sidebar="$(build_sidebar "$base" "en")"
   lang_switch="$(build_lang_switch "$base" "en")"
   breadcrumb="$(build_breadcrumb "$base")"
-  html="$(wrap_page "SlipperOS - ${name}" "$sidebar" "$breadcrumb" "$content" "$lang_switch")"
+  html="$(wrap_page "OnyxOS - ${name}" "$sidebar" "$breadcrumb" "$content" "$lang_switch")"
   out="${md%.en.md}.en.html"
   echo "$html" > "$out"
   echo "  ${rel} -> ${rel%.en.md}.en.html"
@@ -332,8 +332,12 @@ echo "$idx_html" > "$ROOT/index.html"
 echo "  index.html"
 
 # ---- index (EN) ----
-if [[ -f "$SCRIPT_DIR/README.en.md" ]]; then
-  readme_en_content="$(md_to_html "$SCRIPT_DIR/README.en.md")"
+# README.md is the single (English) landing page; README.en.md is only used
+# if a separate English variant is ever reintroduced.
+EN_README="$SCRIPT_DIR/README.en.md"
+[[ -f "$EN_README" ]] || EN_README="$SCRIPT_DIR/README.md"
+if [[ -f "$EN_README" ]]; then
+  readme_en_content="$(md_to_html "$EN_README")"
   readme_en_content="$(echo "$readme_en_content" | sed 's|href="LICENSE"|href="../LICENSE"|g')"
   readme_en_content="$(echo "$readme_en_content" | sed 's|href="docs/|href="|g')"
   idx_en_sidebar="$(build_sidebar "" "en")"

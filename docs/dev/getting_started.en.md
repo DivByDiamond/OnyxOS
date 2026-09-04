@@ -15,7 +15,7 @@ cargo build --release
 ## Run in QEMU
 
 ```bash
-qemu-system-riscv64 -machine virt -m 128M -nographic -bios default -kernel target/riscv64gc-unknown-none-elf/release/slipperos
+qemu-system-riscv64 -machine virt -m 128M -nographic -bios default -kernel target/riscv64gc-unknown-none-elf/release/onyx-kernel
 ```
 
 ## OC2r

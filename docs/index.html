@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SlipperOS Documentation</title>
+<title>OnyxOS Documentation</title>
 <style>*{margin:0;padding:0;box-sizing:border-box}
 body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;display:flex;min-height:100vh}
 nav{width:260px;min-width:260px;background:#161b22;padding:16px;overflow-y:auto;border-right:1px solid #30363d;height:100vh;position:sticky;top:0}
@@ -46,11 +46,12 @@ main li{margin-bottom:4px}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0d1117}::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}</style>
 </head>
 <body>
-<nav><h2>SlipperOS Docs</h2><ul><li class="home"><a href="." class="active">Home</a></li><div class="dir">Architecture</div><li><a href="architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="architecture/design_decisions.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="dev/adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="dev/bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="dev/building.html">&nbsp;&nbsp;Building</a></li><li><a href="dev/contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="dev/debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="dev/getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="dev/known_issues.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="dev/language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="dev/roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="dev/wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="lore/why_slipperos.html">&nbsp;&nbsp;Why Slipperos</a></li><div class="dir">Shell</div><li><a href="shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
+<nav><h2>OnyxOS Docs</h2><ul><li class="home"><a href="." class="active">Home</a></li><div class="dir">Architecture</div><li><a href="architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="architecture/design_decisions.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="dev/adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="dev/bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="dev/building.html">&nbsp;&nbsp;Building</a></li><li><a href="dev/contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="dev/debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="dev/getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="dev/known_issues.html">&nbsp;&nbsp;Known Issues</a></li><li><a href="dev/language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="dev/roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="dev/wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="lore/why_onyxos.html">&nbsp;&nbsp;Why Onyxos</a></li><div class="dir">Shell</div><li><a href="shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
   <a href="index.html" class="active">RU</a>
   <a href="index.en.html">EN</a>
 </div></nav>
 <main><h1>OnyxOS</h1>
+<p><a href="https://github.com/DivByDiamond/OnyxOS/actions/workflows/build.yml"><img src="https://github.com/DivByDiamond/OnyxOS/actions/workflows/build.yml/badge.svg" alt="Build &amp; Test" /></a> <a href="https://github.com/DivByDiamond/OnyxOS/actions/workflows/release.yml"><img src="https://github.com/DivByDiamond/OnyxOS/actions/workflows/release.yml/badge.svg" alt="Release" /></a></p>
 <p align="center">
   <img src="https://img.shields.io/badge/arch-RISC--V%2064--bit%20%7C%20RV32-green" alt="RISC-V">
   <img src="https://img.shields.io/badge/kernel-Rust-orange" alt="Rust">
@@ -59,80 +60,113 @@ main li{margin-bottom:4px}
   <img src="https://img.shields.io/badge/compiler-C99-yellow" alt="Compiler">
   <img src="https://img.shields.io/badge/license-GPL--3.0-red" alt="GPL-3.0">
 </p>
-<p>Операционная система для RISC-V (OC2r / Milk-V Duo S). Монолитное ядро на Rust,
-загрузчик на C++, userspace shell на Rust, собственный C-компилятор.</p>
-<h2>Компоненты</h2>
-<table><thead><tr><th>Компонент</th><th>Язык</th><th>Описание</th><th>Статус</th></tr></thead><tbody>
-<tr><td><strong>*<em>*OnyxBoot*</em>*</strong></td><td>C++20</td><td>Загрузчик: FDT, VirtIO, SDHCI, FAT32/ext4, GPT, boot menu</td><td>v0.7</td></tr>
-<tr><td><strong>*<em>*OnyxKernel*</em>*</strong></td><td>Rust</td><td>Монолитное ядро: MM (Sv39), SMP, VFS, TCP/IP, OnyxFS v2 (chmod/symlink/truncate-to-N), FAT32 read+write, 85 syscalls</td><td>v0.5</td></tr>
-<tr><td><strong>*<em>*OnyxShell*</em>*</strong></td><td>Rust</td><td>Шелл: 20 команд, табы, история, пайпы/редиректы, globbing, background jobs</td><td>v0.3</td></tr>
-<tr><td><strong>*<em>*OnyxCompiller*</em>*</strong></td><td>C99</td><td>C → RV64 → <code>`.onx`</code>, single-pass, multi-file compilation, self-hosting stage-1, onyx-ld linker (.o + .a)</td><td>v0.5</td></tr>
-<tr><td><strong>*<em>*libonyxc*</em>*</strong></td><td>C99</td><td>libc: FILE* buffered I/O, sprintf/snprintf/sscanf, errno/strerror/perror, time/signal/stdlib/string/ctype</td><td>v0.5</td></tr>
-<tr><td><strong>*<em>*OnyxOS*</em>*</strong></td><td>-</td><td>Документация, скрипты, интеграция</td><td>meta</td></tr>
+<p>An operating system for RISC-V (QEMU virt, OC2R, Milk-V Duo S). A monolithic
+kernel in Rust, a bootloader in C++, a userspace shell in Rust, and a
+self-hosting C compiler - all built from source and assembled into one
+bootable image.</p>
+<p>This repository is the meta-project: it vendors the other Onyx repositories
+as sibling checkouts, builds all of them, and assembles the boot disk image
+and QEMU launch scripts.</p>
+<hr />
+<h2>Components</h2>
+<table><thead><tr><th>Component</th><th>Language</th><th>Description</th></tr></thead><tbody>
+<tr><td><a href="https://github.com/DivByDiamond/OnyxBoot">OnyxBoot</a></td><td>C++20</td><td>Bootloader: FDT, VirtIO, SDHCI, FAT32/ext4, GPT, boot menu</td></tr>
+<tr><td><a href="https://github.com/DivByDiamond/OnyxKernel">OnyxKernel</a></td><td>Rust</td><td>Monolithic kernel: SMP, Sv39 MM, VFS, TCP/IP, OnyxFS v2, FAT32, wide syscall ABI</td></tr>
+<tr><td><a href="https://github.com/DivByDiamond/OnyxShell">OnyxShell</a></td><td>Rust</td><td><code>`/bin/osh`</code>: built-in commands, tab completion, history, pipes/redirects, globbing, job control</td></tr>
+<tr><td><a href="https://github.com/DivByDiamond/OnyxCompiller">OnyxCompiller</a></td><td>C99</td><td>Self-hosting C compiler: C99 -> RV64 -> <code>`.onx`</code>, <code>`libonyxc`</code></td></tr>
+<tr><td><a href="https://github.com/DivByDiamond/OnyxApps">OnyxApps</a></td><td>C99</td><td>Optional userland applications, built with OnyxCompiller</td></tr>
+<tr><td>OnyxOS (this repo)</td><td>-</td><td>Build orchestration, docs, disk image assembly</td></tr>
 </tbody></table>
-<h2>Быстрый старт</h2>
-<pre><code class="language-bash"># 1. Установить зависимости
-sudo pacman -S cmake base-devel curl libarchive    # Arch
-sudo apt install cmake build-essential libcurl4-openssl-dev libarchive-dev  # Deb
+<hr />
+<h2>Quick Start</h2>
+<pre><code class="language-console">$ # 1. Install build dependencies
+$ sudo pacman -S cmake base-devel curl libarchive             # Arch
+$ sudo apt install cmake build-essential libcurl4-openssl-dev libarchive-dev  # Debian/Ubuntu
 
-# 2. Скачать все Onyx-репозитории
-./.vent/vent -j 4 Onyx.vent
+$ # 2. Clone every Onyx repository as a sibling checkout
+$ bash scripts/bootstrap.sh
 
-# 3. Собрать всё
-bash scripts/build-all.sh
+$ # 3. Build every component and assemble the boot disk image
+$ bash scripts/build-all.sh
 
-# 4. Запустить в QEMU
-bash scripts/run-qemu.sh
+$ # 4. Boot it in QEMU
+$ bash scripts/run-qemu.sh
 </code></pre>
-<h2>Структура репозитория</h2>
+<p><code>scripts/bootstrap.sh</code> fetches <a href="https://github.com/grafmorkov/vent">Vent</a>
+(building it from source on first run if needed) and resolves the
+dependency manifest in <code>Onyx.vent</code>, cloning OnyxBoot, OnyxKernel,
+OnyxShell, and OnyxCompiller into <code>.vent/repos/</code>. <code>scripts/build-all.sh</code>
+then builds each component in turn and writes everything to <code>.build/</code>.</p>
+<hr />
+<h2>Repository Layout</h2>
 <pre><code>OnyxOS/
-├── Onyx.vent              # Dependency-файл для Vent
+├── Onyx.vent               # Dependency manifest for Vent
 ├── .vent/
-│   ├── vent               # Vent binary
-│   └── repos/             # Стянутые репозитории (после запуска Vent)
+│   ├── vent                # Vent binary
+│   └── repos/               # Sibling checkouts (after bootstrap.sh)
 ├── scripts/
-│   ├── bootstrap.sh       # Установка Vent + клонирование репозиториев
-│   ├── build-all.sh       # Сборка всех компонентов
-│   └── run-qemu.sh        # Запуск QEMU (OnyxBoot + OnyxKernel)
-├── docs/                  # Документация
-│   ├── architecture/      # Архитектура: boot, memory, privilege modes
-│   ├── dev/               # Разработка: building, contributing, roadmap
-│   ├── hardware/          # Железо: UART, PLIC, CLINT, VirtIO
-│   ├── internals/         # Внутренности: coding style, error handling
-│   ├── kernel/            # Ядро: процессы, MM, прерывания
-│   ├── shell/             # Шелл: команды, internals
-│   └── lore/              # Фольклор
-├── Makefile               # Skeleton (WIP)
+│   ├── bootstrap.sh         # Install Vent, clone dependent repositories
+│   ├── build-all.sh         # Build every component + assemble the disk image
+│   ├── run-qemu.sh          # Boot in QEMU (dev mode or full boot chain)
+│   ├── mk-onyxfs-disk.sh    # Build the FAT32 + OnyxFS partitioned disk image
+│   ├── qemu-smoke.sh        # Headless boot smoke test
+│   └── qemu-interactive-smoke.sh  # Interactive boot smoke test
+├── docs/
+│   ├── architecture/        # Boot chain, memory layout, privilege rings
+│   ├── dev/                 # Building, contributing, roadmap
+│   ├── hardware/            # UART, PLIC, CLINT, VirtIO
+│   ├── internals/            # Coding style, error handling conventions
+│   ├── kernel/               # Process model, memory management, interrupts
+│   ├── shell/                 # Shell commands and internals
+│   └── lore/                  # Project history and notes
+├── Makefile
 └── README.md
 </code></pre>
-<h2>Сборка компонентов по отдельности</h2>
+<hr />
+<h2>Running QEMU</h2>
+<p><code>scripts/run-qemu.sh</code> supports two modes:</p>
+<pre><code class="language-console">$ bash scripts/run-qemu.sh boot    # default: full chain via OnyxBoot + a disk image
+$ bash scripts/run-qemu.sh dev     # fast dev loop: QEMU loads the kernel ELF directly, no disk image
+</code></pre>
+<p>Useful environment variables:</p>
+<table><thead><tr><th>Variable</th><th>Effect</th></tr></thead><tbody>
+<tr><td><code>`QEMU_MEM`</code></td><td>RAM size (default <code>`256M`</code>)</td></tr>
+<tr><td><code>`QEMU_EXTRA`</code></td><td>Extra QEMU flags, e.g. <code>`-s -S`</code> for GDB</td></tr>
+</tbody></table>
+<p>SMP is controlled by passing <code>-smp N</code> via <code>QEMU_EXTRA</code>, or by invoking QEMU
+directly (see the <a href="https://github.com/DivByDiamond/OnyxKernel">OnyxKernel README</a>
+for the full manual command line and its multi-hart caveat - the kernel
+supports up to 12 harts, but multi-hart boots are still experimental).</p>
+<hr />
+<h2>Building Components Individually</h2>
 <h3>OnyxKernel</h3>
-<pre><code class="language-bash">cd .vent/repos/OnyxKernel
-cargo kbuild    # alias: cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf
+<pre><code class="language-console">$ cd .vent/repos/OnyxKernel
+$ cargo kbuild    # alias for: cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf
 </code></pre>
 <h3>OnyxBoot</h3>
-<pre><code class="language-bash">cd .vent/repos/OnyxBoot
-make -j$(nproc)
+<pre><code class="language-console">$ cd .vent/repos/OnyxBoot
+$ make -j$(nproc)
 </code></pre>
 <h3>OnyxShell</h3>
-<pre><code class="language-bash">cd .vent/repos/OnyxShell
-bash build.sh
+<pre><code class="language-console">$ cd .vent/repos/OnyxShell
+$ bash build.sh
 </code></pre>
 <h3>OnyxCompiller</h3>
-<pre><code class="language-bash">cd .vent/repos/OnyxCompiller
-make host          # нативный бинар для Linux
-make onyx          # кросс-компиляция в .onx
+<pre><code class="language-console">$ cd .vent/repos/OnyxCompiller
+$ make            # native Linux binary
+$ make onyxcc-onx # cross-compiled .onx for OnyxOS
 </code></pre>
-<h2>Как сделать свою прошивку (OC2R)</h2>
+<hr />
+<h2>Building a Firmware Image for OC2R</h2>
 <blockquote>
-<p><strong>OC2R</strong> - мод для Minecraft (NeoForge), добавляющий виртуальные компьютеры с
-64-битной RISC-V эмуляцией: <a href="https://github.com/TumRedSun/OC2R">https://github.com/TumRedSun/OC2R</a>.
-OnyxOS можно загрузить прямо внутри игры.</p>
+<p><a href="https://github.com/TumRedSun/OC2R">OC2R</a> is a Minecraft (NeoForge) mod
+that adds virtual computers with 64-bit RISC-V emulation. OnyxOS can boot
+directly inside the game.</p>
 </blockquote>
-<p>Мод OC2R умеет скачивать прошивку компьютера из GitHub-репозитория по манифесту
-<code>oc2r-firmware.json</code> в корне репозитория. Мод читает его, берёт ссылку <code>image</code>
-и заливает flash-образ в виртуальную машину.</p>
-<h3>Формат манифеста <code>oc2r-firmware.json</code></h3>
+<p>OC2R downloads a computer's firmware from a GitHub repository using an
+<code>oc2r-firmware.json</code> manifest at the repository root. The mod reads it,
+follows the <code>image</code> link, and flashes that image into the virtual machine.</p>
+<h3>Manifest format (<code>oc2r-firmware.json</code>)</h3>
 <pre><code class="language-json">{
   &quot;name&quot;: &quot;OnyxOS&quot;,
   &quot;version&quot;: &quot;0.3.0&quot;,
@@ -140,63 +174,74 @@ OnyxOS можно загрузить прямо внутри игры.</p>
   &quot;image&quot;: &quot;https://github.com/DivByDiamond/OnyxOS/releases/latest/download/onyx-flash.img&quot;
 }
 </code></pre>
-<table><thead><tr><th>Поле</th><th>Значение</th><th>Описание</th></tr></thead><tbody>
-<tr><td><code>`name`</code></td><td><code>`OnyxOS`</code></td><td>Название прошивки</td></tr>
-<tr><td><code>`version`</code></td><td><code>`0.3.0`</code></td><td>Версия из <code>`Cargo.toml`</code> воркспейса OnyxKernel</td></tr>
-<tr><td><code>`layout`</code></td><td><code>`minux`</code></td><td>Схема раскладки flash (см. ниже)</td></tr>
-<tr><td><code>`image`</code></td><td>прямая ссылка на <code>`onyx-flash.img`</code></td><td>Цельный flash-образ, прикреплённый к GitHub Release</td></tr>
+<table><thead><tr><th>Field</th><th>Value</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>`name`</code></td><td><code>`OnyxOS`</code></td><td>Firmware name</td></tr>
+<tr><td><code>`version`</code></td><td>e.g. <code>`0.3.0`</code></td><td>Matches the OnyxKernel workspace <code>`Cargo.toml`</code> version</td></tr>
+<tr><td><code>`layout`</code></td><td><code>`minux`</code></td><td>Flash layout scheme (below)</td></tr>
+<tr><td><code>`image`</code></td><td>direct link to <code>`onyx-flash.img`</code></td><td>The flat flash image attached to a GitHub Release</td></tr>
 </tbody></table>
-<p>Раскладка <code>minux</code> (flash ровно 15 МБ):</p>
-<table><thead><tr><th>Offset</th><th>Размер</th><th>Содержимое</th></tr></thead><tbody>
-<tr><td><code>`0x000000`</code> (0)</td><td>-</td><td><code>`fw_jump.bin`</code> - OpenSBI (файл из мода OC2R: <code>`src/main/scripts/firmware_files/fw_jump.bin`</code>)</td></tr>
-<tr><td><code>`0x200000`</code> (2 МБ)</td><td>-</td><td>Образ ядра OnyxKernel (ELF, собранный cargo)</td></tr>
-<tr><td>до 15 МБ</td><td>-</td><td>Нули</td></tr>
+<p><code>minux</code> layout (flash is exactly 15 MB):</p>
+<table><thead><tr><th>Offset</th><th>Size</th><th>Contents</th></tr></thead><tbody>
+<tr><td><code>`0x000000`</code></td><td>-</td><td><code>`fw_jump.bin`</code> (OpenSBI, from the OC2R mod's <code>`src/main/scripts/firmware_files/`</code>)</td></tr>
+<tr><td><code>`0x200000`</code> (2 MB)</td><td>-</td><td>OnyxKernel image (ELF, built by cargo)</td></tr>
+<tr><td>up to 15 MB</td><td>-</td><td>zero-filled</td></tr>
 </tbody></table>
-<h3>Сборка образа вручную</h3>
-<pre><code class="language-bash"># 1. Разрешить зависимости - vent клонирует репозитории в .vent/repos/
-make deps
+<h3>Building the image manually</h3>
+<pre><code class="language-console">$ # 1. Resolve dependencies (vent clones the repos into .vent/repos/)
+$ make deps
 
-# 2. Собрать bootloader и ядро
-make -C .vent/repos/OnyxBoot
-cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf \
-  --manifest-path .vent/repos/OnyxKernel/Cargo.toml
+$ # 2. Build the bootloader and kernel
+$ make -C .vent/repos/OnyxBoot
+$ cargo build --release -p onyx_kernel --target riscv64gc-unknown-none-elf \
+    --manifest-path .vent/repos/OnyxKernel/Cargo.toml
 
-# 3. Положить настоящий OpenSBI как firmware/fw_jump.bin
-#    (берётся из мода OC2R: src/main/scripts/firmware_files/fw_jump.bin)
+$ # 3. Place a real OpenSBI build at firmware/fw_jump.bin
+$ #    (from the OC2R mod: src/main/scripts/firmware_files/fw_jump.bin)
 
-# 4. Склеить образ ровно 15 МБ по схеме minux
-dd if=/dev/zero of=onyx-flash.img bs=1M count=15
-dd if=firmware/fw_jump.bin of=onyx-flash.img conv=notrunc
-dd if=.vent/repos/OnyxKernel/target/riscv64gc-unknown-none-elf/release/onyx-kernel \
-   of=onyx-flash.img bs=1M seek=2 conv=notrunc
+$ # 4. Assemble a 15 MB image using the minux layout
+$ dd if=/dev/zero of=onyx-flash.img bs=1M count=15
+$ dd if=firmware/fw_jump.bin of=onyx-flash.img conv=notrunc
+$ dd if=.vent/repos/OnyxKernel/target/riscv64gc-unknown-none-elf/release/onyx-kernel \
+    of=onyx-flash.img bs=1M seek=2 conv=notrunc
 </code></pre>
-<h3>Автоматическая сборка через GitHub Actions</h3>
-<p><code>.github/workflows/release.yml</code> при пуше git-тега (например <code>v0.3.0</code>):</p>
+<h3>Automated builds via GitHub Actions</h3>
+<p><code>.github/workflows/release.yml</code> runs on every pushed git tag (e.g. <code>v0.3.0</code>):</p>
 <ol>
-<li>Собирает все компоненты (<code>make deps</code> → vent клонирует OnyxKernel/OnyxBoot/OnyxShell/OnyxCompiller);</li>
-<li>Склеивает <code>onyx-flash.img</code> (15 МБ, layout <code>minux</code>);</li>
-<li>Создаёт GitHub Release и прикрепляет образ.</li>
+<li>Builds every component (<code>make deps</code> resolves OnyxKernel/OnyxBoot/OnyxShell/OnyxCompiller via Vent).</li>
+<li>Assembles <code>onyx-flash.img</code> (15 MB, <code>minux</code> layout).</li>
+<li>Creates a GitHub Release and attaches the image.</li>
 </ol>
-<p>Ссылка <code>image</code> в манифесте указывает на <code>/releases/latest/download/onyx-flash.img</code> -
-GitHub сам отдаёт ассет последнего релиза по тегу.</p>
-<p>Для рабочего релиза нужно:</p>
+<p>The manifest's <code>image</code> field points at
+<code>/releases/latest/download/onyx-flash.img</code>, which GitHub resolves to the
+newest release's asset automatically.</p>
+<p>To produce a working release you need to either:</p>
 <ol>
-<li>Положить настоящий <code>fw_jump.bin</code> (OpenSBI) в <code>firmware/fw_jump.bin</code> репозитория
-либо задать переменную репозитория <code>OC2R_FW_JUMP_URL</code> (если файла нет, CI
-соберёт образ с заглушкой - он не загрузится);</li>
-<li>Создать тег <code>v0.3.0</code> и запушить - CI соберёт и зальёт образ.</li>
+<li>Commit a real <code>fw_jump.bin</code> (OpenSBI) at <code>firmware/fw_jump.bin</code>, or set the
+repository variable <code>OC2R_FW_JUMP_URL</code> (without either, CI builds an image
+with a placeholder that will not boot); and</li>
+<li>Push a tag such as <code>v0.3.0</code> - CI builds and uploads the image.</li>
 </ol>
-<p>На каждый пуш в <code>main</code> workflow дополнительно публикует превью-образ как
-artifact (без создания Release).</p>
-<h2>План развития</h2>
-<table><thead><tr><th>Область</th><th>Что делаем</th></tr></thead><tbody>
-<tr><td><strong>*<em>*OnyxKernel*</em>*</strong></td><td>FAT32 read, USB URB, symlink, chmod, 32-bit порт, unit-тесты</td></tr>
-<tr><td><strong>*<em>*OnyxCompiller*</em>*</strong></td><td>Самокомпиляция, multi-file linking, C++</td></tr>
-<tr><td><strong>*<em>*CI/CD*</em>*</strong></td><td>GitHub Actions, автотесты в QEMU</td></tr>
-<tr><td><strong>*<em>*Железо*</em>*</strong></td><td>Проверка на Milk-V Duo S</td></tr>
-</tbody></table>
-<p>Подробнее - <a href="dev/roadmap.md">docs/dev/roadmap.md</a> и <a href="https://github.com/DivByDiamond/OnyxKernel/blob/main/todo.md">todo.md</a>.</p>
-<h2>Лицензия</h2>
-<p>GPL-3.0-or-later</p></main>
+<p>Every push to <code>main</code> also publishes a preview image as a workflow artifact,
+without creating a Release.</p>
+<hr />
+<h2>Userspace Applications</h2>
+<p>Optional userspace programs live in the
+<a href="https://github.com/DivByDiamond/OnyxApps">OnyxApps</a> monorepo (a text
+editor, a system monitor, an HTTP client, and more). Each application has
+its own <code>README.md</code> under <code>apps/&lt;name&gt;/</code>. Build with <code>make</code> in the OnyxApps
+repository root; CI also publishes <code>build/*.onx</code> artifacts.</p>
+<p>All applications run on top of the kernel's ANSI/VT100 framebuffer
+terminal (<code>fb_term</code>/<code>ansi.rs</code>): SGR colors, cursor positioning, erase
+sequences, scroll regions, per-process <code>termios</code> via <code>TCGETS</code>/<code>TCSETS</code>, and
+<code>TIOCGWINSZ</code> reporting the real framebuffer grid.</p>
+<hr />
+<h2>Roadmap</h2>
+<p>Planned work and open issues are tracked in
+<a href="dev/roadmap.md"><code>docs/dev/roadmap.md</code></a> (project-wide milestones) and
+<a href="https://github.com/DivByDiamond/OnyxKernel/blob/main/todo.md">OnyxKernel's <code>todo.md</code></a>
+(kernel-level tracking, including in-progress investigations).</p>
+<hr />
+<h2>License</h2>
+<p>GPL-3.0-or-later. See <a href="../LICENSE">LICENSE</a>.</p></main>
 </body>
 </html>

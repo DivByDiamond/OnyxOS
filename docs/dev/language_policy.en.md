@@ -5,13 +5,13 @@
 Each system layer has its own language. At the boundary — only ELF + ABI.
 
 ```
-SlipperBoot   → C++  (one naked entry, rest is pure C++)
-SlipperOS     → Rust (kernel, drivers, shell, services)
+OnyxBoot   → C++  (one naked entry, rest is pure C++)
+OnyxOS     → Rust (kernel, drivers, shell, services)
 Userspace C   → C    (picolibc only, if a port is needed)
 Userspace C++ → C++  (only if porting Hyprland)
 ```
 
-## SlipperBoot: C++ without assembly
+## OnyxBoot: C++ without assembly
 
 The only `asm volatile` is the naked entry point `_start()`. Everything else
 is pure C++: templates for MMIO registers, `constexpr` for addresses,
@@ -23,11 +23,11 @@ Why C++, not Rust:
 - C++ naked + `asm volatile` works stably in GCC for years
 - The bootloader is small — templates are beneficial, borrow checker is not
 
-## SlipperOS: Rust
+## OnyxOS: Rust
 
 Kernel in Rust `#![no_std]` targeting `riscv64gc-unknown-none-elf`.
 Allowed assembly — only inline `asm!` inside Rust files,
-no separate `.S` files except `boot/boot.S` (which will be replaced by SlipperBoot).
+no separate `.S` files except `boot/boot.S` (which will be replaced by OnyxBoot).
 
 ## C — picolibc only for userspace
 

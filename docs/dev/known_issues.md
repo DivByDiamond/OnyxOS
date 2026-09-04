@@ -50,7 +50,7 @@
 
 ## Решённые проблемы (исторические)
 
-Все проблемы из предыдущей версии (`known_issues.md` SlipperOS) исправлены:
+Все проблемы из предыдущей версии (`known_issues.md` OnyxOS) исправлены:
 
 - ✅ Контекст свитч — работает (SMP, per-CPU run queues)
 - ✅ Page allocator — bitmap + slab, есть contiguous
