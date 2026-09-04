@@ -1,4 +1,4 @@
-# SlipperOS Roadmap
+# OnyxOS Roadmap
 
 ## v0.1 — Skeleton
 - [x] UART console (NS16550A)
@@ -9,7 +9,7 @@
 - [x] Slip shell (7 commands)
 - [x] Panic handler
 
-## SlipperBoot (v0.4)
+## OnyxBoot (v0.4)
 - [x] _start entry (naked C++, inline asm)
 - [x] UART driver (NS16550A, address from FDT)
 - [x] VirtIO block v2 MMIO (probe, read_sector)
@@ -47,4 +47,4 @@
 ## v1.0 — Release
 - [ ] Slip shell as userspace program
 - [ ] Port picolibc for C software
-- [ ] Module loading via SlipperBoot
+- [ ] Module loading via OnyxBoot

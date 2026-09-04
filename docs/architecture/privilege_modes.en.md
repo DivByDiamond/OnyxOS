@@ -1,7 +1,7 @@
 # Privilege Modes
 
 - **M-mode** — OpenSBI (built into OC2r)
-- **S-mode** — SlipperOS (kernel)
+- **S-mode** — OnyxOS (kernel)
 - **U-mode** — not used (yet)
 
-SlipperOS runs exclusively in S-mode, using OpenSBI for M-mode services.
+OnyxOS runs exclusively in S-mode, using OpenSBI for M-mode services.

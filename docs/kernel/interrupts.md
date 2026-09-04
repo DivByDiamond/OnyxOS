@@ -47,7 +47,7 @@ struct TrapFrame {
 Ядро работает в S-mode. OpenSBI делегирует трапы через `stvec`.
 Используются исключительно S-mode регистры:
 
-| Назначение | M-mode (OpenSBI) | S-mode (SlipperOS) |
+| Назначение | M-mode (OpenSBI) | S-mode (OnyxOS) |
 |---|---|---|
 | Trap vector | `mtvec` | `stvec` |
 | Exception PC | `mepc` | `sepc` |

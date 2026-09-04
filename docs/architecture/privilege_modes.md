@@ -1,7 +1,7 @@
 # Привилегированные режимы
 
 - **M-mode** — OpenSBI (встроен в OC2r)
-- **S-mode** — SlipperOS (ядро)
+- **S-mode** — OnyxOS (ядро)
 - **U-mode** — не используется (пока)
 
-SlipperOS работает исключительно в S-mode, используя OpenSBI для M-mode сервисов.
+OnyxOS работает исключительно в S-mode, используя OpenSBI для M-mode сервисов.

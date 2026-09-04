@@ -48,7 +48,7 @@ wording from old docs — configure `stvec`, not `mtvec`.
 (0x10001000, IRQ 1-8), both kernel and bootloader currently hardcode
 addresses and IRQs. This will not work on OC2r with dynamic device placement.
 
-**Plan**: SlipperBoot — FDT parser for UART and VirtIO;
+**Plan**: OnyxBoot — FDT parser for UART and VirtIO;
 v0.3 or v0.4 — pass FDT to kernel and remove hardcoding.
 
 ## Userspace: ELF load + syscalls not implemented
@@ -62,7 +62,7 @@ Depends on v0.4 (VirtIO block) and v0.5 (SlipFS).
 processed, causing `read_line()` to always return `None`, so commands
 are never executed.
 
-**Plan**: fix in SlipperBoot.
+**Plan**: fix in OnyxBoot.
 
 ## Sv39: map_page() does not allocate page tables
 

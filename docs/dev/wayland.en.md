@@ -2,7 +2,7 @@
 
 ## Goal
 
-Run a Wayland compositor on SlipperOS, eventually Hyprland.
+Run a Wayland compositor on OnyxOS, eventually Hyprland.
 
 ## Layers
 
@@ -17,7 +17,7 @@ Run a Wayland compositor on SlipperOS, eventually Hyprland.
 [Compositor] Wayland protocol
     → wl_display, wl_surface, wl_buffer
     ↓
-[Client] application (slipper-app, shell, etc)
+[Client] application (onyx-app, shell, etc)
 ```
 
 ## VirtIO-GPU in kernel
@@ -67,7 +67,7 @@ compositor (userspace):
 
 ## Wayland compositor
 
-Minimal compositor for SlipperOS:
+Minimal compositor for OnyxOS:
 
 ```rust
 // wl_display — shared display

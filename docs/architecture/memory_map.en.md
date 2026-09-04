@@ -29,10 +29,10 @@ dynamically — read from the FDT node's `interrupts` property.
 
 | Address | What | Size |
 |---|---|---|
-| 0x80000000 | SlipperBoot (text + data) | ≤ 32KB |
-| 0x80008000 | SlipperBoot stack | 4KB |
-| 0x80100000 | SlipperBoot bss/data (optional reserve) | — |
-| 0x80200000 | **SlipperOS kernel** (from ELF) | variable |
+| 0x80000000 | OnyxBoot (text + data) | ≤ 32KB |
+| 0x80008000 | OnyxBoot stack | 4KB |
+| 0x80100000 | OnyxBoot bss/data (optional reserve) | — |
+| 0x80200000 | **OnyxOS kernel** (from ELF) | variable |
 | 0x80200000 + kernel_size | Heap (bump, page allocator) | up to top |
 | memory_top | end of RAM (from FDT) | — |
 
@@ -40,7 +40,7 @@ dynamically — read from the FDT node's `interrupts` property.
 > `maxAllocatedMemory = 512MB`. Actual size depends on the number
 > of installed cards (2/4/8/16MB each).
 
-## SlipperBoot layout (inside 0x80000000)
+## OnyxBoot layout (inside 0x80000000)
 
 ```
 .text.boot   → _start() naked (inline asm)

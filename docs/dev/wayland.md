@@ -2,7 +2,7 @@
 
 ## Цель
 
-Запустить Wayland compositor на SlipperOS, в перспективе — Hyprland.
+Запустить Wayland compositor на OnyxOS, в перспективе — Hyprland.
 
 ## Слои
 
@@ -17,7 +17,7 @@
 [Compositor] Wayland protocol
     → wl_display, wl_surface, wl_buffer
     ↓
-[Client] приложение (slipper-app, shell, etc)
+[Client] приложение (onyx-app, shell, etc)
 ```
 
 ## VirtIO-GPU в ядре
@@ -67,7 +67,7 @@ compositor (userspace):
 
 ## Wayland compositor
 
-Минимальный compositor для SlipperOS:
+Минимальный compositor для OnyxOS:
 
 ```rust
 // wl_display — общий дисплей
