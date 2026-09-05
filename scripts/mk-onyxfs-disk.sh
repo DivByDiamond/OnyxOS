@@ -71,13 +71,29 @@ fi
 MKIMAGE=""
 ELF2ONX=""
 PSFGEN=""
+# Always run `cargo tbuild` — cargo is incremental and no-ops instantly when
+# nothing changed, but previously this script only invoked it when the
+# binaries were entirely MISSING, so a source change to mkimage/elf2onx/
+# psfgen silently kept using a stale prebuilt binary forever (bug found
+# 2026-09-05: an mkimage fix for the inode-headroom bug had no effect on
+# rebuilds until the binary was deleted by hand).
+echo "[*] Building OnyxKernel tools (mkimage, elf2onx, psfgen)..."
+(cd "$ONYXKERNEL_DIR" && cargo tbuild 2>&1 | tail -5)
 # cargo places host binaries under target/<host-triple>/release/ only when
 # --target <host> was passed explicitly; a plain `cargo build --release`
 # puts them in target/release/. Accept both locations, preferring the
 # explicit-target one.
+
+# `cargo tbuild` (no explicit --target) always places host binaries in
+# target/release/, never target/<host-triple>/release/ — that layout only
+# happens if someone runs cargo with an explicit --target matching the host.
+# A stale binary left over from such a run previously shadowed the real one
+# here since this loop checked it first (bug found 2026-09-05: an mkimage
+# fix appeared to have no effect because a months-old target/<host>/release/
+# copy kept winning). Check the plain path cargo actually uses first.
 for TOOLDIR in \
-    "$ONYXKERNEL_DIR/target/$HOST_TARGET/release" \
-    "$ONYXKERNEL_DIR/target/release"
+    "$ONYXKERNEL_DIR/target/release" \
+    "$ONYXKERNEL_DIR/target/$HOST_TARGET/release"
 do
     if [ -x "$TOOLDIR/mkimage" ] && [ -x "$TOOLDIR/elf2onx" ] && [ -x "$TOOLDIR/psfgen" ]; then
         MKIMAGE="$TOOLDIR/mkimage"
@@ -88,22 +104,6 @@ do
 done
 
 if [ -z "$MKIMAGE" ] || [ ! -x "$MKIMAGE" ] || [ ! -x "$ELF2ONX" ] || [ ! -x "$PSFGEN" ]; then
-    echo "[*] Building OnyxKernel tools (mkimage, elf2onx, psfgen)..."
-    (cd "$ONYXKERNEL_DIR" && cargo tbuild 2>&1 | tail -5)
-    # Re-scan after the build attempt (cargo may have used either layout).
-    for TOOLDIR in \
-        "$ONYXKERNEL_DIR/target/$HOST_TARGET/release" \
-        "$ONYXKERNEL_DIR/target/release"
-    do
-        if [ -x "$TOOLDIR/mkimage" ] && [ -x "$TOOLDIR/elf2onx" ] && [ -x "$TOOLDIR/psfgen" ]; then
-            MKIMAGE="$TOOLDIR/mkimage"
-            ELF2ONX="$TOOLDIR/elf2onx"
-            PSFGEN="$TOOLDIR/psfgen"
-            break
-        fi
-    done
-fi
-if [ -z "$MKIMAGE" ] || [ ! -x "$MKIMAGE" ] || [ ! -x "$ELF2ONX" ] || [ ! -x "$PSFGEN" ]; then
     echo "[-] Tools missing after build attempt. Check cargo output above."
     exit 1
 fi
@@ -112,7 +112,7 @@ fi
 # These are Rust binaries from OnyxKernel/init, each with its own [[bin]]
 # entry in Cargo.toml. We build them all in release mode for riscv64gc, then
 # convert each to .onx with elf2onx --ring=1 (they run in root space).
-echo "[*] Building init/login/passwd/useradd/userdel (onyx_init crate)..."
+echo "[*] Building init/login/passwd/su/useradd/userdel (onyx_init crate)..."
 (
     cd "$ONYXKERNEL_DIR"
     cargo ibuild 2>&1 | tail -5
@@ -123,10 +123,11 @@ INIT_TARGET="$ONYXKERNEL_DIR/target/riscv64gc-unknown-none-elf/release"
 INIT_ELF="$INIT_TARGET/onyx-init"
 LOGIN_ELF="$INIT_TARGET/onyx-login"
 PASSWD_ELF="$INIT_TARGET/onyx-passwd"
+SU_ELF="$INIT_TARGET/onyx-su"
 USERADD_ELF="$INIT_TARGET/onyx-useradd"
 USERDEL_ELF="$INIT_TARGET/onyx-userdel"
 
-for elf in "$INIT_ELF" "$LOGIN_ELF" "$PASSWD_ELF" "$USERADD_ELF" "$USERDEL_ELF"; do
+for elf in "$INIT_ELF" "$LOGIN_ELF" "$PASSWD_ELF" "$SU_ELF" "$USERADD_ELF" "$USERDEL_ELF"; do
     if [ ! -f "$elf" ]; then
         echo "[-] Expected binary not found: $elf"
         echo "    (Did cargo ibuild succeed? Check 'init/Cargo.toml [[bin]]' entries.)"
@@ -141,6 +142,7 @@ mkdir -p "$TMP_ONX_DIR"
 "$ELF2ONX" --ring=1 "$INIT_ELF"   "$TMP_ONX_DIR/init.onx"
 "$ELF2ONX" --ring=1 "$LOGIN_ELF"  "$TMP_ONX_DIR/login.onx"
 "$ELF2ONX" --ring=1 "$PASSWD_ELF"  "$TMP_ONX_DIR/passwd.onx"
+"$ELF2ONX" --ring=1 "$SU_ELF" "$TMP_ONX_DIR/su.onx"
 "$ELF2ONX" --ring=1 "$USERADD_ELF" "$TMP_ONX_DIR/useradd.onx"
 "$ELF2ONX" --ring=1 "$USERDEL_ELF" "$TMP_ONX_DIR/userdel.onx"
 cp "$OSH_ONX" "$TMP_ONX_DIR/osh.onx"
@@ -177,6 +179,7 @@ file $TMP_ONX_DIR/init.onx /bin/init
 file $TMP_ONX_DIR/login.onx /bin/login
 file $TMP_ONX_DIR/osh.onx /bin/osh
 file $TMP_ONX_DIR/passwd.onx /bin/passwd
+file $TMP_ONX_DIR/su.onx /bin/su
 file $TMP_ONX_DIR/useradd.onx /bin/useradd
 file $TMP_ONX_DIR/userdel.onx /bin/userdel
 file $TMP_ONX_DIR/passwd.txt /etc/passwd
@@ -184,15 +187,20 @@ file $TMP_ONX_DIR/shadow.txt /etc/shadow
 file $TMP_ONX_DIR/default.psf /font/default.psf
 EOF
 
-# Optional userland apps from OnyxApps (https://github.com/DivByDiamond/OnyxApps):
-# drop built *.onx (vim.onx, oed.onx, ...) into .tmp-onx before this script
-if [ -f "$TMP_ONX_DIR/vim.onx" ]; then
-    echo "file $TMP_ONX_DIR/vim.onx /bin/vim" >> "$MANIFEST"
-fi
-for app in oed osysmon osnake otop ohttp obrowse; do
-    if [ -f "$TMP_ONX_DIR/$app.onx" ]; then
-        echo "file $TMP_ONX_DIR/$app.onx /bin/$app" >> "$MANIFEST"
-    fi
+# Userland apps from OnyxApps (https://github.com/DivByDiamond/OnyxApps):
+# build-all.sh builds every app under .vent/repos/OnyxApps and copies the
+# resulting *.onx into .tmp-onx before this script runs. Bundle all of them
+# into /bin so every app is available immediately, not just a hardcoded
+# subset — everything already named above (init/login/osh/passwd/useradd/
+# userdel) is skipped since it's placed at a fixed path already.
+CORE_BINS="init login osh passwd su useradd userdel"
+for onx in "$TMP_ONX_DIR"/*.onx; do
+    [ -f "$onx" ] || continue
+    app="$(basename "$onx" .onx)"
+    case " $CORE_BINS " in
+        *" $app "*) continue ;;
+    esac
+    echo "file $onx /bin/$app" >> "$MANIFEST"
 done
 
 # mkimage uses literal path strings in the manifest — substitute $TMP_ONX_DIR

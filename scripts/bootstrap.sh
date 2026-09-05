@@ -30,7 +30,7 @@ echo "[+] All Onyx repos cloned under .vent/repos/"
 echo ""
 
 # Verify
-for repo in OnyxKernel OnyxBoot OnyxShell OnyxCompiller; do
+for repo in OnyxKernel OnyxBoot OnyxShell OnyxCompiller OnyxApps; do
     if [ -d ".vent/repos/$repo" ]; then
         echo "  ✓ $repo"
     else

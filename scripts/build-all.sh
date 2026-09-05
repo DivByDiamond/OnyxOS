@@ -67,6 +67,22 @@ cp onyx-ld "$BUILD_DIR/"
 cd "$OLDPWD"
 echo "[+] OnyxCompiller done"
 
+# 4.5 Build OnyxApps (vim, otop, osnake, ohttp, ...) with the just-built
+#     onyxcc, and drop every resulting .onx straight into .tmp-onx so
+#     mk-onyxfs-disk.sh bundles ALL of them into /bin automatically instead
+#     of relying on someone manually copying prebuilt .onx files there.
+echo "[*] Building OnyxApps (vim, otop, osnake, ohttp, ...)..."
+if [ -d ".vent/repos/OnyxApps" ]; then
+    cd .vent/repos/OnyxApps
+    make ONYXCC="$BUILD_DIR/onyxcc" -j"$(nproc)" 2>&1
+    cd "$OLDPWD"
+    mkdir -p "$BUILD_DIR/.tmp-onx"
+    cp .vent/repos/OnyxApps/build/*.onx "$BUILD_DIR/.tmp-onx/"
+    echo "[+] OnyxApps done"
+else
+    echo "[!] OnyxApps not found under .vent/repos — skipping userland apps"
+fi
+
 # 5. Create boot disk image (FAT32 + OnyxFS two-partition) for OnyxBoot.
 #    Requires: parted, mkfs.fat, mcopy (Arch: pacman -S parted dosfstools mtools)
 #    + OnyxKernel's mkimage, elf2onx, psfgen tools (built via cargo tbuild)
