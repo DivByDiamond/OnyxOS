@@ -60,6 +60,7 @@ echo "[+] OnyxShell done"
 # OnyxCompiller's Makefile has no `host` target — the default `all`
 # target builds both onyxcc (host C compiler) and onyx-ld (host linker).
 echo "[*] Building OnyxCompiller (host onyxcc + onyx-ld)..."
+ONYXCOMPILLER_DIR="$(pwd)/.vent/repos/OnyxCompiller"
 cd .vent/repos/OnyxCompiller
 make 2>&1
 cp onyxcc "$BUILD_DIR/"
@@ -71,10 +72,18 @@ echo "[+] OnyxCompiller done"
 #     onyxcc, and drop every resulting .onx straight into .tmp-onx so
 #     mk-onyxfs-disk.sh bundles ALL of them into /bin automatically instead
 #     of relying on someone manually copying prebuilt .onx files there.
+#
+#     Invoke onyxcc from its ORIGINAL location in .vent/repos/OnyxCompiller,
+#     not the copy in $BUILD_DIR: onyxcc auto-links libonyxc (stdio.h etc.)
+#     by locating it relative to its own binary path, and libonyxc's
+#     syscalls.c in turn includes its syscall-number header via a relative
+#     "../../../include/sys/syscalls.h" — both only resolve correctly from
+#     inside the OnyxCompiller repo layout (libonyxc/ and include/ as
+#     siblings), which the flat $BUILD_DIR copy doesn't preserve.
 echo "[*] Building OnyxApps (vim, otop, osnake, ohttp, ...)..."
 if [ -d ".vent/repos/OnyxApps" ]; then
     cd .vent/repos/OnyxApps
-    make ONYXCC="$BUILD_DIR/onyxcc" -j"$(nproc)" 2>&1
+    make ONYXCC="$ONYXCOMPILLER_DIR/onyxcc" -j"$(nproc)" 2>&1
     cd "$OLDPWD"
     mkdir -p "$BUILD_DIR/.tmp-onx"
     cp .vent/repos/OnyxApps/build/*.onx "$BUILD_DIR/.tmp-onx/"
