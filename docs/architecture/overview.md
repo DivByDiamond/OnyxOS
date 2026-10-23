@@ -9,7 +9,7 @@ OnyxBoot (S-mode, C++)
     ↓
 OnyxKernel (S-mode, Rust — no_std)
     ↓
-init → login → OnyxShell (ring 1, Rust)
+init → login → OnyxShell (root: ring 1, Rust)
     ↓
 OnyxCompiller (ring 2, C — userspace)
 ```
@@ -52,7 +52,7 @@ OnyxCompiller (ring 2, C — userspace)
 
 ## OnyxShell
 
-Пользовательский shell (`/bin/osh`). Работает в ring 1 (root space).
+Пользовательский shell (`/bin/osh`). Стандартная сборка имеет RING1 и работает в ring 1 после входа root. Оба пользовательских кольца используют U-mode. Непривилегированный login пока несовместим с этим образом shell; подробнее — [режимы привилегий](privilege_modes.md).
 
 **Возможности:**
 - 20 built-in команд: ls, cat, cp, mv, rm, mkdir, touch, stat, cd, pwd, echo, whoami, uname, date, clear, help, exit, exec, run, ver

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "revisions": {
+    "OnyxKernel": "c73559c23b4f1f3a6cc6e3a972c7e871dfe5529d",
+    "OnyxBoot": "f4792aac206e598781e55603eb382a180641276c",
+    "OnyxShell": "29db7be72a3a3775416ed20afa85afda38fbb144",
+    "OnyxCompiller": "fc105438233960d9dd03c465c2b43289d50f29cf",
+    "OnyxApps": "47a6a90ccbb0088dae727dc77f0e4408a6890a6b"
+  }
+}

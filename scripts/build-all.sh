@@ -12,6 +12,10 @@ if [ ! -d ".vent/repos/OnyxKernel" ]; then
     bash scripts/bootstrap.sh
 fi
 
+# Locked builds are the default. Local sibling/symlink trees require opt-in.
+python3 scripts/dependencies.py "${ONYX_DEPS_MODE:-check}"
+bash scripts/check-abi.sh "$(pwd)/.vent/repos"
+
 BUILD_DIR="$(pwd)/.build"
 mkdir -p "$BUILD_DIR"
 
@@ -62,35 +66,16 @@ echo "[+] OnyxShell done"
 echo "[*] Building OnyxCompiller (host onyxcc + onyx-ld)..."
 ONYXCOMPILLER_DIR="$(pwd)/.vent/repos/OnyxCompiller"
 cd .vent/repos/OnyxCompiller
-make 2>&1
+make -B 2>&1
 cp onyxcc "$BUILD_DIR/"
 cp onyx-ld "$BUILD_DIR/"
 cd "$OLDPWD"
 echo "[+] OnyxCompiller done"
 
-# 4.5 Build OnyxApps (vim, otop, osnake, ohttp, ...) with the just-built
-#     onyxcc, and drop every resulting .onx straight into .tmp-onx so
-#     mk-onyxfs-disk.sh bundles ALL of them into /bin automatically instead
-#     of relying on someone manually copying prebuilt .onx files there.
-#
-#     Invoke onyxcc from its ORIGINAL location in .vent/repos/OnyxCompiller,
-#     not the copy in $BUILD_DIR: onyxcc auto-links libonyxc (stdio.h etc.)
-#     by locating it relative to its own binary path, and libonyxc's
-#     syscalls.c in turn includes its syscall-number header via a relative
-#     "../../../include/sys/syscalls.h" — both only resolve correctly from
-#     inside the OnyxCompiller repo layout (libonyxc/ and include/ as
-#     siblings), which the flat $BUILD_DIR copy doesn't preserve.
-echo "[*] Building OnyxApps (vim, otop, osnake, ohttp, ...)..."
-if [ -d ".vent/repos/OnyxApps" ]; then
-    cd .vent/repos/OnyxApps
-    make ONYXCC="$ONYXCOMPILLER_DIR/onyxcc" -j"$(nproc)" 2>&1
-    cd "$OLDPWD"
-    mkdir -p "$BUILD_DIR/.tmp-onx"
-    cp .vent/repos/OnyxApps/build/*.onx "$BUILD_DIR/.tmp-onx/"
-    echo "[+] OnyxApps done"
-else
-    echo "[!] OnyxApps not found under .vent/repos — skipping userland apps"
-fi
+# 4.5 Compile every app into a fresh stage with the just-built compiler.
+# Do not package ignored/stale OnyxApps/build or .tmp-onx outputs.
+echo "[*] Building OnyxApps into fresh staging..."
+python3 scripts/build-apps.py "$(pwd)/.vent/repos" "$BUILD_DIR" "$BUILD_DIR/apps.list"
 
 # 5. Create boot disk image (FAT32 + OnyxFS two-partition) for OnyxBoot.
 #    Requires: parted, mkfs.fat, mcopy (Arch: pacman -S parted dosfstools mtools)
@@ -101,9 +86,12 @@ fi
 echo "[*] Creating boot disk image (FAT32 kernel partition + OnyxFS rootfs)..."
 if bash scripts/mk-onyxfs-disk.sh 2>&1; then
     echo "[+] Boot disk ready"
-else
+elif [ "${ONYX_DEPS_MODE:-check}" = workspace ]; then
     echo "[!] Boot disk creation skipped — 'bash scripts/run-qemu.sh boot' will fail"
     echo "    Use 'bash scripts/run-qemu.sh dev' to skip OnyxBoot (faster dev mode)"
+else
+    echo "[-] Locked build failed to create its boot disk" >&2
+    exit 1
 fi
 
 echo ""

@@ -9,7 +9,7 @@ OnyxBoot (S-mode, C++)
     ↓
 OnyxKernel (S-mode, Rust — no_std)
     ↓
-init → login → OnyxShell (ring 1, Rust)
+init → login → OnyxShell (root: ring 1, Rust)
     ↓
 OnyxCompiller (ring 2, C — userspace)
 ```
@@ -53,7 +53,7 @@ Monolithic kernel in pure Rust (`no_std`, `no_main`). RISC-V 64-bit (rv64gc),
 
 ## OnyxShell
 
-Userspace shell (`/bin/osh`). Runs in ring 1 (root space).
+Userspace shell (`/bin/osh`). The shipped RING1 build runs in ring 1 after root login. Both userspace rings use U-mode. Non-root login is currently incompatible with that shell image; see [privilege modes](privilege_modes.en.md).
 
 **Features:**
 - 20 built-in commands: ls, cat, cp, mv, rm, mkdir, touch, stat, cd, pwd, echo, whoami, uname, date, clear, help, exit, exec, run, ver

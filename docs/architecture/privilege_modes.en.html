@@ -52,10 +52,11 @@ main li{margin-bottom:4px}
 </div></nav>
 <main><div class="breadcrumb"><a href="../">Docs</a> <span> / Architecture / Privilege Modes</span></div><h1>Privilege Modes</h1>
 <ul>
-<li><strong>M-mode</strong> - OpenSBI (built into OC2r)</li>
-<li><strong>S-mode</strong> - OnyxOS (kernel)</li>
-<li><strong>U-mode</strong> - not used (yet)</li>
+<li><strong>M-mode</strong> - OnyxBoot or OpenSBI (in OC2R)</li>
+<li><strong>S-mode / ring 0</strong> - OnyxKernel and drivers</li>
+<li><strong>U-mode / ring 1 or 2</strong> - init, login, shell, and applications</li>
 </ul>
-<p>OnyxOS runs exclusively in S-mode, using OpenSBI for M-mode services.</p></main>
+<p>Ring 1 and ring 2 are software ACL levels, not separate RISC-V hardware modes. Privilege drops are one-way; exec/execve reject RING1 images from ring 2.</p>
+<p>Root login retains ring 1. Non-root login drops to ring 2, but cannot launch the shipped RING1 shell. Installing passwd uid/gid is also unfinished.</p></main>
 </body>
 </html>

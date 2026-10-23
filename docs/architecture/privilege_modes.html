@@ -52,10 +52,11 @@ main li{margin-bottom:4px}
 </div></nav>
 <main><div class="breadcrumb"><a href="../">Docs</a> <span> / Architecture / Privilege Modes</span></div><h1>Привилегированные режимы</h1>
 <ul>
-<li><strong>M-mode</strong> - OpenSBI (встроен в OC2r)</li>
-<li><strong>S-mode</strong> - OnyxOS (ядро)</li>
-<li><strong>U-mode</strong> - не используется (пока)</li>
+<li><strong>M-mode</strong> - OnyxBoot либо OpenSBI (в OC2R)</li>
+<li><strong>S-mode / ring 0</strong> - OnyxKernel и драйверы</li>
+<li><strong>U-mode / ring 1 или 2</strong> - init, login, shell и приложения</li>
 </ul>
-<p>OnyxOS работает исключительно в S-mode, используя OpenSBI для M-mode сервисов.</p></main>
+<p>Ring 1 и ring 2 — программные уровни ACL, а не отдельные аппаратные режимы RISC-V. Понижение привилегий однонаправленное; exec/execve отклоняют RING1-образы из ring 2.</p>
+<p>Root-login сохраняет ring 1. Непривилегированный login переходит в ring 2, но не может запустить стандартный RING1-shell. Установка uid/gid из passwd пока не реализована.</p></main>
 </body>
 </html>

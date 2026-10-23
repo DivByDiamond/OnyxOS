@@ -1,6 +1,6 @@
 # OnyxOS — Dependency Resolution File
-# Usage: .vent/vent -j 4 Onyx.vent
-# This will clone all Onyx repositories under .vent/repos/
+# Source URL manifest. Use `make deps` to resolve Onyx.lock.json revisions.
+# Calling Vent directly does not enforce the lock and is not a release build.
 
 git https://github.com/DivByDiamond/OnyxKernel     .vent/repos/OnyxKernel
 git https://github.com/DivByDiamond/OnyxBoot       .vent/repos/OnyxBoot
