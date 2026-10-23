@@ -14,7 +14,7 @@ on:
 
 jobs:
   # =====================================================================
-  # BUILD — builds all components via the vent/Makefile and assembles the
+  # BUILD — builds all components from the dependency lock and assembles the
   # complete flash image onyx-flash.img (exactly 15 MB, "minux" layout).
   # =====================================================================
   build:
@@ -27,7 +27,7 @@ jobs:
       OC2R_FW_JUMP_URL: ${{ vars.OC2R_FW_JUMP_URL }}
     steps:
       # 1. Checkout the OnyxOS repository. Dependencies (OnyxBoot/OnyxKernel/
-      #    OnyxShell/OnyxCompiller) are pulled by the .vent system on step 4.
+      #    OnyxShell/OnyxCompiller) are checked out at locked commits on step 4.
       #    submodules — in case git submodules appear in the repo.
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -35,8 +35,7 @@ jobs:
           submodules: recursive
 
       # 2. System dependencies:
-      #    - cmake/git/build-essential + libcurl/libarchive dev — to build .vent/vent
-      #      from source (Makefile `deps` target) and the host OnyxCC compiler
+      #    - git/python3 — dependency resolver; build-essential — host OnyxCC compiler
       #    - gcc-riscv64-unknown-elf — cross-compiler for OnyxBoot (bootloader)
       - name: Install system dependencies
         run: |
@@ -63,12 +62,14 @@ jobs:
         with:
           targets: riscv64gc-unknown-none-elf
 
-      # 4. make deps:
-      #    - builds .vent/vent from source (grafmorkov/vent) via cmake
-      #    - runs .vent/vent -j 4 Onyx.vent -> clones OnyxKernel,
-      #      OnyxBoot, OnyxShell, OnyxCompiller into .vent/repos/
+      # 4. Clone component URLs and detach at the exact Onyx.lock.json commits.
       - name: Resolve dependencies (make deps)
         run: make deps
+
+      - name: Verify locked component revisions
+        run: |
+          python3 scripts/dependencies.py check
+          bash scripts/check-abi.sh "$PWD/.vent/repos"
 
       # 5. Component builds.
       #    Note: `make build` in the Makefile = build-boot + build-kernel +
@@ -202,7 +203,9 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: onyx-flash.img
-          path: onyx-flash.img
+          path: |
+            onyx-flash.img
+            Onyx.lock.json
           if-no-files-found: error
 
   # =====================================================================
@@ -227,6 +230,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           # The tag is taken from github.ref automatically (ref_name of the tag).
-          files: onyx-flash.img
+          files: |
+            onyx-flash.img
+            Onyx.lock.json
           generate_release_notes: true
           fail_on_unmatched_files: true

@@ -52,11 +52,21 @@ $ # 4. Boot it in QEMU
 $ bash scripts/run-qemu.sh
 ```
 
-`scripts/bootstrap.sh` fetches [Vent](https://github.com/grafmorkov/vent)
-(building it from source on first run if needed) and resolves the
-dependency manifest in `Onyx.vent`, cloning OnyxBoot, OnyxKernel,
-OnyxShell, and OnyxCompiller into `.vent/repos/`. `scripts/build-all.sh`
-then builds each component in turn and writes everything to `.build/`.
+`scripts/bootstrap.sh` reads repository URLs from `Onyx.vent` and checks out
+exact commits from `Onyx.lock.json` into `.vent/repos/`. It uses Python 3 and
+Git directly; Vent is not required. Existing dirty or symlinked repositories
+are never checked out automatically. `scripts/build-all.sh` verifies the lock
+before building and writes artifacts to `.build/`.
+
+For local sibling checkouts or symlinks, explicitly opt into development inputs:
+
+```console
+$ ONYX_DEPS_MODE=workspace bash scripts/build-all.sh
+$ ONYX_DEPS_MODE=workspace bash scripts/build-oc2r.sh
+```
+
+This mode reports revisions and dirty status; it does not claim a locked build.
+See [dependency locking](docs/dev/dependencies.md) for release updates.
 
 ----
 
@@ -64,12 +74,12 @@ then builds each component in turn and writes everything to `.build/`.
 
 ```
 OnyxOS/
-├── Onyx.vent               # Dependency manifest for Vent
+├── Onyx.vent               # Component source URLs
+├── Onyx.lock.json          # Exact component Git revisions
 ├── .vent/
-│   ├── vent                # Vent binary
 │   └── repos/               # Sibling checkouts (after bootstrap.sh)
 ├── scripts/
-│   ├── bootstrap.sh         # Install Vent, clone dependent repositories
+│   ├── bootstrap.sh         # Clone exact locked component revisions
 │   ├── build-all.sh         # Build every component + assemble the disk image
 │   ├── run-qemu.sh          # Boot in QEMU (dev mode or full boot chain)
 │   ├── mk-onyxfs-disk.sh    # Build the FAT32 + OnyxFS partitioned disk image
@@ -184,7 +194,7 @@ follows the `image` link, and flashes that image into the virtual machine.
 ### Building the image manually
 
 ```console
-$ # 1. Resolve dependencies (vent clones the repos into .vent/repos/)
+$ # 1. Resolve locked dependencies into .vent/repos/
 $ make deps
 
 $ # 2. Build the bootloader and kernel
@@ -206,7 +216,7 @@ $ dd if=.vent/repos/OnyxKernel/target/riscv64gc-unknown-none-elf/release/onyx-ke
 
 `.github/workflows/release.yml` runs on every pushed git tag (e.g. `v0.3.0`):
 
-1. Builds every component (`make deps` resolves OnyxKernel/OnyxBoot/OnyxShell/OnyxCompiller via Vent).
+1. Builds every component (`make deps` resolves exact component commits from `Onyx.lock.json`).
 2. Assembles `onyx-flash.img` (15 MB, `minux` layout).
 3. Creates a GitHub Release and attaches the image.
 

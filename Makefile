@@ -1,38 +1,35 @@
-.PHONY: all deps bootstrap build build-boot build-kernel build-shell build-compiller run clean
+.PHONY: all deps bootstrap build build-boot build-kernel build-shell build-compiller check-deps run clean
 
-all: deps build
+all: deps
+	$(MAKE) build
 
 # === Dependencies ===
 
-deps: .vent/vent
-	./.vent/vent -j 4 Onyx.vent
-
-bootstrap:
+deps:
 	bash scripts/bootstrap.sh
 
-.vent/vent:
-	mkdir -p .vent
-	git clone https://github.com/grafmorkov/vent.git /tmp/vent-build 2>/dev/null || true
-	cmake -B /tmp/vent-build/build /tmp/vent-build
-	cmake --build /tmp/vent-build/build
-	cp /tmp/vent-build/build/vent .vent/vent
-	rm -rf /tmp/vent-build
+bootstrap: deps
+
+check-deps:
+	python3 scripts/dependencies.py check
 
 # === Build ===
 
 build: build-boot build-kernel build-shell build-compiller
 
+build-boot build-kernel build-shell build-compiller: | check-deps
+
 build-boot:
 	$(MAKE) -C .vent/repos/OnyxBoot
 
 build-kernel:
-	cargo build --release --manifest-path .vent/repos/OnyxKernel/Cargo.toml
+	cd .vent/repos/OnyxKernel && cargo kbuild
 
 build-shell:
 	cd .vent/repos/OnyxShell && bash build.sh
 
 build-compiller:
-	$(MAKE) -C .vent/repos/OnyxCompiller host
+	$(MAKE) -C .vent/repos/OnyxCompiller
 
 # === Run ===
 

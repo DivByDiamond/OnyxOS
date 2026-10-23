@@ -187,21 +187,22 @@ file $TMP_ONX_DIR/shadow.txt /etc/shadow
 file $TMP_ONX_DIR/default.psf /font/default.psf
 EOF
 
-# Userland apps from OnyxApps (https://github.com/DivByDiamond/OnyxApps):
-# build-all.sh builds every app under .vent/repos/OnyxApps and copies the
-# resulting *.onx into .tmp-onx before this script runs. Bundle all of them
-# into /bin so every app is available immediately, not just a hardcoded
-# subset — everything already named above (init/login/osh/passwd/useradd/
-# userdel) is skipped since it's placed at a fixed path already.
+# Only package the exact outputs compiled by the most recent build-all run.
+# Old .tmp-onx/*.onx and OnyxApps/build/*.onx files are deliberately ignored.
+APPS_LIST="$BUILD_DIR/apps.list"
+if [ ! -f "$APPS_LIST" ]; then
+    echo "[-] Missing fresh app list; run scripts/build-all.sh first" >&2
+    exit 1
+fi
 CORE_BINS="init login osh passwd su useradd userdel"
-for onx in "$TMP_ONX_DIR"/*.onx; do
-    [ -f "$onx" ] || continue
+while IFS= read -r onx; do
+    [ -f "$onx" ] || { echo "[-] App output missing: $onx" >&2; exit 1; }
     app="$(basename "$onx" .onx)"
     case " $CORE_BINS " in
-        *" $app "*) continue ;;
+        *" $app "*) echo "[-] App conflicts with core binary: $app" >&2; exit 1 ;;
     esac
     echo "file $onx /bin/$app" >> "$MANIFEST"
-done
+done < "$APPS_LIST"
 
 # mkimage uses literal path strings in the manifest — substitute $TMP_ONX_DIR
 sed -i "s|\$TMP_ONX_DIR|$TMP_ONX_DIR|g" "$MANIFEST"

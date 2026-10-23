@@ -3,6 +3,8 @@
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")/.." && pwd)
 REPOS=${ONYX_REPOS:-$(cd "$HERE/.." && pwd)}
+python3 "$HERE/scripts/dependencies.py" "${ONYX_DEPS_MODE:-check}" --repos "$REPOS"
+bash "$HERE/scripts/check-abi.sh" "$REPOS"
 KERNEL="$REPOS/OnyxKernel"
 SHELL_REPO="$REPOS/OnyxShell"
 OUT=${ONYX_OUTPUT:-"$HERE/.build/oc2r"}
@@ -28,11 +30,20 @@ echo "file $OUT/passwd.txt /etc/passwd" >> "$MANIFEST"
 echo "file $OUT/shadow.txt /etc/shadow" >> "$MANIFEST"
 "$TOOLS/psfgen" "$OUT/default.psf"
 echo "file $OUT/default.psf /font/default.psf" >> "$MANIFEST"
-# Applications are optional; build them with OnyxApps/make before packaging.
-for app in "$REPOS/OnyxApps"/build/*.onx; do
-    [ -f "$app" ] || continue
-    echo "file $app /bin/$(basename "$app" .onx)" >> "$MANIFEST"
-done
+if [ "${ONYX_DEPS_MODE:-check}" = workspace ]; then
+    # Explicit development mode preserves optional prebuilt applications.
+    for app in "$REPOS/OnyxApps"/build/*.onx; do
+        [ -f "$app" ] || continue
+        echo "file $app /bin/$(basename "$app" .onx)" >> "$MANIFEST"
+    done
+else
+    # Locked packaging must rebuild compiler and apps from selected sources.
+    make -B -C "$REPOS/OnyxCompiller"
+    python3 "$HERE/scripts/build-apps.py" "$REPOS" "$OUT" "$OUT/apps.list"
+    while IFS= read -r app; do
+        echo "file $app /bin/$(basename "$app" .onx)" >> "$MANIFEST"
+    done < "$OUT/apps.list"
+fi
 "$TOOLS/mkimage" "$MANIFEST" "$OUT/onyxfs.img"
 # The filesystem grows into this extra space on mount. The host shares this
 # immutable base and stores each VM's writes in its own persistent COW layer.
