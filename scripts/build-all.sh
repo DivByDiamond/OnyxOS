@@ -3,6 +3,12 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+# Cap build memory (default 6 GiB) so a runaway compiler cannot OOM the host.
+# Override with ONYX_BUILD_MEM_LIMIT=<size> or disable with 0/off.
+# shellcheck source=scripts/mem-limit.sh
+source scripts/mem-limit.sh
+onyx_limit_build_memory "$0" "$@"
+
 echo "=== OnyxOS Build All ==="
 echo ""
 
