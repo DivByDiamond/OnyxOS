@@ -6,6 +6,12 @@ import subprocess
 import tempfile
 
 
+# Apps that must run in root space (ring 1). `mux` is a terminal
+# multiplexer: it owns PTY masters and execs the session shell, both of
+# which the kernel only allows at ring 1. Everything else stays ring 2.
+ROOT_APPS = {"mux"}
+
+
 def build(repos, output, listing):
     output.mkdir(parents=True, exist_ok=True)
     staging = Path(tempfile.mkdtemp(prefix="apps-", dir=output))
@@ -18,8 +24,9 @@ def build(repos, output, listing):
         if not sources:
             raise ValueError(f"No C sources for application {app.name}")
         product = staging / (app.name + ".onx")
+        ring = ["--ring1"] if app.name in ROOT_APPS else []
         subprocess.run(
-            [str(compiler), "-I", str(app), "-o", str(product), *map(str, sources)],
+            [str(compiler), *ring, "-I", str(app), "-o", str(product), *map(str, sources)],
             check=True,
         )
         if not product.is_file():
