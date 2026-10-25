@@ -3,6 +3,11 @@
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")/.." && pwd)
 REPOS=${ONYX_REPOS:-$(cd "$HERE/.." && pwd)}
+# Cap build memory (default 6 GiB); see scripts/mem-limit.sh.
+# shellcheck source=scripts/mem-limit.sh
+source "$HERE/scripts/mem-limit.sh"
+onyx_limit_build_memory "$0" "$@"
+
 python3 "$HERE/scripts/dependencies.py" "${ONYX_DEPS_MODE:-check}" --repos "$REPOS"
 bash "$HERE/scripts/check-abi.sh" "$REPOS"
 KERNEL="$REPOS/OnyxKernel"
