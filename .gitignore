@@ -8,3 +8,6 @@
 *.elf
 
 .claude/
+
+__pycache__/
+*.py[cod]

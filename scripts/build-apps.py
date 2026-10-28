@@ -3,13 +3,15 @@
 import argparse
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 
 
 # Apps that must run in root space (ring 1). `mux` is a terminal
 # multiplexer: it owns PTY masters and execs the session shell, both of
-# which the kernel only allows at ring 1. Everything else stays ring 2.
-ROOT_APPS = {"mux"}
+# which the kernel only allows at ring 1. Lua/luac also need system file
+# access; Lua os.execute uses the same root-only spawn interface.
+ROOT_APPS = {"mux", "lua", "luac"}
 
 
 def build(repos, output, listing):
@@ -20,15 +22,18 @@ def build(repos, output, listing):
     for app in sorted((repos / "OnyxApps/apps").iterdir()):
         if not app.is_dir():
             continue
-        sources = sorted(app.rglob("*.c"))
-        if not sources:
-            raise ValueError(f"No C sources for application {app.name}")
         product = staging / (app.name + ".onx")
         ring = ["--ring1"] if app.name in ROOT_APPS else []
-        subprocess.run(
-            [str(compiler), *ring, "-I", str(app), "-o", str(product), *map(str, sources)],
-            check=True,
-        )
+        custom = app / "build.py"
+        if custom.is_file():
+            command = [sys.executable, str(custom), "--compiler", str(compiler),
+                       "--output", str(product), *ring]
+        else:
+            sources = sorted(app.rglob("*.c"))
+            if not sources:
+                raise ValueError(f"No C sources for application {app.name}")
+            command = [str(compiler), *ring, "-I", str(app), "-o", str(product), *map(str, sources)]
+        subprocess.run(command, check=True)
         if not product.is_file():
             raise ValueError(f"Compiler did not produce {product}")
         products.append(product)
