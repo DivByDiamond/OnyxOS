@@ -204,6 +204,9 @@ while IFS= read -r onx; do
     echo "file $onx /bin/$app" >> "$MANIFEST"
 done < "$APPS_LIST"
 
+python3 scripts/package-lua.py "$VENT_REPOS" "$MANIFEST"
+python3 scripts/package-compiler.py "$VENT_REPOS" "$TMP_ONX_DIR" "$MANIFEST"
+
 # mkimage uses literal path strings in the manifest — substitute $TMP_ONX_DIR
 sed -i "s|\$TMP_ONX_DIR|$TMP_ONX_DIR|g" "$MANIFEST"
 

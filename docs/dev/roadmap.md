@@ -42,7 +42,7 @@
 - [x] RV64IMA codegen
 - [x] .onx v1 output
 - [x] libonyxc (printf, malloc, string, syscall wrappers)
-- [x] 58 тестовых программ
+- [x] Проверки фронтенда и тесты с исполнением (`make check`)
 
 **OnyxOS:**
 - [x] Vent dependency management
@@ -62,15 +62,26 @@
 - [ ] UDP/DHCP/DNS
 
 **OnyxCompiller:**
-- [ ] **Самокомпиляция** (P0)
-- [ ] Multi-file linking
-- [ ] Глобальные инициализаторы массивов/строк
-- [ ] Автоматический test runner
+- [x] Сборка и запуск OnyxCC, собранного самим OnyxCC; компиляция freestanding-программы
+- [x] Несколько C translation units в одном `.onx`
+- [x] Базовые глобальные инициализаторы массивов/строк
+- [x] Автоматический test runner с проверкой исполнения
+- [ ] Повторный полный bootstrap и завершение поддержки C/libc
+- [ ] Отдельная компиляция `.o`, статические библиотеки и совместимый ABI
 
 **Quality:**
 - [ ] GitHub Actions CI
 - [ ] Unit-тесты ядра
 - [ ] Full-stack QEMU test suite
+
+**Приоритет языков перед GUI/Java:**
+- [x] Стандартные Lua 5.5.1 и `luac`: CLI, REPL, Lua-модули, байткод и системные проверки
+- [ ] Полная поддержка C и C++, базовых и пользовательских библиотек
+- [ ] LuaJIT/Luau после стандартной Lua и проверки требований платформы
+- [ ] Портирование существующего `rustc` target/runtime после стабилизации ABI
+
+Ограничения компилятора: [compiler.md](compiler.md) и `OnyxCompiller/docs/STATUS.md`.
+Lua собрана без загрузки нативных shared libraries; полный upstream test suite ещё не подтверждён.
 
 ### v0.6 — расширение
 

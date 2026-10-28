@@ -49,6 +49,8 @@ else
         echo "file $app /bin/$(basename "$app" .onx)" >> "$MANIFEST"
     done < "$OUT/apps.list"
 fi
+python3 "$HERE/scripts/package-lua.py" "$REPOS" "$MANIFEST"
+python3 "$HERE/scripts/package-compiler.py" "$REPOS" "$OUT" "$MANIFEST"
 "$TOOLS/mkimage" "$MANIFEST" "$OUT/onyxfs.img"
 # The filesystem grows into this extra space on mount. The host shares this
 # immutable base and stores each VM's writes in its own persistent COW layer.

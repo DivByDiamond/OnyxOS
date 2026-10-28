@@ -8,7 +8,7 @@
 # Verifies:
 #   - SMOKE_ECHO_OK appears in serial output
 #   - osh prompt is reached
-#   - counts "illegal instruction" lines (known bug, tracked separately)
+#   - rejects any "illegal instruction" lines
 #
 # Env:
 #   DISK         — disk image override (default .build/onyx-boot-disk.img)
@@ -40,6 +40,16 @@ LOG="${LOG:-/tmp/opencode/ismoke.log}"
     -bios .build/onyx-boot.bin \
     -drive file=${DISK:-.build/onyx-boot-disk.img},format=raw,if=none,id=drive0 \
     -device virtio-blk-device,drive=drive0 > "$LOG" 2>&1
-grep -aq "SMOKE_ECHO_OK" "$LOG" && echo "[+] echo OK" || echo "[-] echo FAIL"
-grep -aqE "osh\\\$" "$LOG" && echo "[+] osh prompt OK" || echo "[-] osh prompt FAIL"
-grep -ac "illegal instruction" "$LOG"
+if ! grep -aq "SMOKE_ECHO_OK" "$LOG"; then
+    echo "[-] echo FAIL"; exit 1
+fi
+echo "[+] echo OK"
+if ! grep -aqE "osh\\\$" "$LOG"; then
+    echo "[-] osh prompt FAIL"; exit 1
+fi
+echo "[+] osh prompt OK"
+illegal=$(grep -ac "illegal instruction" "$LOG" || true)
+if [ "$illegal" -ne 0 ]; then
+    echo "[-] illegal instructions: $illegal"; exit 1
+fi
+echo "[+] no illegal instructions"
