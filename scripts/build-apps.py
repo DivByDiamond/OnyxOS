@@ -10,8 +10,9 @@ import tempfile
 # Apps that must run in root space (ring 1). `mux` is a terminal
 # multiplexer: it owns PTY masters and execs the session shell, both of
 # which the kernel only allows at ring 1. Lua/luac also need system file
-# access; Lua os.execute uses the same root-only spawn interface.
-ROOT_APPS = {"mux", "lua", "luac"}
+# access; Lua os.execute uses the same root-only spawn interface. ochat and
+# ochat-gui open the raw OC2R RPC bus (/dev/hvc0), like oc2ctl.
+ROOT_APPS = {"mux", "lua", "luac", "ochat", "ochat-gui"}
 
 
 def build(repos, output, listing):
