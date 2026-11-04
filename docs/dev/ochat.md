@@ -4,7 +4,8 @@
 guest PC talk to other PCs and robots by their ORA address (`7K3F:02Q9`), list
 the devices on the radio network and ping them. Both live in OnyxApps and are
 built and packaged with the other apps (`scripts/build-apps.py`); they run in
-ring 1, like `oc2ctl`, because they open the raw RPC bus `/dev/hvc0`.
+the user ring. The kernel opens `/dev/hvc0` (mode 0600) for uid 0 without ring 1,
+so only root can use the raw RPC bus; ring 1 would let any user bypass that.
 
 ## One process owns the bus
 
