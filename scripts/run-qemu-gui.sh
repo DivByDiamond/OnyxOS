@@ -77,8 +77,17 @@ case "$MODE" in
             exit 1
         fi
         if [ ! -f "$DISK_IMG" ]; then
+            # Same script build-all.sh step 5 runs. It needs the artifacts
+            # produced by build-all.sh (onyx-kernel.elf, osh.onx, apps.list)
+            # plus parted/mkfs.fat/mcopy, so it is the only supported way to
+            # produce the disk outside the full pipeline.
             echo "[*] Boot disk not found — creating it now..."
-            bash scripts/mk-boot-disk.sh
+            if ! bash scripts/mk-onyxfs-disk.sh; then
+                echo "[-] Failed to create $DISK_IMG." >&2
+                echo "    Run 'bash scripts/build-all.sh' (needs parted, dosfstools, mtools)" >&2
+                echo "    or use 'bash scripts/run-qemu-gui.sh dev' to skip OnyxBoot." >&2
+                exit 1
+            fi
         fi
 
         echo "[*] Mode: full boot chain (OpenSBI is replaced by OnyxBoot as -bios)"
