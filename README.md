@@ -11,10 +11,38 @@
   <img src="https://img.shields.io/badge/license-GPL--3.0-red" alt="GPL-3.0">
 </p>
 
-An operating system for RISC-V (QEMU virt, OC2R, Milk-V Duo S). A monolithic
-kernel in Rust, a bootloader in C++, a userspace shell in Rust, and a
-self-hosting C compiler - all built from source and assembled into one
-bootable image.
+<p align="center">
+  <img src="docs/img/screenshot.png" alt="OnyxOS booting in QEMU" width="720">
+</p>
+
+**OnyxOS is an operating system for RISC-V, written from scratch.**
+It started as a system for the [OC2R](https://github.com/TumRedSun/OC2R)
+Minecraft mod (OpenComputers 2, which emulates RISC-V with Sedna), and it also
+boots in QEMU. A Milk-V Duo S port is a goal, not yet verified.
+
+Everything in the stack is our own: a monolithic kernel in Rust, a bootloader
+in C++, a Rust shell, and a self-hosting C compiler that builds the userland.
+
+```console
+$ bash scripts/bootstrap.sh && bash scripts/build-all.sh && bash scripts/run-qemu.sh
+```
+
+Log in as `root` and you get a shell, a TCP/IP stack, FAT32 and OnyxFS v2,
+plus Lua, vim and a few more apps built with our own compiler.
+
+### Status
+
+| Area | State |
+|------|-------|
+| Boot in QEMU `virt` (OpenSBI, OnyxBoot, kernel, init, login) | Works |
+| Boot inside OC2R (Sedna) | Works, verified in-game |
+| TCP/IP, UDP, DHCP, DNS | Works; HTTP only, no TLS |
+| FAT32, OnyxFS v2 (journal, snapshots) | Works |
+| Self-hosting compiler | Works (`make selfhost-test`) |
+| SMP | Experimental, multi-hart boots are not stable yet |
+| Unprivileged user sessions | Unfinished: login does not install uid/gid yet |
+| Real single-board hardware (Milk-V Duo S) | Not verified |
+| GUI (window manager, compositor), Java runtime | Planned |
 
 This repository is the meta-project: it vendors the other Onyx repositories
 as sibling checkouts, builds all of them, and assembles the boot disk image
