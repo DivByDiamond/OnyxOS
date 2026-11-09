@@ -54,3 +54,32 @@ otherwise shift an image into a preceding surface, keyboard or unmapped gap.
 Device mmap preserves the physical sub-page offset in its returned user pointer
 and reserves the full rounded extent; callers unmap the aligned base and include
 the prefix in the length, as /bin/fb-draw demonstrates.
+
+
+## Tablet widget integration (16 MiB)
+
+`OnyxTabletSmoke.java` uses Sedna's real RISC-V machine with exactly 16 MiB
+RAM, one 256x160 RGB565 display and a combined absolute pointer/keyboard.
+Compile it alongside `OnyxSednaSmoke.java` using the Sedna 5.4.0 dependency
+classpath, then run:
+
+```sh
+javac -cp "$SEDNA_CLASSPATH" -d /tmp/onyx-tablet-qa scripts/qa/OnyxSednaSmoke.java scripts/qa/OnyxTabletSmoke.java
+java -Xmx768m -cp "/tmp/onyx-tablet-qa:$SEDNA_CLASSPATH" OnyxTabletSmoke fw_jump.bin onyx-kernel.bin onyxfs.img
+```
+
+Use a fresh stock image (initial root account has no password). The check boots
+to the shell, runs `otablet --device`, verifies real guest widget pixels and a
+completed absolute pointer click, checks that releasing outside cancels an
+action, watches for console overwrite, and exits through the VirtIO Q key back
+to an executing shell. The short click overlaps the initial redraw and checks that queued button edges
+survive between the application's pointer polls. A pass ends with
+`ONYX_TABLET_SMOKE_PASS RAM=16 display=256x160 pointer=absolute counter=1 short-click=40ms exit=q`.
+
+For process-death cleanup, compile `scripts/qa/tablet-kill.c` with the selected
+OnyxCC (`--ring1 -I "$ONYX_REPOS/OnyxCompiller/include"`), add it only to a
+separate QA manifest as `/bin/tablet-kill`, rebuild/pad that QA image to 16 MiB,
+and append `kill-test` to the smoke command. The helper spawns the actual widget
+application, verifies that another process cannot claim its console, sends
+SIGKILL, waits for death, and verifies that the console can be claimed again.
+The helper is excluded from the stock image.
