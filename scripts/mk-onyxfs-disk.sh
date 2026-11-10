@@ -39,7 +39,10 @@ DISK_IMG="$BUILD_DIR/onyx-boot-disk.img"
 ROOTFS_IMG="$BUILD_DIR/onyxfs-rootfs.img"   # intermediate file
 
 # Sanity checks
-KERNEL_ELF="$BUILD_DIR/onyx-kernel.elf"
+# Prefer the stripped kernel: the bootloader reads the entire ELF file, and
+# symbol tables are dead weight on the boot disk (build-all.sh produces it).
+KERNEL_ELF="$BUILD_DIR/onyx-kernel-load.elf"
+[ -f "$KERNEL_ELF" ] || KERNEL_ELF="$BUILD_DIR/onyx-kernel.elf"
 OSH_ONX="$BUILD_DIR/osh.onx"
 if [ ! -f "$KERNEL_ELF" ]; then
     echo "[-] $KERNEL_ELF not found — run 'bash scripts/build-all.sh' first."
