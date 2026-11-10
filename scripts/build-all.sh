@@ -55,6 +55,27 @@ cd .vent/repos/OnyxKernel
 cargo kbuild 2>&1
 cp target/riscv64gc-unknown-none-elf/release/onyx-kernel "$BUILD_DIR/onyx-kernel.elf"
 cd "$OLDPWD"
+
+# The bootloader reads the whole ELF file from FAT into RAM. Symbol tables
+# (.symtab/.strtab) are never used on target and dominate the file: with
+# --strip-all the kernel goes from ~1.87 MB to ~0.39 MB, which cuts the
+# bootloader's read phase from ~83 ms to ~18 ms in QEMU TCG (and ~4.7x the
+# SD-card I/O on real hardware). Keep the full ELF for gdb and boot the
+# stripped copy.
+KERNEL_STRIPPED="$BUILD_DIR/onyx-kernel-load.elf"
+stripped=0
+for strip_tool in riscv64-elf-strip riscv64-unknown-elf-strip riscv64-linux-gnu-strip llvm-strip; do
+    if command -v "$strip_tool" >/dev/null 2>&1; then
+        if "$strip_tool" --strip-all -o "$KERNEL_STRIPPED" "$BUILD_DIR/onyx-kernel.elf"; then
+            stripped=1
+            break
+        fi
+    fi
+done
+if [ "$stripped" -eq 0 ]; then
+    echo "[!] no strip tool found; booting the unstripped kernel (slower boot)"
+    cp "$BUILD_DIR/onyx-kernel.elf" "$KERNEL_STRIPPED"
+fi
 echo "[+] OnyxKernel done"
 
 # 3. Build OnyxShell
