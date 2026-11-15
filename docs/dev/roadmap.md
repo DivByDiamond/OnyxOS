@@ -2,6 +2,9 @@
 
 ## OnyxOS Ecosystem Roadmap
 
+Сверка рабочего дерева: 2026-11-15. Реализованные возможности ниже не
+означают полной POSIX/C/C++ совместимости; аппаратные проверки указаны отдельно.
+
 ### v0.4 — текущий релиз ✅
 
 **OnyxBoot:**
@@ -17,7 +20,7 @@
 - [x] Heap allocator
 - [x] Процессы: динамический список, spawn, exec, wait
 - [x] Scheduler: SMP, per-CPU run queues, load balancing
-- [x] 77 syscalls (POSIX-flavored)
+- [x] 100 syscalls в ABI registry (POSIX-flavored)
 - [x] OnyxFS v2 (журналирование, COW snapshots, indirect blocks)
 - [x] OnyxExec v2 загрузчик (RLE compression, ring1 flag)
 - [x] VirtIO block/net, GMAC
@@ -52,14 +55,14 @@
 ### v0.5 — стабилизация ядра
 
 **OnyxKernel:**
-- [ ] FAT32 read (lookup/read)
-- [ ] USB xHCI URB transfer
-- [ ] symlink/readlink
-- [ ] chmod/fchmod
-- [ ] truncate/ftruncate(>0)
-- [ ] getdents64 batched
-- [ ] fork c argv/envp
-- [ ] UDP/DHCP/DNS
+- [x] FAT32 read/write, create/unlink/truncate, LFN и FSINFO (`5e92115`, 2026-10-25)
+- [x] USB xHCI URB transfer и PCI probe; QEMU controller smoke (`7790fdf`, 2026-11-09)
+- [x] symlink/readlink: syscall и VFS/OnyxFS paths (сверено 2026-11-15)
+- [x] chmod/fchmod: syscall и VFS paths (сверено 2026-11-15)
+- [x] truncate/ftruncate(>0): OnyxFS/FAT32 resize (сверено 2026-11-15)
+- [x] getdents64: пакетный syscall (сверено 2026-11-15)
+- [x] fork: копирование argv/envp и child trap frame (сверено 2026-11-15)
+- [x] UDP/DHCP/DNS; DHCP и DNS проверялись в OC2R (2026-10-25, `OnyxKernel/todo.md` §5)
 
 **OnyxCompiller:**
 - [x] Сборка и запуск OnyxCC, собранного самим OnyxCC; компиляция freestanding-программы
@@ -67,12 +70,14 @@
 - [x] Базовые глобальные инициализаторы массивов/строк
 - [x] Автоматический test runner с проверкой исполнения
 - [ ] Повторный полный bootstrap и завершение поддержки C/libc
-- [ ] Отдельная компиляция `.o`, статические библиотеки и совместимый ABI
+- [x] Отдельная компиляция C/C++ → ONYO → `onyx-ld`, libc objects (`bd14e5d`, 2026-11-15)
+- [ ] Полноценный архивный линкер и совместимость с внешним RISC-V ABI
 
 **Quality:**
-- [ ] GitHub Actions CI
-- [ ] Unit-тесты ядра
-- [ ] Full-stack QEMU test suite
+- [x] GitHub Actions CI: component workflows и OnyxOS build/release (сверено 2026-11-15)
+- [x] Host unit-тесты core/kernel и отдельной логики init (`OnyxKernel/docs/TESTING.md`, сверено 2026-11-15)
+- [x] Full-stack QEMU boot/interactive smoke и xHCI smoke (`8c5ad8f`, 2026-11-15)
+- [ ] OnyxFS: fault injection, remount и проверка целостности при переполнении журнала (`FS-J1/J2`, `OnyxKernel/todo.md`)
 
 **Приоритет языков перед GUI/Java:**
 - [x] Стандартные Lua 5.5.1 и `luac`: CLI, REPL, Lua-модули, байткод и системные проверки
@@ -91,7 +96,7 @@ Lua собрана без загрузки нативных shared libraries; п
 - [ ] Динамические модули
 
 **OnyxCompiller:**
-- [ ] C++ фронтенд (начало)
+- [x] C++ subset: классы, RAII, virtual dispatch, exceptions без полного unwinding (`ca8546d`, 2026-11-15)
 - [ ] Оптимизации (const propagation, dead code elimination)
 
 ### v1.0 — стабильный релиз
@@ -99,3 +104,19 @@ Lua собрана без загрузки нативных shared libraries; п
 - [ ] Проверка на реальном Milk-V Duo S
 - [ ] Документация на двух языках
 - [ ] Self-hosting: OnyxOS компилирует OnyxOS
+
+## Проверка среза 2026-11-15
+
+- Согласованные исправления OnyxExec: kernel `14937bc` отклоняет неверные
+  permissions; linker `e7a57ec` использует общие R/W/X и ring1-константы.
+- OnyxFS `9215876`: shrink → extend обнуляет хвост сохранённого блока.
+- Host: 70 core + 3 integration + 293 kernel + 4 init; native Apps;
+  compiler `make check` (66 frontend, 43 runtime, 5 driver, 15 C++, 5 sepcomp)
+  и семь ASan/UBSan suites; 10 тестов dependency resolver; ABI registry — 100.
+- Полная workspace-сборка и locked-сборка в чистых checkout’ах прошли;
+  locked-образ дошёл до login в QEMU.
+- QEMU: boot и interactive smoke; отдельный гостевой прогон tail-zero,
+  octal escape, linked-C++ virtual dispatch (`3 2`) и отказ испорченному ONX
+  с продолжением работы shell. Bootloader: четыре QEMU-сценария прошли.
+- OnyxFS crash recovery после rollover/ошибки очистки пока не подтверждён;
+  `cargo fmt --all -- --check` выявляет старые расхождения вне новых правок.
