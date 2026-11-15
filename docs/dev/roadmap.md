@@ -77,7 +77,8 @@
 - [x] GitHub Actions CI: component workflows и OnyxOS build/release (сверено 2026-11-15)
 - [x] Host unit-тесты core/kernel и отдельной логики init (`OnyxKernel/docs/TESTING.md`, сверено 2026-11-15)
 - [x] Full-stack QEMU boot/interactive smoke и xHCI smoke (`8c5ad8f`, 2026-11-15)
-- [ ] OnyxFS: fault injection, remount и проверка целостности при переполнении журнала (`FS-J1/J2`, `OnyxKernel/todo.md`)
+- [x] OnyxFS: full-block undo, fault injection и remount (`cf6ca42`, 2026-11-15; `FS-J1/J2`)
+- [ ] OnyxFS: flush/barrier и проверка power loss/частичных секторов на OC2R/физических носителях
 
 **Приоритет языков перед GUI/Java:**
 - [x] Стандартные Lua 5.5.1 и `luac`: CLI, REPL, Lua-модули, байткод и системные проверки
@@ -110,7 +111,7 @@ Lua собрана без загрузки нативных shared libraries; п
 - Согласованные исправления OnyxExec: kernel `14937bc` отклоняет неверные
   permissions; linker `e7a57ec` использует общие R/W/X и ring1-константы.
 - OnyxFS `9215876`: shrink → extend обнуляет хвост сохранённого блока.
-- Host: 70 core + 3 integration + 293 kernel + 4 init; native Apps;
+- Host: 70 core + 3 integration + 307 kernel + 4 init; native Apps;
   compiler `make check` (66 frontend, 43 runtime, 5 driver, 15 C++, 5 sepcomp)
   и семь ASan/UBSan suites; 10 тестов dependency resolver; ABI registry — 100.
 - Полная workspace-сборка и locked-сборка в чистых checkout’ах прошли;
@@ -118,5 +119,24 @@ Lua собрана без загрузки нативных shared libraries; п
 - QEMU: boot и interactive smoke; отдельный гостевой прогон tail-zero,
   octal escape, linked-C++ virtual dispatch (`3 2`) и отказ испорченному ONX
   с продолжением работы shell. Bootloader: четыре QEMU-сценария прошли.
-- OnyxFS crash recovery после rollover/ошибки очистки пока не подтверждён;
-  `cargo fmt --all -- --check` выявляет старые расхождения вне новых правок.
+- `cf6ca42`: OnyxFS сохраняет полные before-images метаданных, откатывает
+  незавершённые операции, не переиспользует журнал после неудачного commit.
+  Host write-cut тесты и четыре QEMU-контроля legacy/undo прошли. Гарантия
+  ограничена упорядоченными завершёнными блочными write, не physical power loss.
+- `1c0f188`, `b8866e9`, `773a8b5`, `c27cc31`: полный fmt/строгий Clippy,
+  общие init-модули, удаление dead-code bypass и неиспользуемых заготовок.
+  CI больше не использует advisory-проверку core tests.
+- RV32 smode явно отклоняется: у этой комбинации нет boot entry.
+  Поддерживаемая матрица — RV32 default и RV64 default/smode.
+
+## Обязательная проверка качества
+
+```sh
+bash scripts/quality/check.sh /path/to/component/checkouts
+```
+
+Gate запускает полный fmt и Clippy для поддерживаемых host/target-конфигураций,
+проверяет явный отказ RV32 smode и отсутствие dead-code bypass во всех шести
+компонентах. Для локальных `.vent/repos` аргумент можно опустить.
+Диагностика backend-флага `reserve-x4` сохраняется без подавления: этот флаг
+нужен для регистра `tp`; команды Clippy по-прежнему используют `-D warnings`.
