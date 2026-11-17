@@ -121,6 +121,14 @@ else
     exit 1
 fi
 
+if [ "${ONYX_DEPS_MODE:-check}" = check ]; then
+    # A build must not rewrite tracked artifacts: the next locked build would
+    # then refuse to run. Catch that here instead of in the following build.
+    echo "[*] Verifying locked checkouts stayed clean..."
+    python3 scripts/dependencies.py check
+    echo "[+] Locked checkouts unchanged by the build"
+fi
+
 echo ""
 echo "=== All builds complete ==="
 echo "    Output: $BUILD_DIR/"
