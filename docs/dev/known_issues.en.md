@@ -1,73 +1,58 @@
 # Known Issues
 
-Documented issues currently present in the code.
+> Current as of 2026-11-18. Only **open** limitations are listed here.
+> Closed items live in `docs/dev/roadmap.md`, `OnyxKernel/todo.md` and
+> `docs/history/`; anything done is not copied back here.
 
-## Scheduler: context switch not wired up
+## OnyxKernel
 
-`sched_yield()` advances `CURRENT` and returns. `save_context()` /
-`restore_context()` are written in `context.rs` but never called.
-The scheduler does not actually switch tasks — it just cycles through.
+| Limitation | Where | What remains |
+|------------|-------|--------------|
+| Blocking `recv` | `kernel/src/net/tcp` | There is no per-socket wait queue, so applications poll; a blocking path without busy-poll is needed |
+| TCP sends 536 bytes per segment | `kernel/src/net/tcp` | No IP fragmentation; raise MSS and honour the path MTU |
+| Server sockets are root-only admin | `kernel/src/net` | User-space `listen`/`accept` are unavailable and the contract is not documented in the README |
+| No TLS | userspace (`obrowse`) | The browser stays HTTP-only |
+| No dynamic kernel modules | `kernel/src/fs/procfs` | `/proc/modules` lists built-in drivers only |
+| Journal has no flush/barrier | `kernel/src/fs/onyxfs` | Guarantees cover ordered block writes; power loss and partial sectors are untested on OC2R/physical media (L6) |
+| Glyph blit is per-pixel over MMIO | `kernel/src/drivers/video/fb_term` | Scroll/clear copy words, glyph output does not (L4) |
+| Double buffering unverified | `kernel/src/drivers/video/fb` | Tearing on a live OC2R monitor has not been measured (L5) |
+| URB/HCD layer has no consumer | `kernel/src/drivers/bus/usb/hcd.rs` | Needs USB core enumeration (descriptors, addressing, mass storage) or removal |
+| `nanosleep` on rv32 non-smode | `kernel/src/arch` | Goes through SBI; a direct CLINT MMIO path plus `mtrap_32` is required |
+| RV32 smode unsupported | build | That combination has no boot entry and is rejected explicitly; the supported matrix is RV32 default and RV64 default/smode |
+| No EOF after RST | `kernel/src/net/tcp/sock.rs` | `recv` reports `Err(Io)` rather than `Ok(0)` - deliberate, but applications must distinguish reset from FIN (L3) |
 
-**Plan**: v0.3 — trap handler + calling `sched_yield` from CLINT interrupt.
+## Userland
 
-## Page allocator: no contiguous allocations
+| Limitation | Where | What remains |
+|------------|-------|--------------|
+| No GUI window manager/compositor/cursor | userspace | Separate windows, z-order/clipping, click handling, richer widgets |
+| No Java runtime | userspace | Class loader, bytecode interpreter, JDK subset, GC, hello-world in QEMU/OC2R |
+| Applications not run live | `OnyxApps` | osnake, otop, ochat, ochat-gui are covered by host tests; interactive runs in QEMU/with the mod are unconfirmed |
 
-The current free list returns one page at a time. There is no guarantee
-that two sequential `alloc()` calls return adjacent pages.
+## OnyxCompiller
 
-This will block VirtIO block (v0.4): vring must reside in physically
-contiguous memory. Either implement a descriptor-based allocator (Taken/Last
-flags) or support N-page contiguous allocations.
+| Limitation | What remains |
+|------------|--------------|
+| One input per `-c` | Several translation units cannot be compiled in one invocation |
+| Archives without an index | Lazy linear extraction; `__.SYMDEF` is not read |
+| No COMDAT/versioning/relaxation/section GC | Linking neither drops dead sections nor handles symbol versions |
+| `-e` accepts GLOBAL symbols only | An entry point cannot be a local symbol |
+| PCREL relocations are not emitted | The compiler never produces them; the linker relies on absolute ones |
+| Hard caps | 64 objects and 4 sections per object |
+| Single pass, no optimisation | No IR: const propagation, DCE and loop folding are absent |
+| C++ is a subset | No multiple/virtual inheritance, RTTI/`dynamic_cast`, class templates, virtual destructors or full unwinding - see `OnyxCompiller/docs/STATUS.md` |
+| Repeated full bootstrap | Stage-one self-hosting works; a full self-build cycle is not complete |
 
-**Plan**: resolve before v0.4.
+## OnyxOS
 
-## VirtIO: Legacy vs v2 MMIO — resolved
+| Limitation | What remains |
+|------------|--------------|
+| CI cannot see local commits | The `Onyx.lock.json` pin is only usable after the components are pushed; otherwise a locked build on GitHub cannot fetch the revision |
+| Two-language documentation | The English versions lag behind; regenerate them with `build-docs.sh` after editing `.md` |
 
-Verified against Sedna sources (`AbstractVirtIODevice.java`):
-`VIRTIO_MMIO_VERSION = 0x2`, requires `VIRTIO_F_VERSION_1` during negotiation.
-**Legacy transport is not supported**.
+## How this was checked
 
-Documentation (`hardware/virtio/overview.md`, `hardware/virtio/block.md`,
-`dev/bootloader.md`) rewritten for v2 MMIO:
-`QueueDescLow/High`, `QueueDriverLow/High`, `QueueDeviceLow/High`,
-`QueueReady`. Kernel driver (`kernel/drivers/virtio/block.rs`) — v0.4.
-
-**Risk resolved**. Confirmed: v2 only.
-
-## Trap handling: S-mode registers
-
-Documentation has been corrected (`sepc`/`scause`/`stval`/`stvec`/`sret`),
-but no trap handler code exists yet. When implementing, avoid copying M-mode
-wording from old docs — configure `stvec`, not `mtvec`.
-
-**Plan**: v0.3, via `global_asm!` or `naked_asm!` inside a Rust file.
-
-## UART/VirtIO addresses hardcoded, not from FDT
-
-`kernel/drivers/uart.rs` (0x10000000), `kernel/drivers/virtio/block.rs`
-(0x10001000, IRQ 1-8), both kernel and bootloader currently hardcode
-addresses and IRQs. This will not work on OC2r with dynamic device placement.
-
-**Plan**: OnyxBoot — FDT parser for UART and VirtIO;
-v0.3 or v0.4 — pass FDT to kernel and remove hardcoding.
-
-## Userspace: ELF load + syscalls not implemented
-
-ELF loader (`elf_loading.md`) is designed but not implemented.
-Depends on v0.4 (VirtIO block) and v0.5 (SlipFS).
-
-## Shell: read_line() always returns None
-
-`shell/slip.rs` — bug: `INPUT_LEN` is reset to 0 before the line is
-processed, causing `read_line()` to always return `None`, so commands
-are never executed.
-
-**Plan**: fix in OnyxBoot.
-
-## Sv39: map_page() does not allocate page tables
-
-`mm/map.rs` — `map_page()` checks `pte.is_valid()` but when the table
-is missing it simply returns instead of allocating a new page for the
-page table.
-
-**Plan**: v0.3, together with real context switching.
+Cross-checked against code and plans on 2026-11-18: `abi/syscalls.csv`
+(100 syscalls), `docs/dev/roadmap.md` (v0.4/v0.5 snapshot),
+`OnyxKernel/todo.md` §3-4, `OnyxCompiller/docs/STATUS.md`
+("Remaining limitations") and `OnyxApps/todo.md`.

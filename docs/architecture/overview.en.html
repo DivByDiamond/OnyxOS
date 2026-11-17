@@ -93,7 +93,7 @@ OnyxCompiller (ring 2, C - userspace)
 <p><strong>Status:</strong> active development, ~30K+ LOC</p>
 <hr />
 <h2>OnyxShell</h2>
-<p>Userspace shell (<code>/bin/osh</code>). The shipped RING1 build runs in ring 1 after root login. Both userspace rings use U-mode. Non-root login cannot launch this shell image; passwd uid/gid installation is unfinished.</p>
+<p>Userspace shell (<code>/bin/osh</code>). The shipped RING1 build runs in ring 1 after root login. Both userspace rings use U-mode. Non-root login is currently incompatible with that shell image; see <a href="privilege_modes.en.md">privilege modes</a>.</p>
 <p><strong>Features:</strong></p>
 <ul>
 <li>20 built-in commands: ls, cat, cp, mv, rm, mkdir, touch, stat, cd, pwd, echo, whoami, uname, date, clear, help, exit, exec, run, ver</li>

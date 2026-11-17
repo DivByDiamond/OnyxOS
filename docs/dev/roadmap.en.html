@@ -50,62 +50,170 @@ main li{margin-bottom:4px}
   <a href="roadmap.html">RU</a>
   <a href="roadmap.en.html" class="active">EN</a>
 </div></nav>
-<main><div class="breadcrumb"><a href="../">Docs</a> <span> / Dev / Roadmap</span></div><h1>OnyxOS Roadmap</h1>
-<h2>v0.1 - Skeleton</h2>
+<main><div class="breadcrumb"><a href="../">Docs</a> <span> / Dev / Roadmap</span></div><h1>Roadmap</h1>
+<h2>OnyxOS Ecosystem Roadmap</h2>
+<p>Cross-checked against the working tree on 2026-11-18. Implemented features
+below do not imply full POSIX/C/C++ conformance; hardware verification is
+listed separately.</p>
+<h3>v0.4 - current release ✅</h3>
+<p><strong>OnyxBoot:</strong></p>
 <ul>
-<li>[x] UART console (NS16550A)</li>
-<li>[x] CLINT timer</li>
-<li>[x] PLIC interrupts</li>
-<li>[x] Bump + Page allocator</li>
-<li>[x] Sv39 identity map</li>
-<li>[x] Slip shell (7 commands)</li>
-<li>[x] Panic handler</li>
+<li>[x] UART, FDT, VirtIO v2 MMIO, SDHCI</li>
+<li>[x] FAT32 + ext4 read, GPT + MBR</li>
+<li>[x] Boot menu with timeout</li>
+<li>[x] ELF64 loader</li>
+<li>[x] QEMU integration tests</li>
 </ul>
-<h2>OnyxBoot (v0.4)</h2>
+<p><strong>OnyxKernel (core):</strong></p>
 <ul>
-<li>[x] _start entry (naked C++, inline asm)</li>
-<li>[x] UART driver (NS16550A, address from FDT)</li>
-<li>[x] VirtIO block v2 MMIO (probe, read_sector)</li>
-<li>[x] SDHCI driver (probe, read_sector)</li>
-<li>[x] FAT32 + EXT4 reader</li>
-<li>[x] ELF64 parser (valid, check_safe, load_all)</li>
-<li>[x] FDT parser (memory, UART, VirtIO, SDHCI)</li>
-<li>[x] Boot menu (device selection)</li>
-<li>[x] Load &amp; jump to <code>kernel.elf</code></li>
+<li>[x] UART, CLINT, PLIC, timer</li>
+<li>[x] PMM (bitmap+slab) + VMM (Sv39)</li>
+<li>[x] Heap allocator</li>
+<li>[x] Processes: dynamic list, spawn, exec, wait</li>
+<li>[x] Scheduler: SMP, per-CPU run queues, load balancing</li>
+<li>[x] 100 syscalls in the ABI registry (POSIX-flavoured)</li>
+<li>[x] OnyxFS v2 (journal, COW snapshots, indirect blocks)</li>
+<li>[x] OnyxExec v2 loader (RLE compression, ring1 flag)</li>
+<li>[x] VirtIO block/net, GMAC</li>
+<li>[x] TCP/IP (Ethernet, IP, TCP)</li>
+<li>[x] IPC channels (/ipc/*)</li>
+<li>[x] Framebuffer + PSF1/PSF2 fonts</li>
+<li>[x] /proc filesystem</li>
+<li>[x] Authentication (/etc/passwd + /etc/shadow)</li>
+<li>[x] INIT + LOGIN + userspace binaries (9 in total)</li>
+<li>[x] FDT-driven device addresses</li>
 </ul>
-<h2>v0.3 - Interrupts and tasks</h2>
+<p><strong>OnyxShell:</strong></p>
 <ul>
-<li>[ ] Trap handler (S-mode, <code>stvec</code>)</li>
-<li>[ ] Real context switching in <code>sched_yield()</code></li>
-<li>[ ] Round-robin scheduler via CLINT</li>
-<li>[ ] syscall: ecall handler</li>
+<li>[x] 20 built-in commands</li>
+<li>[x] Tab completion + arrow-key history</li>
+<li>[x] History expansion (!! / !N / !-N)</li>
+<li>[x] Pipe (|) and redirect (&gt;, &lt;)</li>
+<li>[x] Wildcard globbing (*, ?, [...])</li>
+<li>[x] QEMU integration test</li>
 </ul>
-<h2>v0.4 - VirtIO block in kernel (v2 MMIO)</h2>
+<p><strong>OnyxCompiller:</strong></p>
 <ul>
-<li>[x] v2 MMIO confirmed (Sedna: <code>VIRTIO_MMIO_VERSION = 2</code>, requires <code>VIRTIO_F_VERSION_1</code>)</li>
-<li>[ ] Descriptor-based page allocator (contiguous)</li>
-<li>[ ] Sector read/write (v2 driver)</li>
-<li>[ ] I/O completion interrupts</li>
+<li>[x] C99 lexer, preprocessor, parser</li>
+<li>[x] RV64IMA codegen</li>
+<li>[x] .onx v1 output</li>
+<li>[x] libonyxc (printf, malloc, string, syscall wrappers)</li>
+<li>[x] Frontend checks and executed-behaviour tests (<code>make check</code>)</li>
 </ul>
-<h2>v0.5 - SlipFS + userspace</h2>
+<p><strong>OnyxOS:</strong></p>
 <ul>
-<li>[ ] SlipFS (block filesystem in Rust)</li>
-<li>[ ] Mount, read, write</li>
-<li>[ ] ELF loader in kernel</li>
-<li>[ ] First userspace process</li>
+<li>[x] Vent dependency management</li>
+<li>[x] Bootstrap/build/run scripts</li>
+<li>[x] Complete documentation</li>
 </ul>
-<h2>v0.6 - Stable kernel</h2>
+<h3>v0.5 - kernel stabilisation</h3>
+<p><strong>OnyxKernel:</strong></p>
 <ul>
-<li>[ ] CLI tools (ls, cat, echo, ps)</li>
-<li>[ ] Init process</li>
-<li>[ ] Runs on OC2r</li>
-<li>[ ] Full documentation</li>
+<li>[x] FAT32 read/write, create/unlink/truncate, LFN and FSINFO (<code>5e92115</code>, 2026-10-25)</li>
+<li>[x] USB xHCI URB transfer and PCI probe; QEMU controller smoke (<code>7790fdf</code>, 2026-11-09)</li>
+<li>[x] symlink/readlink: syscall and VFS/OnyxFS paths (checked 2026-11-15)</li>
+<li>[x] chmod/fchmod: syscall and VFS paths (checked 2026-11-15)</li>
+<li>[x] truncate/ftruncate(&gt;0): OnyxFS/FAT32 resize (checked 2026-11-15)</li>
+<li>[x] getdents64: batched syscall (checked 2026-11-15)</li>
+<li>[x] fork: argv/envp copying and child trap frame (checked 2026-11-15)</li>
+<li>[x] UDP/DHCP/DNS; DHCP and DNS verified on OC2R (2026-10-25, <code>OnyxKernel/todo.md</code> §5)</li>
 </ul>
-<h2>v1.0 - Release</h2>
+<p><strong>OnyxCompiller:</strong></p>
 <ul>
-<li>[ ] Slip shell as userspace program</li>
-<li>[ ] Port picolibc for C software</li>
-<li>[ ] Module loading via OnyxBoot</li>
-</ul></main>
+<li>[x] Build and run OnyxCC compiled by OnyxCC; compile a freestanding program</li>
+<li>[x] Several C translation units in one <code>.onx</code></li>
+<li>[x] Basic global array/string initialisers</li>
+<li>[x] Automatic test runner that also checks execution</li>
+<li>[ ] Repeated full bootstrap and completion of C/libc support</li>
+<li>[x] Separate C/C++ -&gt; ONYO -&gt; <code>onyx-ld</code> compilation, libc objects (<code>bd14e5d</code>, 2026-11-15)</li>
+<li>[ ] Full-featured archive linker and external RISC-V ABI compatibility</li>
+</ul>
+<p><strong>Quality:</strong></p>
+<ul>
+<li>[x] GitHub Actions CI: component workflows and the OnyxOS build/release (checked 2026-11-15)</li>
+<li>[x] Host unit tests for core/kernel and the separable init logic (<code>OnyxKernel/docs/TESTING.md</code>, checked 2026-11-15)</li>
+<li>[x] Full-stack QEMU boot/interactive smoke and xHCI smoke (<code>8c5ad8f</code>, 2026-11-15)</li>
+<li>[x] OnyxFS: full-block undo, fault injection and remount (<code>cf6ca42</code>, 2026-11-15; <code>FS-J1/J2</code>)</li>
+<li>[ ] OnyxFS: flush/barrier and power-loss/partial-sector verification on OC2R/physical media</li>
+</ul>
+<p><strong>Language priority ahead of GUI/Java:</strong></p>
+<ul>
+<li>[x] Standard Lua 5.5.1 and <code>luac</code>: CLI, REPL, Lua modules, bytecode and system checks</li>
+<li>[ ] Full C and C++ support, base and user libraries</li>
+<li>[ ] LuaJIT/Luau after standard Lua and a platform-requirements check</li>
+<li>[ ] Port the existing <code>rustc</code> target/runtime once the ABI stabilises</li>
+</ul>
+<p>Compiler limitations: <a href="compiler.md">compiler.md</a> and <code>OnyxCompiller/docs/STATUS.md</code>.
+Lua is built without loading native shared libraries; the full upstream test
+suite is not confirmed yet.</p>
+<h3>v0.6 - expansion</h3>
+<p><strong>OnyxKernel:</strong></p>
+<ul>
+<li>[ ] 32-bit port (RV32)</li>
+<li>[ ] Multi-user mode</li>
+<li>[ ] Dynamic modules</li>
+</ul>
+<p><strong>OnyxCompiller:</strong></p>
+<ul>
+<li>[x] C++ subset: classes, RAII, virtual dispatch, exceptions without full unwinding (<code>ca8546d</code>, 2026-11-15)</li>
+<li>[ ] Optimisations (const propagation, dead code elimination)</li>
+</ul>
+<h3>v1.0 - stable release</h3>
+<ul>
+<li>[ ] Verification on real Milk-V Duo S hardware</li>
+<li>[ ] Documentation in two languages</li>
+<li>[ ] Self-hosting: OnyxOS compiles OnyxOS</li>
+</ul>
+<h2>Snapshot 2026-11-18</h2>
+<ul>
+<li>Compiler pin caught up with the tree: <code>OnyxCompiller 6fc1947</code>,
+<code>OnyxShell 82f0daa</code>. Before that the locked build failed
+<code>dependencies.py check</code>, because building rewrote tracked binaries
+(<code>DW_AT_comp_dir</code> depended on the invocation path and <code>build/osh.onx</code>
+lagged behind its sources).</li>
+<li><code>onyxcc</code>/<code>onyx-ld</code> are now byte-identical from any build path, and
+<code>build-all.sh</code> in <code>check</code> mode verifies at the end that the locked
+checkouts stayed clean.</li>
+<li>Compiler validation at <code>6fc1947</code>: <code>make check</code> (66 frontend, 48 runtime,
+15 C++, 5 sepcomp, 44 archive, 36 weak, 48 source-weak, 26 storage, init),
+<code>make check-native</code> (7 ASan/UBSan suites) and <code>make selfhost-test</code> all pass.</li>
+<li>Full locked build: kernel, shell, compiler, 10 applications, disk image;
+<code>qemu-smoke.sh</code> and <code>qemu-interactive-smoke.sh</code> pass.</li>
+<li><code>docs/dev/known_issues.md</code> was rewritten from the code: only open items
+remain, and the English version is in sync.</li>
+</ul>
+<h2>Snapshot 2026-11-15</h2>
+<ul>
+<li>Coordinated OnyxExec fixes: kernel <code>14937bc</code> rejects invalid permissions;
+the linker <code>e7a57ec</code> uses shared R/W/X and ring1 constants.</li>
+<li>OnyxFS <code>9215876</code>: shrink -&gt; extend zeroes the tail of the retained block.</li>
+<li>Host: 70 core + 3 integration + 307 kernel + 4 init; native Apps;
+compiler <code>make check</code> (66 frontend, 43 runtime, 5 driver, 15 C++, 5 sepcomp)
+and seven ASan/UBSan suites; 10 dependency-resolver tests; ABI registry - 100.</li>
+<li>Full workspace build and a locked build in clean checkouts passed; the
+locked image reached login in QEMU.</li>
+<li>QEMU: boot and interactive smoke; separate guest runs for tail-zero,
+octal escape, linked-C++ virtual dispatch (<code>3 2</code>) and rejection of a
+corrupted ONX while the shell kept running. Bootloader: four QEMU
+scenarios passed.</li>
+<li><code>cf6ca42</code>: OnyxFS keeps whole-block metadata before-images, rolls back
+incomplete operations and does not reuse the journal after a failed commit.
+Host write-cut tests and four QEMU legacy/undo checks passed. The guarantee
+is limited to ordered completed block writes, not physical power loss.</li>
+<li><code>1c0f188</code>, <code>b8866e9</code>, <code>773a8b5</code>, <code>c27cc31</code>: full fmt/strict Clippy, shared
+init modules, removal of dead-code bypasses and unused scaffolds. CI no
+longer uses an advisory check for core tests.</li>
+<li>RV32 smode is rejected explicitly: that combination has no boot entry.
+The supported matrix is RV32 default and RV64 default/smode.</li>
+</ul>
+<h2>Mandatory quality check</h2>
+<pre><code class="language-sh">bash scripts/quality/check.sh /path/to/component/checkouts
+</code></pre>
+<p>The gate runs full fmt and Clippy for the supported host/target
+configurations, asserts the explicit RV32 smode rejection and checks the
+absence of dead-code bypasses across all six components. For local
+<code>.vent/repos</code> the argument can be omitted.
+The backend diagnostic for <code>reserve-x4</code> is kept without suppression: that
+flag is needed for the <code>tp</code> register. Clippy commands still use <code>-D warnings</code>.</p></main>
 </body>
 </html>

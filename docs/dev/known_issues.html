@@ -46,61 +46,58 @@ main li{margin-bottom:4px}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0d1117}::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}</style>
 </head>
 <body>
-<nav><h2>OnyxOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="../architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="../architecture/design_decisions.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="../architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="../architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="../architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="building.html">&nbsp;&nbsp;Building</a></li><li><a href="contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="known_issues.html" class="active">&nbsp;&nbsp;Known Issues</a></li><li><a href="language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_onyxos.html">&nbsp;&nbsp;Why Onyxos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
+<nav><h2>OnyxOS Docs</h2><ul><li class="home"><a href="../">Home</a></li><div class="dir">Architecture</div><li><a href="../architecture/boot_sequence.html">&nbsp;&nbsp;Boot Sequence</a></li><li><a href="../architecture/design_decisions.html">&nbsp;&nbsp;Design Decisions</a></li><li><a href="../architecture/memory_map.html">&nbsp;&nbsp;Memory Map</a></li><li><a href="../architecture/overview.html">&nbsp;&nbsp;Overview</a></li><li><a href="../architecture/privilege_modes.html">&nbsp;&nbsp;Privilege Modes</a></li><div class="dir">Dev</div><li><a href="adding_driver.html">&nbsp;&nbsp;Adding Driver</a></li><li><a href="bootloader.html">&nbsp;&nbsp;Bootloader</a></li><li><a href="building.html">&nbsp;&nbsp;Building</a></li><li><a href="compiler.html">&nbsp;&nbsp;Compiler</a></li><li><a href="contributing.html">&nbsp;&nbsp;Contributing</a></li><li><a href="debugging.html">&nbsp;&nbsp;Debugging</a></li><li><a href="dependencies.html">&nbsp;&nbsp;Dependencies</a></li><li><a href="getting_started.html">&nbsp;&nbsp;Getting Started</a></li><li><a href="known_issues.html" class="active">&nbsp;&nbsp;Known Issues</a></li><li><a href="language_policy.html">&nbsp;&nbsp;Language Policy</a></li><li><a href="ochat.html">&nbsp;&nbsp;Ochat</a></li><li><a href="roadmap.html">&nbsp;&nbsp;Roadmap</a></li><li><a href="tablet.html">&nbsp;&nbsp;Tablet</a></li><li><a href="wayland.html">&nbsp;&nbsp;Wayland</a></li><div class="dir">Hardware</div><li><a href="../hardware/clint.html">&nbsp;&nbsp;Clint</a></li><li><a href="../hardware/plic.html">&nbsp;&nbsp;Plic</a></li><li><a href="../hardware/uart.html">&nbsp;&nbsp;Uart</a></li><li><a href="../hardware/virtio/block.html">&nbsp;&nbsp;&nbsp;&nbsp;Block</a></li><li><a href="../hardware/virtio/net.html">&nbsp;&nbsp;&nbsp;&nbsp;Net</a></li><li><a href="../hardware/virtio/overview.html">&nbsp;&nbsp;&nbsp;&nbsp;Overview</a></li><div class="dir">Internals</div><li><a href="../internals/coding_style.html">&nbsp;&nbsp;Coding Style</a></li><li><a href="../internals/error_handling.html">&nbsp;&nbsp;Error Handling</a></li><li><a href="../internals/panic_policy.html">&nbsp;&nbsp;Panic Policy</a></li><div class="dir">Kernel</div><li><a href="../kernel/interrupts.html">&nbsp;&nbsp;Interrupts</a></li><li><a href="../kernel/mm/bump_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Bump Allocator</a></li><li><a href="../kernel/mm/page_allocator.html">&nbsp;&nbsp;&nbsp;&nbsp;Page Allocator</a></li><li><a href="../kernel/mm/sv39.html">&nbsp;&nbsp;&nbsp;&nbsp;Sv39</a></li><li><a href="../kernel/proc/context_switch.html">&nbsp;&nbsp;&nbsp;&nbsp;Context Switch</a></li><li><a href="../kernel/proc/elf_loading.html">&nbsp;&nbsp;&nbsp;&nbsp;Elf Loading</a></li><li><a href="../kernel/proc/scheduler.html">&nbsp;&nbsp;&nbsp;&nbsp;Scheduler</a></li><li><a href="../kernel/proc/tasks.html">&nbsp;&nbsp;&nbsp;&nbsp;Tasks</a></li><li><a href="../kernel/proc/userspace.html">&nbsp;&nbsp;&nbsp;&nbsp;Userspace</a></li><div class="dir">Lore</div><li><a href="../lore/seal.html">&nbsp;&nbsp;Seal</a></li><li><a href="../lore/why_onyxos.html">&nbsp;&nbsp;Why Onyxos</a></li><div class="dir">Shell</div><li><a href="../shell/commands.html">&nbsp;&nbsp;Commands</a></li><li><a href="../shell/internals.html">&nbsp;&nbsp;Internals</a></li></ul><div class="lang-switch">
   <a href="known_issues.html" class="active">RU</a>
   <a href="known_issues.en.html">EN</a>
 </div></nav>
 <main><div class="breadcrumb"><a href="../">Docs</a> <span> / Dev / Known Issues</span></div><h1>Known Issues</h1>
-<p>Актуальные проблемы и недоделки в текущем коде.</p>
+<blockquote>
+<p>Актуально на 2026-11-18. Здесь только <strong>открытые</strong> ограничения.
+Закрытые пункты живут в <code>docs/dev/roadmap.md</code>, <code>OnyxKernel/todo.md</code>
+и <code>docs/history/</code>; «сделано» сюда не переносится.</p>
+</blockquote>
 <h2>OnyxKernel</h2>
-<table><thead><tr><th>Проблема</th><th>Файл</th><th>Статус</th></tr></thead><tbody>
-<tr><td>FAT32 read - lookup/read заглушены</td><td><code>`kernel/src/fs/fat32/`</code></td><td>TODO (см. ниже)</td></tr>
-<tr><td>USB xHCI - только probe, нет URB transfer</td><td><code>`kernel/src/drivers/usb/`</code></td><td>TODO</td></tr>
-<tr><td><code>`truncate/ftruncate`</code> только до нуля</td><td><code>`kernel/src/fs/vfs/truncate.rs`</code></td><td>✅ FIXED (v0.5) - <code>`truncate_to_length(ino, length)`</code> поддерживает zero/shrink/extend</td></tr>
-<tr><td>symlink/readlink не реализованы</td><td><code>`kernel/src/fs/onyxfs/`</code></td><td>✅ FIXED (v0.5) - symlink.rs + readlink syscall работают</td></tr>
-<tr><td><code>`chmod/fchmod`</code> - заглушки</td><td><code>`kernel/src/syscall/fs_sys3/`</code></td><td>✅ FIXED (v0.5) - set_mode() в OnyxFS сохраняет mode в inode</td></tr>
-<tr><td><code>`chown/fchown`</code></td><td><code>`kernel/src/syscall/fs_sys3/`</code></td><td>✅ FIXED (v0.5) - set_uid_gid() сохраняет uid/gid в inode</td></tr>
-<tr><td><code>`getdents64`</code> без батчинга</td><td><code>`kernel/src/syscall/fs_sys3/`</code></td><td>TODO</td></tr>
-<tr><td>fork без передачи argv/envp</td><td><code>`kernel/src/syscall/fs_sys3/extra.rs`</code></td><td>TODO</td></tr>
-<tr><td>UDP/DHCP/DNS отсутствуют</td><td><code>`kernel/src/net/`</code></td><td>TODO</td></tr>
-<tr><td>Нет unit-тестов</td><td>-</td><td>TODO</td></tr>
-<tr><td>32-bit порт (~50%)</td><td><code>`arch/bits.rs`</code>, <code>`boot_32.rs`</code></td><td>WIP</td></tr>
+<table><thead><tr><th>Ограничение</th><th>Где</th><th>Что осталось</th></tr></thead><tbody>
+<tr><td>Блокирующий <code>`recv`</code></td><td><code>`kernel/src/net/tcp`</code></td><td>В ядре нет wait-очереди по сокетам, приложение опрашивает само; нужен блокирующий путь без busy-poll</td></tr>
+<tr><td>Отправка TCP по 536 байт на сегмент</td><td><code>`kernel/src/net/tcp`</code></td><td>IP-фрагментации нет; поднять MSS и учитывать MTU пути</td></tr>
+<tr><td>Server sockets только root-only admin</td><td><code>`kernel/src/net`</code></td><td>Пользовательские <code>`listen`</code>/<code>`accept`</code> недоступны, контракт не описан в README</td></tr>
+<tr><td>TLS отсутствует</td><td>userspace (<code>`obrowse`</code>)</td><td>Браузер остаётся HTTP-only</td></tr>
+<tr><td>Динамические kernel-модули</td><td><code>`kernel/src/fs/procfs`</code></td><td><code>`/proc/modules`</code> показывает только встроенные драйверы</td></tr>
+<tr><td>Журнал без flush/barrier</td><td><code>`kernel/src/fs/onyxfs`</code></td><td>Гарантия ограничена упорядоченными блочными записями; power-loss и частичные секторы на OC2R/физическом носителе не проверены (L6)</td></tr>
+<tr><td>Glyph-blit попиксельно по MMIO</td><td><code>`kernel/src/drivers/video/fb_term`</code></td><td>Scroll/clear копируют словами, вывод глифа - нет (L4)</td></tr>
+<tr><td>Двойная буферизация не проверена</td><td><code>`kernel/src/drivers/video/fb`</code></td><td>Tearing на живом мониторе OC2R не измерялся (L5)</td></tr>
+<tr><td>URB/HCD-слой без потребителя</td><td><code>`kernel/src/drivers/bus/usb/hcd.rs`</code></td><td>Нужен USB core enumeration (дескрипторы, адресация, mass-storage) или удаление слоя</td></tr>
+<tr><td><code>`nanosleep`</code> на rv32 non-smode</td><td><code>`kernel/src/arch`</code></td><td>Идёт через SBI; нужен прямой CLINT MMIO и <code>`mtrap_32`</code>-путь</td></tr>
+<tr><td>RV32 smode не поддержан</td><td>сборка</td><td>У комбинации нет boot entry, она отклоняется явно; поддерживаемая матрица - RV32 default и RV64 default/smode</td></tr>
+<tr><td>Нет EOF после RST</td><td><code>`kernel/src/net/tcp/sock.rs`</code></td><td><code>`recv`</code> возвращает <code>`Err(Io)`</code>, а не <code>`Ok(0)`</code> - сознательно, но приложение обязано различать сброс и FIN (L3)</td></tr>
+</tbody></table>
+<h2>Userland</h2>
+<table><thead><tr><th>Ограничение</th><th>Где</th><th>Что осталось</th></tr></thead><tbody>
+<tr><td>GUI: нет WM/compositor/курсора</td><td>userspace</td><td>Отдельные окна, z-order/clipping, обработка кликов, продвинутые виджеты</td></tr>
+<tr><td>Java runtime отсутствует</td><td>userspace</td><td>Class loader, интерпретатор байткода, подмножество JDK, GC, hello-world в QEMU/OC2R</td></tr>
+<tr><td>Живые прогоны приложений</td><td><code>`OnyxApps`</code></td><td>osnake, otop, ochat, ochat-gui - логика покрыта host-тестами, интерактив в QEMU/с модом не подтверждён</td></tr>
 </tbody></table>
 <h2>OnyxCompiller</h2>
-<table><thead><tr><th>Проблема</th><th>Статус</th></tr></thead><tbody>
-<tr><td>Самокомпиляция</td><td>✅ DONE (stage-1, <code>`make selfhost`</code> собирает onyxcc_self.onx)</td></tr>
-<tr><td>Multi-file compilation (N <code>`.c`</code> файлов в один <code>`.onx`</code>)</td><td>✅ DONE (см. main.c)</td></tr>
-<tr><td>External library linking (.a архивы + .o объектники с релокациями)</td><td>TODO (см. onyx-ld roadmap)</td></tr>
-<tr><td>Глобальные инициализаторы массивов/строк</td><td>✅ DONE</td></tr>
-<tr><td>C++ фронтенд не написан</td><td>TODO</td></tr>
-<tr><td>Нет автоматического прогона тестов</td><td>✅ DONE (<code>`make test-runner`</code>)</td></tr>
-</tbody></table>
-<h2>libonyxc</h2>
-<table><thead><tr><th>Проблема</th><th>Статус</th></tr></thead><tbody>
-<tr><td>Нет <code>`FILE*`</code> buffered I/O</td><td>✅ FIXED (v0.5)</td></tr>
-<tr><td>Нет <code>`sprintf`</code>/<code>`snprintf`</code>/<code>`sscanf`</code></td><td>✅ FIXED (v0.5)</td></tr>
-<tr><td>Нет <code>`errno`</code>/<code>`strerror`</code>/<code>`perror`</code></td><td>✅ FIXED (v0.5)</td></tr>
-<tr><td>Нет <code>`time.h`</code> (time/localtime/strftime/clock_gettime/nanosleep)</td><td>✅ FIXED (v0.5)</td></tr>
-<tr><td>Нет <code>`signal.h`</code> (sigset ops, struct sigaction)</td><td>✅ FIXED (v0.5)</td></tr>
-<tr><td>Мало stdlib (qsort/bsearch/strtoul/strtoll/strtod/atexit)</td><td>✅ FIXED (v0.5)</td></tr>
-<tr><td>Мало string (strstr/strrchr/strtok_r/strcasecmp/strpbrk/memchr)</td><td>✅ FIXED (v0.5)</td></tr>
+<table><thead><tr><th>Ограничение</th><th>Что осталось</th></tr></thead><tbody>
+<tr><td>Один вход на <code>`-c`</code></td><td>Несколько translation units за один вызов не поддержано</td></tr>
+<tr><td>Архивы без индекса</td><td>Ленивое линейное извлечение, <code>`__.SYMDEF`</code> не читается</td></tr>
+<tr><td>Нет COMDAT/versioning/relaxation/section GC</td><td>Компоновка без удаления мёртвых секций и без версий символов</td></tr>
+<tr><td><code>`-e`</code> принимает только GLOBAL</td><td>Точка входа из локального символа невозможна</td></tr>
+<tr><td>PCREL-релокации не эмитятся</td><td>Компилятор их не порождает, линкер полагается на абсолютные</td></tr>
+<tr><td>Жёсткие лимиты</td><td>64 объекта и 4 секции на объект</td></tr>
+<tr><td>Один проход, без оптимизаций</td><td>Нет IR: const propagation, DCE, свёртка циклов не реализованы</td></tr>
+<tr><td>C++ только подмножество</td><td>Нет множественного/виртуального наследования, RTTI/<code>`dynamic_cast`</code>, шаблонов классов, виртуальных деструкторов, полного unwinding - детали в <code>`OnyxCompiller/docs/STATUS.md`</code></td></tr>
+<tr><td>Повторный полный bootstrap</td><td>Stage-one self-host проходит, полный цикл «собрать себя собой» не завершён</td></tr>
 </tbody></table>
 <h2>OnyxOS</h2>
-<table><thead><tr><th>Проблема</th><th>Статус</th></tr></thead><tbody>
-<tr><td>Makefile - скелет, не все цели работают</td><td>WIP</td></tr>
-<tr><td>Нет CI/CD (GitHub Actions)</td><td>TODO</td></tr>
+<table><thead><tr><th>Ограничение</th><th>Что осталось</th></tr></thead><tbody>
+<tr><td>CI не видит локальных коммитов</td><td>Пин <code>`Onyx.lock.json`</code> валиден только после пуша компонентов; иначе locked-сборка на GitHub не получит ревизию</td></tr>
+<tr><td>Документация на двух языках</td><td>Английские версии отстают; при правке <code>`.md`</code> пересобирать через <code>`build-docs.sh`</code></td></tr>
 </tbody></table>
-<h2>Решённые проблемы (исторические)</h2>
-<p>Все проблемы из предыдущей версии (<code>known_issues.md</code> OnyxOS) исправлены:</p>
-<ul>
-<li>✅ Контекст свитч - работает (SMP, per-CPU run queues)</li>
-<li>✅ Page allocator - bitmap + slab, есть contiguous</li>
-<li>✅ VirtIO Legacy - не используется, только v2</li>
-<li>✅ Trap handler - S-mode, stvec</li>
-<li>✅ UART/VirtIO адреса - FDT-driven</li>
-<li>✅ ELF загрузчик - onx::load работает</li>
-<li>✅ Shell - все 20 команд работают</li>
-<li>✅ Sv39 map_page - аллоцирует page tables</li>
-</ul></main>
+<h2>Как это проверялось</h2>
+<p>Сверка с кодом и планами на 2026-11-18: <code>abi/syscalls.csv</code> (100 вызовов),
+<code>docs/dev/roadmap.md</code> (срез v0.4/v0.5), <code>OnyxKernel/todo.md</code> §3–4,
+<code>OnyxCompiller/docs/STATUS.md</code> §«Remaining limitations»,
+<code>OnyxApps/todo.md</code>.</p></main>
 </body>
 </html>

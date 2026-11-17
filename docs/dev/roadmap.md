@@ -106,6 +106,23 @@ Lua собрана без загрузки нативных shared libraries; п
 - [ ] Документация на двух языках
 - [ ] Self-hosting: OnyxOS компилирует OnyxOS
 
+## Проверка среза 2026-11-18
+
+- Пин компилятора догнал дерево: `OnyxCompiller 6fc1947`, `OnyxShell 82f0daa`.
+  До этого locked-сборка падала на `dependencies.py check`, потому что сборка
+  переписывала отслеживаемые бинарники (`DW_AT_comp_dir` зависел от пути
+  вызова, `build/osh.onx` отставал от исходников).
+- `onyxcc`/`onyx-ld` теперь побайтно воспроизводятся из любого пути сборки;
+  `build-all.sh` в режиме `check` в конце проверяет, что locked-деревья
+  остались чистыми.
+- Валидация компилятора на `6fc1947`: `make check` (66 frontend, 48 runtime,
+  15 C++, 5 sepcomp, 44 archive, 36 weak, 48 source-weak, 26 storage, init),
+  `make check-native` (7 наборов ASan/UBSan), `make selfhost-test` — всё PASS.
+- Полная locked-сборка: ядро, шелл, компилятор, 10 приложений, образ диска;
+  `qemu-smoke.sh` и `qemu-interactive-smoke.sh` PASS.
+- `docs/dev/known_issues.md` переписан по факту: остались только открытые
+  пункты, английская версия синхронизирована.
+
 ## Проверка среза 2026-11-15
 
 - Согласованные исправления OnyxExec: kernel `14937bc` отклоняет неверные

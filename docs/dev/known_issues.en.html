@@ -51,51 +51,53 @@ main li{margin-bottom:4px}
   <a href="known_issues.en.html" class="active">EN</a>
 </div></nav>
 <main><div class="breadcrumb"><a href="../">Docs</a> <span> / Dev / Known Issues</span></div><h1>Known Issues</h1>
-<p>Documented issues currently present in the code.</p>
-<h2>Scheduler: context switch not wired up</h2>
-<p><code>sched_yield()</code> advances <code>CURRENT</code> and returns. <code>save_context()</code> /
-<code>restore_context()</code> are written in <code>context.rs</code> but never called.
-The scheduler does not actually switch tasks - it just cycles through.</p>
-<p><strong>Plan</strong>: v0.3 - trap handler + calling <code>sched_yield</code> from CLINT interrupt.</p>
-<h2>Page allocator: no contiguous allocations</h2>
-<p>The current free list returns one page at a time. There is no guarantee
-that two sequential <code>alloc()</code> calls return adjacent pages.</p>
-<p>This will block VirtIO block (v0.4): vring must reside in physically
-contiguous memory. Either implement a descriptor-based allocator (Taken/Last
-flags) or support N-page contiguous allocations.</p>
-<p><strong>Plan</strong>: resolve before v0.4.</p>
-<h2>VirtIO: Legacy vs v2 MMIO - resolved</h2>
-<p>Verified against Sedna sources (<code>AbstractVirtIODevice.java</code>):
-<code>VIRTIO_MMIO_VERSION = 0x2</code>, requires <code>VIRTIO_F_VERSION_1</code> during negotiation.
-<strong>Legacy transport is not supported</strong>.</p>
-<p>Documentation (<code>hardware/virtio/overview.md</code>, <code>hardware/virtio/block.md</code>,
-<code>dev/bootloader.md</code>) rewritten for v2 MMIO:
-<code>QueueDescLow/High</code>, <code>QueueDriverLow/High</code>, <code>QueueDeviceLow/High</code>,
-<code>QueueReady</code>. Kernel driver (<code>kernel/drivers/virtio/block.rs</code>) - v0.4.</p>
-<p><strong>Risk resolved</strong>. Confirmed: v2 only.</p>
-<h2>Trap handling: S-mode registers</h2>
-<p>Documentation has been corrected (<code>sepc</code>/<code>scause</code>/<code>stval</code>/<code>stvec</code>/<code>sret</code>),
-but no trap handler code exists yet. When implementing, avoid copying M-mode
-wording from old docs - configure <code>stvec</code>, not <code>mtvec</code>.</p>
-<p><strong>Plan</strong>: v0.3, via <code>global_asm!</code> or <code>naked_asm!</code> inside a Rust file.</p>
-<h2>UART/VirtIO addresses hardcoded, not from FDT</h2>
-<p><code>kernel/drivers/uart.rs</code> (0x10000000), <code>kernel/drivers/virtio/block.rs</code>
-(0x10001000, IRQ 1-8), both kernel and bootloader currently hardcode
-addresses and IRQs. This will not work on OC2r with dynamic device placement.</p>
-<p><strong>Plan</strong>: OnyxBoot - FDT parser for UART and VirtIO;
-v0.3 or v0.4 - pass FDT to kernel and remove hardcoding.</p>
-<h2>Userspace: ELF load + syscalls not implemented</h2>
-<p>ELF loader (<code>elf_loading.md</code>) is designed but not implemented.
-Depends on v0.4 (VirtIO block) and v0.5 (SlipFS).</p>
-<h2>Shell: read_line() always returns None</h2>
-<p><code>shell/slip.rs</code> - bug: <code>INPUT_LEN</code> is reset to 0 before the line is
-processed, causing <code>read_line()</code> to always return <code>None</code>, so commands
-are never executed.</p>
-<p><strong>Plan</strong>: fix in OnyxBoot.</p>
-<h2>Sv39: map_page() does not allocate page tables</h2>
-<p><code>mm/map.rs</code> - <code>map_page()</code> checks <code>pte.is_valid()</code> but when the table
-is missing it simply returns instead of allocating a new page for the
-page table.</p>
-<p><strong>Plan</strong>: v0.3, together with real context switching.</p></main>
+<blockquote>
+<p>Current as of 2026-11-18. Only <strong>open</strong> limitations are listed here.
+Closed items live in <code>docs/dev/roadmap.md</code>, <code>OnyxKernel/todo.md</code> and
+<code>docs/history/</code>; anything done is not copied back here.</p>
+</blockquote>
+<h2>OnyxKernel</h2>
+<table><thead><tr><th>Limitation</th><th>Where</th><th>What remains</th></tr></thead><tbody>
+<tr><td>Blocking <code>`recv`</code></td><td><code>`kernel/src/net/tcp`</code></td><td>There is no per-socket wait queue, so applications poll; a blocking path without busy-poll is needed</td></tr>
+<tr><td>TCP sends 536 bytes per segment</td><td><code>`kernel/src/net/tcp`</code></td><td>No IP fragmentation; raise MSS and honour the path MTU</td></tr>
+<tr><td>Server sockets are root-only admin</td><td><code>`kernel/src/net`</code></td><td>User-space <code>`listen`</code>/<code>`accept`</code> are unavailable and the contract is not documented in the README</td></tr>
+<tr><td>No TLS</td><td>userspace (<code>`obrowse`</code>)</td><td>The browser stays HTTP-only</td></tr>
+<tr><td>No dynamic kernel modules</td><td><code>`kernel/src/fs/procfs`</code></td><td><code>`/proc/modules`</code> lists built-in drivers only</td></tr>
+<tr><td>Journal has no flush/barrier</td><td><code>`kernel/src/fs/onyxfs`</code></td><td>Guarantees cover ordered block writes; power loss and partial sectors are untested on OC2R/physical media (L6)</td></tr>
+<tr><td>Glyph blit is per-pixel over MMIO</td><td><code>`kernel/src/drivers/video/fb_term`</code></td><td>Scroll/clear copy words, glyph output does not (L4)</td></tr>
+<tr><td>Double buffering unverified</td><td><code>`kernel/src/drivers/video/fb`</code></td><td>Tearing on a live OC2R monitor has not been measured (L5)</td></tr>
+<tr><td>URB/HCD layer has no consumer</td><td><code>`kernel/src/drivers/bus/usb/hcd.rs`</code></td><td>Needs USB core enumeration (descriptors, addressing, mass storage) or removal</td></tr>
+<tr><td><code>`nanosleep`</code> on rv32 non-smode</td><td><code>`kernel/src/arch`</code></td><td>Goes through SBI; a direct CLINT MMIO path plus <code>`mtrap_32`</code> is required</td></tr>
+<tr><td>RV32 smode unsupported</td><td>build</td><td>That combination has no boot entry and is rejected explicitly; the supported matrix is RV32 default and RV64 default/smode</td></tr>
+<tr><td>No EOF after RST</td><td><code>`kernel/src/net/tcp/sock.rs`</code></td><td><code>`recv`</code> reports <code>`Err(Io)`</code> rather than <code>`Ok(0)`</code> - deliberate, but applications must distinguish reset from FIN (L3)</td></tr>
+</tbody></table>
+<h2>Userland</h2>
+<table><thead><tr><th>Limitation</th><th>Where</th><th>What remains</th></tr></thead><tbody>
+<tr><td>No GUI window manager/compositor/cursor</td><td>userspace</td><td>Separate windows, z-order/clipping, click handling, richer widgets</td></tr>
+<tr><td>No Java runtime</td><td>userspace</td><td>Class loader, bytecode interpreter, JDK subset, GC, hello-world in QEMU/OC2R</td></tr>
+<tr><td>Applications not run live</td><td><code>`OnyxApps`</code></td><td>osnake, otop, ochat, ochat-gui are covered by host tests; interactive runs in QEMU/with the mod are unconfirmed</td></tr>
+</tbody></table>
+<h2>OnyxCompiller</h2>
+<table><thead><tr><th>Limitation</th><th>What remains</th></tr></thead><tbody>
+<tr><td>One input per <code>`-c`</code></td><td>Several translation units cannot be compiled in one invocation</td></tr>
+<tr><td>Archives without an index</td><td>Lazy linear extraction; <code>`__.SYMDEF`</code> is not read</td></tr>
+<tr><td>No COMDAT/versioning/relaxation/section GC</td><td>Linking neither drops dead sections nor handles symbol versions</td></tr>
+<tr><td><code>`-e`</code> accepts GLOBAL symbols only</td><td>An entry point cannot be a local symbol</td></tr>
+<tr><td>PCREL relocations are not emitted</td><td>The compiler never produces them; the linker relies on absolute ones</td></tr>
+<tr><td>Hard caps</td><td>64 objects and 4 sections per object</td></tr>
+<tr><td>Single pass, no optimisation</td><td>No IR: const propagation, DCE and loop folding are absent</td></tr>
+<tr><td>C++ is a subset</td><td>No multiple/virtual inheritance, RTTI/<code>`dynamic_cast`</code>, class templates, virtual destructors or full unwinding - see <code>`OnyxCompiller/docs/STATUS.md`</code></td></tr>
+<tr><td>Repeated full bootstrap</td><td>Stage-one self-hosting works; a full self-build cycle is not complete</td></tr>
+</tbody></table>
+<h2>OnyxOS</h2>
+<table><thead><tr><th>Limitation</th><th>What remains</th></tr></thead><tbody>
+<tr><td>CI cannot see local commits</td><td>The <code>`Onyx.lock.json`</code> pin is only usable after the components are pushed; otherwise a locked build on GitHub cannot fetch the revision</td></tr>
+<tr><td>Two-language documentation</td><td>The English versions lag behind; regenerate them with <code>`build-docs.sh`</code> after editing <code>`.md`</code></td></tr>
+</tbody></table>
+<h2>How this was checked</h2>
+<p>Cross-checked against code and plans on 2026-11-18: <code>abi/syscalls.csv</code>
+(100 syscalls), <code>docs/dev/roadmap.md</code> (v0.4/v0.5 snapshot),
+<code>OnyxKernel/todo.md</code> §3-4, <code>OnyxCompiller/docs/STATUS.md</code>
+(&quot;Remaining limitations&quot;) and <code>OnyxApps/todo.md</code>.</p></main>
 </body>
 </html>
