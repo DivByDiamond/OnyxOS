@@ -57,6 +57,8 @@
 **OnyxKernel:**
 - [x] FAT32 read/write, create/unlink/truncate, LFN и FSINFO (`5e92115`, 2026-10-25)
 - [x] USB xHCI URB transfer и PCI probe; QEMU controller smoke (`7790fdf`, 2026-11-09)
+- [x] USB HID-джойстик: перечисление устройств в реестр слотов, HID report-descriptor парсер, interrupt-IN опрос, `/dev/jsN` joydev-узлы; live QEMU smoke `qemu-usb-smoke.sh` (usb-kbd — перечислен, js-узла нет; usb-tablet — stick-сессия) — ветка feat/usb-hid-joystick `a50d5fb`..`c3c619a`, live-фиксы `fe80f57`, `1e2d1f5`, `b7885a1`, `a181b22`, 2026-11-20
+- [ ] USB multi-device (multi-slot xHCI), EHCI interrupt-передачи, USB mass-storage
 - [x] symlink/readlink: syscall и VFS/OnyxFS paths (сверено 2026-11-15)
 - [x] chmod/fchmod: syscall и VFS paths (сверено 2026-11-15)
 - [x] truncate/ftruncate(>0): OnyxFS/FAT32 resize (сверено 2026-11-15)
@@ -76,7 +78,7 @@
 **Quality:**
 - [x] GitHub Actions CI: component workflows и OnyxOS build/release (сверено 2026-11-15)
 - [x] Host unit-тесты core/kernel и отдельной логики init (`OnyxKernel/docs/TESTING.md`, сверено 2026-11-15)
-- [x] Full-stack QEMU boot/interactive smoke и xHCI smoke (`8c5ad8f`, 2026-11-15)
+- [x] Full-stack QEMU boot/interactive smoke и xHCI smoke (`8c5ad8f`, 2026-11-15); USB HID smoke (`qemu-usb-smoke.sh`, 2026-11-20)
 - [x] OnyxFS: full-block undo, fault injection и remount (`cf6ca42`, 2026-11-15; `FS-J1/J2`)
 - [ ] OnyxFS: flush/barrier и проверка power loss/частичных секторов на OC2R/физических носителях
 
