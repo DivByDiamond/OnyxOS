@@ -146,6 +146,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Ecosystem table self-check
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        # Sibling checkouts do not exist in CI, so the script checks the
+        # lone OnyxOS README against the spec table.
+        run: python3 scripts/check-ecosystem-table.py .
       - name: Install deps
         run: sudo apt-get update && sudo apt-get install -y cmake build-essential libcurl4-openssl-dev libarchive-dev
       - name: Test dependency lock resolver

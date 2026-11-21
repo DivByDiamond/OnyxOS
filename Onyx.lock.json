@@ -1,11 +1,11 @@
 {
   "version": 1,
   "revisions": {
-    "OnyxKernel": "774eeb2e8f9352fa98155b31d3110feca7153725",
-    "OnyxBoot": "98b9ecb0d7938f2065225140140e2746f5ece1a9",
-    "OnyxShell": "908fbec5e94cab7723e4e5d86c53803f56be9a9f",
-    "OnyxCompiller": "bc1ef52873cf58c4cf79d7055769ac5e6ccc0082",
-    "OnyxApps": "2ed018fc1db442a7e5d1057386c320f2ba68c788",
-    "OnyxDesktop": "7e131eca9204bd0246097749c6653f386672d507"
+    "OnyxKernel": "e66b5f681459c733eb89511a45710e272af0e5e4",
+    "OnyxBoot": "620f2d78553ad1c5d520826baece6d7968f17a12",
+    "OnyxShell": "03dbd3bde3478159778774d6541675936f31e306",
+    "OnyxCompiller": "89bb738fe6fbda8b0081b8d1025c4faa0589ae9a",
+    "OnyxApps": "55b2c6e58ab8c58a8aaeb685a8dce436e8d66050",
+    "OnyxDesktop": "170d9e4318f5d8154e57104c942e3b5baa162d40"
   }
 }
