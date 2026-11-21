@@ -98,6 +98,19 @@ Lua собрана без загрузки нативных shared libraries; п
 - [ ] Многопользовательский режим
 - [ ] Динамические модули
 
+**OnyxDesktop:**
+- [x] `onyxdesk` — десктоп-демон (C99, ring 1): claim `/dev/fb0` на сеанс,
+  панель + лаунчер из `/etc/desk.conf`, managed-запуск приложений с
+  возвратом по выходу; 237 host-проверок GREEN (`7e131ec`, 2026-11-21)
+- [x] Интеграция в образ: 7-я `.vent`-зависимость, шаг сборки в
+  `build-all.sh`, упаковка `/bin/onyxdesk` + `/etc/desk.conf`
+  (`package-desktop.py`), smoke `qemu-desk-smoke.sh` — маркеры
+  `DESK_READY`/`APP_STARTED`/`APP_RETURN`/`DESK_EXIT 0` (2026-11-21)
+- [ ] M3: хоткеи, маршрутизация ввода активному окну (ядро P2-A),
+  `SIGSTOP`/`SIGCONT`-переключение
+- [ ] M4: перекрывающиеся окна/композиция (ядро P2-B)
+- [ ] SBC-трек: bring-up на плате, DSI-экран и USB-HID вживую
+
 **OnyxCompiller:**
 - [x] C++ subset: классы, RAII, virtual dispatch, exceptions без полного unwinding (`ca8546d`, 2026-11-15)
 - [ ] Оптимизации (const propagation, dead code elimination)

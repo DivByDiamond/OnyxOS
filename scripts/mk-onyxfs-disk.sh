@@ -9,8 +9,10 @@
 #       /bin/passwd      (change password)
 #       /bin/useradd     (add user)
 #       /bin/userdel     (remove user)
+#       /bin/onyxdesk    (desktop daemon — packaged by package-desktop.py)
 #       /etc/passwd      (user database)
 #       /etc/shadow      (password hashes — empty on first boot)
+#       /etc/desk.conf   (onyxdesk launcher config)
 #       /font/default.psf (PSF1 font for framebuffer console)
 #       /users/          (home dirs created on first boot)
 #       /tmp/            (writable temp dir)
@@ -209,6 +211,7 @@ done < "$APPS_LIST"
 
 python3 scripts/package-lua.py "$VENT_REPOS" "$MANIFEST"
 python3 scripts/package-compiler.py "$VENT_REPOS" "$TMP_ONX_DIR" "$MANIFEST"
+python3 scripts/package-desktop.py "$VENT_REPOS" "$TMP_ONX_DIR" "$MANIFEST"
 
 # mkimage uses literal path strings in the manifest — substitute $TMP_ONX_DIR
 sed -i "s|\$TMP_ONX_DIR|$TMP_ONX_DIR|g" "$MANIFEST"

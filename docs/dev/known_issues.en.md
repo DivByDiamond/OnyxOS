@@ -48,7 +48,7 @@
 | Limitation | What remains |
 |------------|--------------|
 | CI cannot see local commits | The `Onyx.lock.json` pin is only usable after the components are pushed; otherwise a locked build on GitHub cannot fetch the revision |
-| Two-language documentation | The English versions lag behind; regenerate them with `build-docs.sh` after editing `.md` |
+| Two-language documentation | The English versions lag behind; keep them up to date when editing `.md` |
 
 ## How this was checked
 

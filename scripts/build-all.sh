@@ -99,7 +99,17 @@ cp onyx-ld "$BUILD_DIR/"
 cd "$OLDPWD"
 echo "[+] OnyxCompiller done"
 
-# 4.5 Compile every app into a fresh stage with the just-built compiler.
+# 4.5 Build OnyxDesktop (desk daemon) with the just-built host onyxcc.
+# onyxcc links libonyxc automatically; the daemon is built --ring1 (its
+# Makefile passes the flag) because it is gated on SYS_spawn/SYS_kill.
+# build/ inside the locked checkout is gitignored, so tracked files stay
+# untouched and the final dependencies.py check keeps passing.
+echo "[*] Building OnyxDesktop..."
+make -C .vent/repos/OnyxDesktop ONYXCC="$ONYXCOMPILLER_DIR/onyxcc" build/onyxdesk.onx 2>&1
+cp .vent/repos/OnyxDesktop/build/onyxdesk.onx "$BUILD_DIR/onyxdesk.onx"
+echo "[+] OnyxDesktop done"
+
+# 4.6 Compile every app into a fresh stage with the just-built compiler.
 # Do not package ignored/stale OnyxApps/build or .tmp-onx outputs.
 echo "[*] Building OnyxApps into fresh staging..."
 python3 scripts/build-apps.py "$(pwd)/.vent/repos" "$BUILD_DIR" "$BUILD_DIR/apps.list"
