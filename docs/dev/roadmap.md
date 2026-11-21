@@ -2,7 +2,7 @@
 
 ## OnyxOS Ecosystem Roadmap
 
-Сверка рабочего дерева: 2026-11-15. Реализованные возможности ниже не
+Сверка рабочего дерева: 2026-11-21. Реализованные возможности ниже не
 означают полной POSIX/C/C++ совместимости; аппаратные проверки указаны отдельно.
 
 ### v0.4 — текущий релиз ✅
@@ -74,11 +74,14 @@
 - [ ] Повторный полный bootstrap и завершение поддержки C/libc
 - [x] Отдельная компиляция C/C++ → ONYO → `onyx-ld`, libc objects (`bd14e5d`, 2026-11-15)
 - [ ] Полноценный архивный линкер и совместимость с внешним RISC-V ABI
+  (выбор членов архива по неразрешённым именам `c3d2bd7` и weak binding
+  `4845c52` готовы, 2026-11-15; остаются `__.SYMDEF`-индекс, COMDAT,
+  section GC и внешняя ABI-совместимость)
 
 **Quality:**
 - [x] GitHub Actions CI: component workflows и OnyxOS build/release (сверено 2026-11-15)
 - [x] Host unit-тесты core/kernel и отдельной логики init (`OnyxKernel/docs/TESTING.md`, сверено 2026-11-15)
-- [x] Full-stack QEMU boot/interactive smoke и xHCI smoke (`8c5ad8f`, 2026-11-15); USB HID smoke (`qemu-usb-smoke.sh`, 2026-11-20)
+- [x] Full-stack QEMU boot/interactive smoke и xHCI smoke (`8c5ad8f`, 2026-11-15); USB HID smoke (`qemu-usb-smoke.sh`, 2026-11-20); desktop smoke (`qemu-desk-smoke.sh`, 2026-11-21)
 - [x] OnyxFS: full-block undo, fault injection и remount (`cf6ca42`, 2026-11-15; `FS-J1/J2`)
 - [ ] OnyxFS: flush/barrier и проверка power loss/частичных секторов на OC2R/физических носителях
 
@@ -120,6 +123,23 @@ Lua собрана без загрузки нативных shared libraries; п
 - [ ] Проверка на реальном Milk-V Duo S
 - [ ] Документация на двух языках
 - [ ] Self-hosting: OnyxOS компилирует OnyxOS
+
+## Проверка среза 2026-11-21
+
+- Сверка чекбоксов v0.4/v0.5/v0.6 по heads OnyxOS `45ffd2f`, OnyxKernel
+  `113945a`: источники `OnyxKernel/todo.md` (P1, §3, §4),
+  `OnyxCompiller/docs/STATUS.md`, `OnyxApps/todo.md`, `OnyxBoot/roadmap.md`;
+  спорные пункты оставлены открытыми с примечанием.
+- OnyxDesktop v1 влит в образ (`312cce5`, `17688cb`): 7-я `.vent`-зависимость,
+  шаг сборки в `build-all.sh`, упаковка `package-desktop.py`, дизайн-док
+  `docs/dev/onyxdesktop-design.md`, обзор экосистемы `docs/dev/ecosystem.md`,
+  smoke `qemu-desk-smoke.sh`.
+- Смоки на артефактах текущей locked-сборки `.build/`: `qemu-smoke.sh`,
+  `qemu-interactive-smoke.sh`, `qemu-desk-smoke.sh`, все три PASS.
+- CI на указанных heads зелёный: workflows всех шести компонентов и OnyxOS
+  Build & Test / Release.
+- `roadmap.en.md` синхронизирован с этой ревизией: добавлены секция
+  OnyxDesktop, USB HID-записи и этот срез.
 
 ## Проверка среза 2026-11-18
 

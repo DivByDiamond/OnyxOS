@@ -2,7 +2,7 @@
 
 ## OnyxOS Ecosystem Roadmap
 
-Cross-checked against the working tree on 2026-11-18. Implemented features
+Cross-checked against the working tree on 2026-11-21. Implemented features
 below do not imply full POSIX/C/C++ conformance; hardware verification is
 listed separately.
 
@@ -58,6 +58,13 @@ listed separately.
 **OnyxKernel:**
 - [x] FAT32 read/write, create/unlink/truncate, LFN and FSINFO (`5e92115`, 2026-10-25)
 - [x] USB xHCI URB transfer and PCI probe; QEMU controller smoke (`7790fdf`, 2026-11-09)
+- [x] USB HID joystick: device enumeration into the slot registry, HID
+  report-descriptor parser, interrupt-IN polling, `/dev/jsN` joydev nodes;
+  live QEMU smoke `qemu-usb-smoke.sh` (usb-kbd enumerates without a js node,
+  usb-tablet gives a stick session; branch `feat/usb-hid-joystick`
+  `a50d5fb`..`c3c619a`, live fixes `fe80f57`, `1e2d1f5`, `b7885a1`,
+  `a181b22`, 2026-11-20)
+- [ ] USB multi-device (multi-slot xHCI), EHCI interrupt transfers, USB mass-storage
 - [x] symlink/readlink: syscall and VFS/OnyxFS paths (checked 2026-11-15)
 - [x] chmod/fchmod: syscall and VFS paths (checked 2026-11-15)
 - [x] truncate/ftruncate(>0): OnyxFS/FAT32 resize (checked 2026-11-15)
@@ -73,11 +80,14 @@ listed separately.
 - [ ] Repeated full bootstrap and completion of C/libc support
 - [x] Separate C/C++ -> ONYO -> `onyx-ld` compilation, libc objects (`bd14e5d`, 2026-11-15)
 - [ ] Full-featured archive linker and external RISC-V ABI compatibility
+  (archive member selection by unresolved names `c3d2bd7` and weak binding
+  `4845c52` are done, 2026-11-15; `__.SYMDEF` indexes, COMDAT, section GC
+  and external ABI compatibility remain)
 
 **Quality:**
 - [x] GitHub Actions CI: component workflows and the OnyxOS build/release (checked 2026-11-15)
 - [x] Host unit tests for core/kernel and the separable init logic (`OnyxKernel/docs/TESTING.md`, checked 2026-11-15)
-- [x] Full-stack QEMU boot/interactive smoke and xHCI smoke (`8c5ad8f`, 2026-11-15)
+- [x] Full-stack QEMU boot/interactive smoke and xHCI smoke (`8c5ad8f`, 2026-11-15); USB HID smoke (`qemu-usb-smoke.sh`, 2026-11-20); desktop smoke (`qemu-desk-smoke.sh`, 2026-11-21)
 - [x] OnyxFS: full-block undo, fault injection and remount (`cf6ca42`, 2026-11-15; `FS-J1/J2`)
 - [ ] OnyxFS: flush/barrier and power-loss/partial-sector verification on OC2R/physical media
 
@@ -98,6 +108,19 @@ suite is not confirmed yet.
 - [ ] Multi-user mode
 - [ ] Dynamic modules
 
+**OnyxDesktop:**
+- [x] `onyxdesk` desktop daemon (C99, ring 1): claims `/dev/fb0` for the
+  session, panel + launcher from `/etc/desk.conf`, managed application
+  launch with return on exit; 237 host checks GREEN (`7e131ec`, 2026-11-21)
+- [x] Image integration: 7th `.vent` dependency, build step in
+  `build-all.sh`, packaging of `/bin/onyxdesk` + `/etc/desk.conf`
+  (`package-desktop.py`), smoke `qemu-desk-smoke.sh` with the
+  `DESK_READY`/`APP_STARTED`/`APP_RETURN`/`DESK_EXIT 0` markers (2026-11-21)
+- [ ] M3: hotkeys, input routing to the active window (kernel P2-A),
+  `SIGSTOP`/`SIGCONT` switching
+- [ ] M4: overlapping windows/composition (kernel P2-B)
+- [ ] SBC track: board bring-up, DSI display and live USB HID
+
 **OnyxCompiller:**
 - [x] C++ subset: classes, RAII, virtual dispatch, exceptions without full unwinding (`ca8546d`, 2026-11-15)
 - [ ] Optimisations (const propagation, dead code elimination)
@@ -107,6 +130,24 @@ suite is not confirmed yet.
 - [ ] Verification on real Milk-V Duo S hardware
 - [ ] Documentation in two languages
 - [ ] Self-hosting: OnyxOS compiles OnyxOS
+
+## Snapshot 2026-11-21
+
+- Checkbox cross-check for v0.4/v0.5/v0.6 at OnyxOS `45ffd2f`, OnyxKernel
+  `113945a`: sources are `OnyxKernel/todo.md` (P1, §3, §4),
+  `OnyxCompiller/docs/STATUS.md`, `OnyxApps/todo.md`, `OnyxBoot/roadmap.md`;
+  disputed items stay open with a note.
+- OnyxDesktop v1 is merged into the image (`312cce5`, `17688cb`): 7th
+  `.vent` dependency, build step in `build-all.sh`, `package-desktop.py`
+  packaging, design doc `docs/dev/onyxdesktop-design.md`, ecosystem
+  overview `docs/dev/ecosystem.md`, smoke `qemu-desk-smoke.sh`.
+- Smokes on the artifacts of the current locked build in `.build/`:
+  `qemu-smoke.sh`, `qemu-interactive-smoke.sh`, `qemu-desk-smoke.sh`,
+  all three PASS.
+- CI is green at the listed heads: workflows of all six components plus
+  the OnyxOS Build & Test / Release pipelines.
+- `roadmap.en.md` is synced with this revision: the OnyxDesktop section,
+  the USB HID entries and this snapshot were added.
 
 ## Snapshot 2026-11-18
 
