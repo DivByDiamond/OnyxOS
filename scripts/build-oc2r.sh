@@ -39,6 +39,8 @@ if [ "${ONYX_DEPS_MODE:-check}" = workspace ]; then
     # Explicit development mode preserves optional prebuilt applications.
     for app in "$REPOS/OnyxApps"/build/*.onx; do
         [ -f "$app" ] || continue
+        # luac doubles the ~1.7 MB Lua payload; the 16 MiB OC2R base keeps lua only.
+        case "$(basename "$app" .onx)" in luac) continue ;; esac
         echo "file $app /bin/$(basename "$app" .onx)" >> "$MANIFEST"
     done
 else
@@ -46,6 +48,7 @@ else
     make -B -C "$REPOS/OnyxCompiller"
     python3 "$HERE/scripts/build-apps.py" "$REPOS" "$OUT" "$OUT/apps.list"
     while IFS= read -r app; do
+        case "$(basename "$app" .onx)" in luac) continue ;; esac
         echo "file $app /bin/$(basename "$app" .onx)" >> "$MANIFEST"
     done < "$OUT/apps.list"
 fi
