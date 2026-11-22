@@ -58,7 +58,8 @@
 - [x] FAT32 read/write, create/unlink/truncate, LFN и FSINFO (`5e92115`, 2026-10-25)
 - [x] USB xHCI URB transfer и PCI probe; QEMU controller smoke (`7790fdf`, 2026-11-09)
 - [x] USB HID-джойстик: перечисление устройств в реестр слотов, HID report-descriptor парсер, interrupt-IN опрос, `/dev/jsN` joydev-узлы; live QEMU smoke `qemu-usb-smoke.sh` (usb-kbd — перечислен, js-узла нет; usb-tablet — stick-сессия) — ветка feat/usb-hid-joystick `a50d5fb`..`c3c619a`, live-фиксы `fe80f57`, `1e2d1f5`, `b7885a1`, `a181b22`, 2026-11-20
-- [ ] USB multi-device (multi-slot xHCI), EHCI interrupt-передачи, USB mass-storage
+- [x] USB multi-device (multi-slot xHCI): несколько одновременных `/dev/jsN`, smoke `qemu-usb-smoke.sh` (c)-(e); 2026-11-22
+- [ ] EHCI interrupt-передачи, USB mass-storage
 - [x] symlink/readlink: syscall и VFS/OnyxFS paths (сверено 2026-11-15)
 - [x] chmod/fchmod: syscall и VFS paths (сверено 2026-11-15)
 - [x] truncate/ftruncate(>0): OnyxFS/FAT32 resize (сверено 2026-11-15)

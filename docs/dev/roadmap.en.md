@@ -64,7 +64,8 @@ listed separately.
   usb-tablet gives a stick session; branch `feat/usb-hid-joystick`
   `a50d5fb`..`c3c619a`, live fixes `fe80f57`, `1e2d1f5`, `b7885a1`,
   `a181b22`, 2026-11-20)
-- [ ] USB multi-device (multi-slot xHCI), EHCI interrupt transfers, USB mass-storage
+- [x] USB multi-device (multi-slot xHCI): several simultaneous `/dev/jsN`, smoke `qemu-usb-smoke.sh` (c)-(e); 2026-11-22
+- [ ] EHCI interrupt transfers, USB mass-storage
 - [x] symlink/readlink: syscall and VFS/OnyxFS paths (checked 2026-11-15)
 - [x] chmod/fchmod: syscall and VFS paths (checked 2026-11-15)
 - [x] truncate/ftruncate(>0): OnyxFS/FAT32 resize (checked 2026-11-15)
