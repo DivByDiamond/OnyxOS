@@ -11,7 +11,8 @@ import tempfile
 # multiplexer: it owns PTY masters and execs the session shell, both of
 # which the kernel only allows at ring 1. Lua/luac also need system file
 # access; Lua os.execute uses the same root-only spawn interface.
-ROOT_APPS = {"mux", "lua", "luac"}
+# `otablet` persists notes under /users, which only ring 1 may create.
+ROOT_APPS = {"mux", "lua", "luac", "otablet"}
 
 
 def build(repos, output, listing):
